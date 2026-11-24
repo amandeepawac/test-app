@@ -703,6 +703,11 @@ Requirements:
 - Do not assume job descriptions are available in all three languages;
   user-generated content should be displayed as submitted.
 
+The current web shell defaults to English and stores the selected language
+in a browser cookie without changing URLs. Account-level preference
+synchronization is not implemented; reconcile the account default and
+cookie preference when profiles are built.
+
 ### 7.3 PWA
 
 - Provide a web app manifest and installability.

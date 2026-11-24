@@ -1,0 +1,23 @@
+{
+  "Metadata": {
+    "description": "Connecting local people and opportunities."
+  },
+  "Home": {
+    "title": "Connecting local people and opportunities",
+    "description": "The RozgarLocal platform is under development. Job search and account features are not yet available.",
+    "apiStatus": "API status: {status}",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "apiNote": "This status checks the API process only, not the database."
+  },
+  "Language": {
+    "label": "Language",
+    "apply": "Apply"
+  },
+  "Theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  }
+}
