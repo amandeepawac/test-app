@@ -7,6 +7,7 @@
     "lint": "turbo run lint",
     "format": "pnpm --parallel --filter web --filter api run format",
     "check-types": "turbo run check-types",
+    "test": "turbo run test",
     "db:generate": "turbo run db:generate",
     "db:push": "turbo run db:push",
     "db:migrate": "turbo run db:migrate",

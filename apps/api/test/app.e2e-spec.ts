@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types.js';
 import { AppModule } from './../src/app.module.js';
+import { healthResponseSchema } from '@repo/contracts';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
@@ -18,6 +19,11 @@ describe('AppController (e2e)', () => {
 
   it('/ (GET)', () => {
     return request(app.getHttpServer()).get('/').expect(200).expect('Hello World!');
+  });
+
+  it('/health (GET) returns the shared health contract', async () => {
+    const response = await request(app.getHttpServer()).get('/health').expect(200);
+    expect(healthResponseSchema.parse(response.body)).toEqual({ status: 'ok' });
   });
 
   afterEach(async () => {

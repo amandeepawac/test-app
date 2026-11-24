@@ -3,6 +3,9 @@ packages:
   - "packages/*"
 allowBuilds:
   '@prisma/engines': true
+  '@parcel/watcher': true
+  '@scarf/scarf': false
+  '@swc/core': true
   esbuild: true
   prisma: true
 minimumReleaseAgeExclude:
