@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { getApiHealth } from '../lib/api-health';
+import { getApiHealth } from '@/features/home/api-health';
 
 test('reports an invalid health response as unavailable', async () => {
   const originalFetch = globalThis.fetch;

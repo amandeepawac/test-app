@@ -2,11 +2,10 @@ import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
 import localFont from 'next/font/local';
-import './globals.css';
+import '@/app/globals.css';
 import { cn } from '@/lib/utils';
-import { ThemeProvider } from '@/components/theme-provider';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { LanguageSelector } from '@/components/language-selector';
+import { SiteHeader } from '@/components/layout/site-header';
+import { ThemeProvider } from '@/components/providers/theme-provider';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -40,13 +39,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <div className="mx-auto flex min-h-screen max-w-3xl flex-col gap-8 px-6 py-12">
-              <header className="flex flex-wrap items-center justify-between gap-4">
-                <span className="text-lg font-semibold">RozgarLocal</span>
-                <div className="flex flex-wrap items-center gap-4">
-                  <LanguageSelector />
-                  <ThemeToggle />
-                </div>
-              </header>
+              <SiteHeader />
               {children}
             </div>
           </ThemeProvider>

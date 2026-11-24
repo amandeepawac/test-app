@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/create-next-app).
+# RozgarLocal web
 
-## Getting Started
+See the [repository README](../../README.md) for setup and commands.
 
-First, run the development server:
+## Structure
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- `app/` contains Next.js routes, layouts, global styles, and route assets.
+  Keep routes focused on composing features.
+- `features/` groups application-specific code by capability. `home/` owns
+  the home screen and its health check; `language/` owns language selection.
+  Add feature folders when the corresponding functionality is implemented.
+- `components/ui/` contains reusable UI primitives. `components/layout/`
+  contains shared site layout components, and `components/providers/`
+  contains application-wide providers.
+- `i18n/` configures `next-intl` and supported locales; `messages/` holds
+  translations. The language preference is stored in a browser cookie.
+- `hooks/` and `lib/` contain shared hooks and utilities. Keep feature-only
+  code with its feature instead of placing it in these shared folders.
+- `tests/` contains Playwright tests, grouped by the behavior being tested.
+  Put future feature-specific tests with their feature or in a matching
+  `tests/` folder, and keep cross-feature journeys in `tests/e2e/`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The web app communicates with the NestJS API; it must not import Prisma or
+connect directly to the database. Keep server-only configuration and API
+access out of Client Components.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Use the `@/` alias for imports from the web app root.

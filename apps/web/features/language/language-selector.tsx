@@ -1,5 +1,5 @@
 import { getLocale, getTranslations } from 'next-intl/server';
-import { setLocale } from '@/i18n/actions';
+import { setLocale } from '@/features/language/actions';
 
 export async function LanguageSelector() {
   const locale = await getLocale();
