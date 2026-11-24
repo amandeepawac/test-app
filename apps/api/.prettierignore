@@ -1,0 +1,14 @@
+node_modules
+.turbo
+dist
+build
+coverage
+.nyc_output
+test-results
+playwright-report
+blob-report
+playwright/.cache
+playwright/.auth
+*.tsbuildinfo
+logs
+*.log

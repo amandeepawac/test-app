@@ -1,0 +1,42 @@
+# `users` (`User`)
+
+## Use case
+
+Stores the platform identity shared by job seekers, employers, and
+administrators. A user can have an optional seeker profile and an optional
+employer profile; role-based access should be enforced in application logic.
+
+## Scalar fields
+
+| Field | Prisma type | Purpose |
+| --- | --- | --- |
+| `id` | `String` (UUID, generated) | Primary account identifier. |
+| `email` | `String` (unique) | Account email and sign-in identifier. |
+| `emailVerifiedAt` | `DateTime?` | When email ownership was verified; null means not verified. |
+| `name` | `String?` | Display name. |
+| `avatarUrl` | `String?` | URL for the account avatar. |
+| `googleSubject` | `String?` (unique) | Google identity subject for account sign-in/linking. |
+| `primaryRole` | `UserRole` (default `JOB_SEEKER`) | Primary application role. |
+| `status` | `AccountStatus` (default `ACTIVE`) | Account lifecycle and access status. |
+| `preferredLanguage` | `String` (default `pa`, max 10 chars) | Preferred interface locale. |
+| `phone` | `String?` (unique, max 20 chars) | Optional phone number. |
+| `lastLoginAt` | `DateTime?` | Most recent successful login time. |
+| `createdAt` | `DateTime` (default now) | Account creation time. |
+| `updatedAt` | `DateTime` (auto-updated) | Last account record update. |
+| `deletedAt` | `DateTime?` | Soft-deletion timestamp, if deleted. |
+
+## Relations
+
+- One optional `PasswordCredential`, `SeekerProfile`, and `EmployerProfile`.
+- Many sessions, email-verification tokens, password-reset tokens, and notifications.
+- Actor/target relations to reports, audit logs, reviews, job moderation, and
+  application status history.
+
+## Constraints and indexes
+
+- `email`, `googleSubject`, and `phone` are unique; nullable unique fields allow
+  accounts without those optional values.
+- Indexes support role/status queries and account-creation-time queries.
+
+See the [database table index](./README.md) and
+[Prisma schema](../../../packages/db/prisma/schema.prisma).
