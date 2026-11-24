@@ -7,6 +7,7 @@ export default defineConfig({
   use: {
     baseURL: 'http://127.0.0.1:3000',
     trace: 'on-first-retry',
+    launchOptions: { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH },
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
@@ -14,12 +15,12 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: 'pnpm --filter api start',
+      command: 'npm --prefix ../api run start',
       url: 'http://127.0.0.1:3001/health',
       reuseExistingServer: !process.env.CI,
     },
     {
-      command: 'pnpm --filter web dev',
+      command: 'npm run dev',
       url: 'http://127.0.0.1:3000',
       reuseExistingServer: !process.env.CI,
     },

@@ -44,7 +44,10 @@ pnpm --filter web test:e2e
 
 The web end-to-end test starts both apps on ports 3000 and 3001. Stop other
 services on those ports first; in local runs Playwright can reuse already
-running servers. CI runs these checks without a database.
+running servers. To use an existing local Chromium or Chrome installation
+instead of downloading Playwright's browser, set
+`PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to its executable path. CI runs these
+checks without a database.
 
 ## Database
 

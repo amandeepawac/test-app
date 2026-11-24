@@ -1,7 +1,7 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
-  "globalEnv": ["DATABASE_URL", "PORT", "API_BASE_URL"],
+  "globalEnv": ["DATABASE_URL", "PORT", "API_BASE_URL", "CI", "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
