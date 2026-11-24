@@ -5,6 +5,7 @@ import localFont from 'next/font/local';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import { SiteHeader } from '@/components/layout/site-header';
+import { QueryProvider } from '@/components/providers/query-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 
 const geistSans = localFont({
@@ -32,17 +33,19 @@ export default async function RootLayout({
     <html lang={locale} className={cn('font-sans', geistSans.variable)} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <NextIntlClientProvider>
-          <ThemeProvider
-            attribute={'class'}
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <div className="mx-auto flex min-h-screen max-w-3xl flex-col gap-8 px-6 py-12">
-              <SiteHeader />
-              {children}
-            </div>
-          </ThemeProvider>
+          <QueryProvider>
+            <ThemeProvider
+              attribute={'class'}
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <div className="mx-auto flex min-h-screen max-w-3xl flex-col gap-8 px-6 py-12">
+                <SiteHeader />
+                {children}
+              </div>
+            </ThemeProvider>
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

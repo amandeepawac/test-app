@@ -24,4 +24,10 @@ The web app communicates with the NestJS API; it must not import Prisma or
 connect directly to the database. Keep server-only configuration and API
 access out of Client Components.
 
+TanStack Query is available to Client Components through the root query
+provider. It uses the library defaults; choose query keys, freshness, and
+retry policies for each feature. Server renders use isolated clients, while
+the browser reuses one client. When authentication is implemented, clear
+user-specific cached data on logout or account changes.
+
 Use the `@/` alias for imports from the web app root.
