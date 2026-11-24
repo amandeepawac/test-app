@@ -21,6 +21,7 @@ applications, and saved jobs. Identity and sign-in details remain in `User`.
 | `longitude` | `Decimal?` (10,7) | Optional geographic longitude. |
 | `experienceLevel` | `ExperienceLevel` (default `NO_EXPERIENCE`) | Broad experience category. |
 | `experienceSummary` | `String?` | Free-form work or experience summary. |
+| `educationSummary` | `String?` | Optional free-form education summary. |
 | `expectedSalaryMin` | `Decimal?` (12,2) | Lower expected salary bound. |
 | `expectedSalaryMax` | `Decimal?` (12,2) | Upper expected salary bound. |
 | `salaryPeriod` | `SalaryPeriod?` | Period used for expected salary amounts. |

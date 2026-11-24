@@ -139,14 +139,11 @@ records.
   have the required authorization.
 - Administrative actions must be permission-protected and auditable.
 
-> **Schema alignment note:** The latest recorded database decision is
-> `rozgarlocal-schema-auth-v2.prisma`, described as containing 22 models
-> and 18 enums. The exact Prisma file was not available to inspect while
-> preparing this document. This PRD therefore preserves the confirmed
-> domain decisions and authentication changes, but does not invent the
-> names or fields of the remaining schema models. Before implementation,
-> reconcile the model names, field names, relations, indexes, and enum
-> values below against that exact schema artifact.
+> **Schema alignment note:** The repository's
+> [Prisma schema](../packages/db/prisma/schema.prisma) and
+> [table reference](./database/tables/README.md) describe the intended
+> database. The web and API are currently starter applications; schema
+> models do not imply that these product features are implemented.
 
 ---
 
@@ -278,8 +275,10 @@ force and token replay.
 - Use a separate `UserAuthProvider` model rather than placing all
   provider identity data directly on `User`.
 - Recommended unique constraints for provider identity:
-  `[provider, providerUserId]` and `[userId, provider]`, subject to
-  the final schema.
+  `[provider, providerUserId]` and `[userId, provider]`.
+- Use the Google subject for Google identities and the account UUID as
+  text for email/password identities. Create the identity and password
+  credential atomically, and verify identity ownership before linking.
 - Keep password credentials separate from provider identity records.
 - Store password hashes using Argon2id.
 - Store verification, reset, and refresh tokens as hashes; use
@@ -444,12 +443,13 @@ relevant job lifecycle
 changes.
 ------------------------------------------------------------------------
 
-**Known job status values:** `DRAFT`, `PENDING`, `ACTIVE`, `PAUSED`,
-`FILLED`, `EXPIRED`, `REJECTED`.
+**Schema job status values:** `DRAFT`, `PENDING_REVIEW`, `PUBLISHED`,
+`PAUSED`, `REJECTED`, `CLOSED`, `FILLED`, `EXPIRED`, `REMOVED`.
+`FILLED` denotes a filled vacancy; `CLOSED` covers other closures.
 
 Implement allowed transitions explicitly. For example, a rejected job
 must not become publicly visible simply because a client sends
-`status: ACTIVE`.
+`status: PUBLISHED`.
 
 ### 5.5 Job discovery
 
@@ -510,10 +510,7 @@ seeker can apply to an
 active eligible job.
 
 APP-02 The system prevents P0
-duplicate active  
-applications by the  
-same job seeker for the
-same job.
+duplicate applications by the same job seeker for the same job.
 
 APP-03 The job seeker can view P0
 their application  
@@ -540,8 +537,11 @@ APP-08 Relevant status changes P0
 generate notifications.
 -----------------------------------------------------------------------
 
-**Known application status values:** `APPLIED`, `VIEWED`, `SHORTLISTED`,
-`HIRED`, `REJECTED`, `WITHDRAWN`.
+**Schema application status values:** `APPLIED`, `REVIEWING`,
+`SHORTLISTED`, `CONTACTED`, `REJECTED`, `HIRED`, `WITHDRAWN`.
+The unique job/seeker pair allows one application record per job even
+after withdrawal. Decide whether reapplying may reactivate that record
+before implementing the transition rules.
 
 The application history must preserve who changed a status, the previous
 and new status, and when the change occurred, according to the final
@@ -823,7 +823,7 @@ rozgarlocal/
 │   ├── validation/           # Shared Zod schemas
 │   ├── config/               # Shared lint/TS configuration
 │   └── utils/                # Framework-agnostic utilities
-├── prisma/                   # Prisma schema/migrations if centrally managed
+├── packages/db/prisma/       # Prisma schema and migrations
 ├── docs/
 │   ├── PRD.md
 │   ├── ARCHITECTURE.md
@@ -932,10 +932,9 @@ working, tested increment.
 
 ### Phase 0 --- Confirm the baseline
 
-**Deliverables** - Retrieve and review the exact
-`rozgarlocal-schema-auth-v2.prisma` file. - Confirm all 22 models and 18
-enums, including field names, relations, constraints, and indexes. -
-Confirm the MVP state transitions for jobs and applications. - Confirm
+**Deliverables** - Review the repository Prisma schema and migrations,
+including field names, relations, constraints, and indexes. - Confirm
+the MVP state transitions for jobs and applications. - Confirm
 employer verification policy and required evidence. - Confirm the
 required profile fields and location hierarchy. - Record unresolved
 decisions in an architecture decision log.
@@ -1146,11 +1145,9 @@ Topic Risk / open decision Recommended next action
 
 ---
 
-Exact Prisma schema The exact Compare this PRD with
-`rozgarlocal-schema-auth-v2.prisma` the actual schema
-file was not available for direct before coding; use the
-inspection during PRD preparation. schema as the database
-source of truth.
+Schema and deployment The repository schema may differ from a deployed
+database. Check migration status and drift against the target database
+before deployment; use the repository schema as the intended model.
 
 Employer verification Required evidence and approval policy Define acceptable
 are not fully specified here. evidence, reviewer
@@ -1212,8 +1209,8 @@ The MVP is ready for a controlled launch when:
 
 ## 16. Immediate next actions
 
-1.  Put the exact latest Prisma schema beside this PRD and verify every
-    model, enum, relation, and index.
+1.  Verify migration status and drift against the target database before
+    deploying schema changes.
 2.  Resolve the open decisions in Section 14, especially employer
     verification and job moderation.
 3.  Create `docs/PRD.md` and `docs/ARCHITECTURE.md` in the monorepo.

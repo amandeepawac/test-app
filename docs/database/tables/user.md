@@ -15,7 +15,6 @@ employer profile; role-based access should be enforced in application logic.
 | `emailVerifiedAt` | `DateTime?` | When email ownership was verified; null means not verified. |
 | `name` | `String?` | Display name. |
 | `avatarUrl` | `String?` | URL for the account avatar. |
-| `googleSubject` | `String?` (unique) | Google identity subject for account sign-in/linking. |
 | `primaryRole` | `UserRole` (default `JOB_SEEKER`) | Primary application role. |
 | `status` | `AccountStatus` (default `ACTIVE`) | Account lifecycle and access status. |
 | `preferredLanguage` | `String` (default `pa`, max 10 chars) | Preferred interface locale. |
@@ -28,13 +27,14 @@ employer profile; role-based access should be enforced in application logic.
 ## Relations
 
 - One optional `PasswordCredential`, `SeekerProfile`, and `EmployerProfile`.
+- Many `UserAuthProvider` identities, at most one per provider.
 - Many sessions, email-verification tokens, password-reset tokens, and notifications.
 - Actor/target relations to reports, audit logs, reviews, job moderation, and
   application status history.
 
 ## Constraints and indexes
 
-- `email`, `googleSubject`, and `phone` are unique; nullable unique fields allow
+- `email` and `phone` are unique; nullable unique fields allow
   accounts without those optional values.
 - Indexes support role/status queries and account-creation-time queries.
 

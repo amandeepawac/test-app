@@ -23,6 +23,11 @@ enum AccountStatus {
   DELETED
 }
 
+enum AuthProvider {
+  EMAIL_PASSWORD
+  GOOGLE
+}
+
 enum OtpPurpose {
   SIGN_IN
   PHONE_VERIFICATION
@@ -131,6 +136,7 @@ enum JobStatus {
   PAUSED
   REJECTED
   CLOSED
+  FILLED
   EXPIRED
   REMOVED
 }
@@ -191,7 +197,6 @@ model User {
   emailVerifiedAt   DateTime?
   name              String?
   avatarUrl         String?
-  googleSubject     String?       @unique
   primaryRole       UserRole      @default(JOB_SEEKER)
   status            AccountStatus @default(ACTIVE)
   preferredLanguage String        @default("pa") @db.VarChar(10)
@@ -202,6 +207,7 @@ model User {
   deletedAt         DateTime?
 
   passwordCredential        PasswordCredential?
+  authProviders             UserAuthProvider[]
   emailVerificationTokens   EmailVerificationToken[]
   passwordResetTokens       PasswordResetToken[]
   sessions                  AuthSession[]
@@ -220,6 +226,21 @@ model User {
   @@index([primaryRole, status])
   @@index([createdAt])
   @@map("users")
+}
+
+model UserAuthProvider {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  userId         String       @db.Uuid
+  provider       AuthProvider
+  providerUserId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerUserId])
+  @@unique([userId, provider])
+  @@map("user_auth_providers")
 }
 
 // One row represents one logged-in device/browser session.
@@ -334,6 +355,7 @@ model SeekerProfile {
   longitude                Decimal?         @db.Decimal(10, 7)
   experienceLevel          ExperienceLevel  @default(NO_EXPERIENCE)
   experienceSummary        String?
+  educationSummary         String?
   expectedSalaryMin        Decimal?         @db.Decimal(12, 2)
   expectedSalaryMax        Decimal?         @db.Decimal(12, 2)
   salaryPeriod             SalaryPeriod?

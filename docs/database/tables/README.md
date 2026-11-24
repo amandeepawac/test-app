@@ -7,6 +7,7 @@ The Prisma schema is the source of truth; review it before changing a table.
 | Prisma model | Database table | Documentation |
 | --- | --- | --- |
 | `User` | `users` | [User](./user.md) |
+| `UserAuthProvider` | `user_auth_providers` | [UserAuthProvider](./user-auth-provider.md) |
 | `AuthSession` | `auth_sessions` | [AuthSession](./auth-session.md) |
 | `PasswordCredential` | `password_credentials` | [PasswordCredential](./password-credential.md) |
 | `EmailVerificationToken` | `email_verification_tokens` | [EmailVerificationToken](./email-verification-token.md) |

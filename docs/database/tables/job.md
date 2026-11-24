@@ -63,6 +63,7 @@ compensation, publication lifecycle, and moderation metadata.
   uniqueness in a later schema change if needed.
 - Legal status transitions and public visibility rules belong in application
   logic; a stored status alone does not enforce them.
+- `FILLED` distinguishes a filled vacancy from a listing otherwise `CLOSED`.
 
 See the [database table index](./README.md) and
 [Prisma schema](../../../packages/db/prisma/schema.prisma).
