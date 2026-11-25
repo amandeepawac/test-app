@@ -33,6 +33,48 @@ test('auth forms do not show the preview notice', async ({ page }) => {
   }
 });
 
+test('auth pages use readable blue actions in light and dark themes', async ({ page }) => {
+  const pages = [
+    { path: '/login', submit: 'Sign in' },
+    { path: '/register', submit: 'Create account' },
+    { path: '/forgot-password', submit: 'Send reset link' },
+    { path: '/reset-password', submit: 'Reset password' },
+  ];
+
+  for (const colorScheme of ['light', 'dark'] as const) {
+    await page.emulateMedia({ colorScheme });
+    for (const { path, submit } of pages) {
+      await page.goto(path);
+      const button = page.getByRole('button', { name: submit, exact: true });
+      await expect(button).toBeEnabled();
+      const { background, contrast } = await button.evaluate((element) => {
+        const style = getComputedStyle(element);
+        const channels = (color: string) => {
+          const match = color.match(/\d+/g);
+          if (!match || match.length < 3) throw new Error(`Unexpected color: ${color}`);
+          return match.slice(0, 3).map(Number);
+        };
+        const luminance = (rgb: number[]) =>
+          rgb
+            .map((channel) => {
+              const value = channel / 255;
+              return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+            })
+            .reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index]!, 0);
+        const background = channels(style.backgroundColor);
+        const foreground = channels(style.color);
+        const levels = [luminance(background), luminance(foreground)].sort((a, b) => b - a);
+        return { background, contrast: (levels[0]! + 0.05) / (levels[1]! + 0.05) };
+      });
+      expect(background[2]!).toBeGreaterThan(background[0]!);
+      expect(contrast).toBeGreaterThanOrEqual(4.5);
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      ).toBe(true);
+    }
+  }
+});
+
 test('auth routes link together and Google sign-in is unavailable', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: 'Sign in' }).click();
