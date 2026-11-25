@@ -24,6 +24,10 @@ The web app communicates with the NestJS API; it must not import Prisma or
 connect directly to the database. Keep server-only configuration and API
 access out of Client Components.
 
+The home page previews the planned job seeker and employer journeys. Job
+search is disabled until job discovery is implemented; it does not display
+sample listings or submit search requests.
+
 TanStack Query is available to Client Components through the root query
 provider. It uses the library defaults; choose query keys, freshness, and
 retry policies for each feature. Server renders use isolated clients, while

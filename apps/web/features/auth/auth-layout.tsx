@@ -39,7 +39,7 @@ export function AuthLayout({
 }) {
   const t = useTranslations('Auth');
   return (
-    <main className="flex flex-1 items-start justify-center rounded-3xl bg-auth-canvas px-3 py-6 sm:px-8 sm:py-12">
+    <main className="flex flex-1 items-start justify-center bg-auth-canvas px-3 py-6 sm:px-8 sm:py-12">
       <Card className="w-full max-w-md gap-8 rounded-3xl bg-auth-surface text-auth-foreground shadow-sm ring-1 ring-auth-border [--card-spacing:--spacing(6)] sm:[--card-spacing:--spacing(8)]">
         <CardHeader className="gap-3">
           <CardTitle className="text-3xl leading-tight font-semibold tracking-tight">

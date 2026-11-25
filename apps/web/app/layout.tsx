@@ -5,6 +5,7 @@ import localFont from 'next/font/local';
 import '@/app/globals.css';
 import { cn } from '@/lib/utils';
 import { SiteHeader } from '@/components/layout/site-header';
+import { SiteFooter } from '@/components/layout/site-footer';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 
@@ -40,9 +41,10 @@ export default async function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <div className="mx-auto flex min-h-screen max-w-3xl flex-col gap-8 px-6 py-12">
+              <div className="flex min-h-dvh flex-col">
                 <SiteHeader />
                 {children}
+                <SiteFooter />
               </div>
             </ThemeProvider>
           </QueryProvider>

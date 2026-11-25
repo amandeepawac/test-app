@@ -118,6 +118,7 @@ test('auth pages keep the heading above the form in a centered card', async ({ p
     if (!cardBox || !headingBox || !formBox || !mainBox) {
       throw new Error('Auth layout is not visible');
     }
+    expect(mainBox.width).toBe(await page.evaluate(() => document.documentElement.clientWidth));
     expect(cardBox.width).toBeLessThanOrEqual(448);
     expect(Math.abs(cardBox.x + cardBox.width / 2 - (mainBox.x + mainBox.width / 2))).toBeLessThan(
       2,
