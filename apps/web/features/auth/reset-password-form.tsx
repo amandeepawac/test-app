@@ -37,8 +37,10 @@ export function ResetPasswordForm() {
             type="password"
             autoComplete="new-password"
           />
-          <PreviewSubmit>{t('resetPassword')}</PreviewSubmit>
         </FieldGroup>
+        <div className="mt-8">
+          <PreviewSubmit>{t('resetPassword')}</PreviewSubmit>
+        </div>
       </form>
     </AuthLayout>
   );

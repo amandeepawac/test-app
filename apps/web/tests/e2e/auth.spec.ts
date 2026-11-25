@@ -33,6 +33,18 @@ test('auth forms do not show the preview notice', async ({ page }) => {
   }
 });
 
+test('alternative sign-in is separated from the form only where available', async ({ page }) => {
+  for (const path of ['/login', '/register']) {
+    await page.goto(path);
+    await expect(page.getByText('or', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: /continue with google/i })).toBeDisabled();
+  }
+  for (const path of ['/forgot-password', '/reset-password']) {
+    await page.goto(path);
+    await expect(page.getByText('or', { exact: true })).toHaveCount(0);
+  }
+});
+
 test('auth pages use readable blue actions in light and dark themes', async ({ page }) => {
   const pages = [
     { path: '/login', submit: 'Sign in' },
@@ -73,6 +85,20 @@ test('auth pages use readable blue actions in light and dark themes', async ({ p
       ).toBe(true);
     }
   }
+});
+
+test('auth actions use the shared theme color', async ({ page }) => {
+  await page.goto('/login');
+  const button = page.getByRole('button', { name: 'Sign in', exact: true });
+  await expect(button).toBeEnabled();
+  await page.evaluate(() => {
+    document.documentElement.style.setProperty('--auth-primary', 'rgb(35, 75, 135)');
+  });
+  await expect(button).toHaveCSS('background-color', 'rgb(35, 75, 135)');
+  await expect(page.getByRole('link', { name: 'Forgot password?' })).toHaveCSS(
+    'color',
+    'rgb(35, 75, 135)',
+  );
 });
 
 test('auth pages keep the heading above the form in a centered card', async ({ page }) => {
@@ -125,6 +151,7 @@ test('auth screens follow the selected language', async ({ page }) => {
   await page.getByRole('button', { name: 'Language' }).click();
   await page.getByRole('menuitemradio', { name: 'हिन्दी' }).click();
   await expect(page.getByRole('heading', { name: 'साइन इन करें' })).toBeVisible();
+  await expect(page.getByText('या', { exact: true })).toBeVisible();
   await expect(page).toHaveURL(/\/login\?source=home#form$/);
   await expect(page.getByLabel('ईमेल पता')).toBeVisible();
   await page.getByRole('button', { name: 'साइन इन करें' }).click();

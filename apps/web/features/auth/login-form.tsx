@@ -41,14 +41,16 @@ export function LoginForm() {
             labelAction={
               <Link
                 href="/forgot-password"
-                className="text-sm font-medium text-[#0b57d0] underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0b57d0] dark:text-[#a8c7fa] dark:focus-visible:outline-[#a8c7fa]"
+                className="text-sm font-medium text-auth-primary underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-auth-primary"
               >
                 {t('forgotLink')}
               </Link>
             }
           />
-          <PreviewSubmit>{t('signIn')}</PreviewSubmit>
         </FieldGroup>
+        <div className="mt-8">
+          <PreviewSubmit>{t('signIn')}</PreviewSubmit>
+        </div>
       </form>
     </AuthLayout>
   );

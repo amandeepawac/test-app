@@ -53,8 +53,10 @@ export function RegisterForm() {
             type="password"
             autoComplete="new-password"
           />
-          <PreviewSubmit>{t('createAccount')}</PreviewSubmit>
         </FieldGroup>
+        <div className="mt-8">
+          <PreviewSubmit>{t('createAccount')}</PreviewSubmit>
+        </div>
       </form>
     </AuthLayout>
   );

@@ -30,8 +30,10 @@ export function ForgotPasswordForm() {
             autoComplete="email"
             placeholder="you@example.com"
           />
-          <PreviewSubmit>{t('sendResetLink')}</PreviewSubmit>
         </FieldGroup>
+        <div className="mt-8">
+          <PreviewSubmit>{t('sendResetLink')}</PreviewSubmit>
+        </div>
       </form>
     </AuthLayout>
   );

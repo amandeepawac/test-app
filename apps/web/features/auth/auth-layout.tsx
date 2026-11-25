@@ -16,7 +16,7 @@ export function PreviewSubmit({ children }: { children: ReactNode }) {
   return (
     <Button
       type="submit"
-      className="h-11 w-full rounded-full bg-[#0b57d0] font-medium text-white hover:bg-[#0842a0] focus-visible:ring-[#0b57d0]/40 dark:bg-[#a8c7fa] dark:text-[#062e6f] dark:hover:bg-[#c2d7fb]"
+      className="h-auto min-h-12 w-full rounded-full bg-auth-primary px-4 py-3 text-center text-base font-medium whitespace-normal text-auth-primary-foreground hover:bg-auth-primary-hover focus-visible:ring-auth-primary/40"
       disabled={!isHydrated}
     >
       {children}
@@ -39,33 +39,40 @@ export function AuthLayout({
 }) {
   const t = useTranslations('Auth');
   return (
-    <main className="flex flex-1 items-start justify-center rounded-[2rem] bg-[#f0f4f9] py-4 sm:py-12 dark:bg-[#111318]">
-      <Card className="w-full max-w-md rounded-[1.75rem] bg-white text-[#1f1f1f] ring-0 [--card-spacing:--spacing(6)] dark:bg-[#1f1f1f] dark:text-[#e3e3e3]">
-        <CardHeader className="gap-2">
-          <CardTitle className="text-3xl leading-tight font-normal tracking-tight">
+    <main className="flex flex-1 items-start justify-center rounded-3xl bg-auth-canvas px-3 py-6 sm:px-8 sm:py-12">
+      <Card className="w-full max-w-md gap-8 rounded-3xl bg-auth-surface text-auth-foreground shadow-sm ring-1 ring-auth-border [--card-spacing:--spacing(6)] sm:[--card-spacing:--spacing(8)]">
+        <CardHeader className="gap-3">
+          <CardTitle className="text-3xl leading-tight font-semibold tracking-tight">
             <h1>{title}</h1>
           </CardTitle>
-          <CardDescription className="text-sm leading-6 text-[#444746] dark:text-[#c4c7c5]">
+          <CardDescription className="text-sm leading-6 text-auth-muted">
             {description}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6 [--input:#747775] [--ring:#0b57d0] [&_[data-slot=input]]:h-12 [&_[data-slot=input]]:rounded-md [&_[data-slot=input]]:px-4 dark:[--input:#8e918f] dark:[--ring:#a8c7fa]">
+        <CardContent className="space-y-6 [--input:var(--auth-input)] [--ring:var(--auth-primary)] [&_[data-slot=input]]:h-12 [&_[data-slot=input]]:rounded-lg [&_[data-slot=input]]:px-4">
           {children}
           {showGoogle && (
-            <Button
-              type="button"
-              variant="outline"
-              className="h-11 w-full rounded-full border-[#747775] text-[#1f1f1f] dark:border-[#8e918f] dark:text-[#e3e3e3]"
-              disabled
-            >
-              {t('googleComingSoon')}
-            </Button>
+            <div className="space-y-6">
+              <div className="flex items-center gap-4 text-sm text-auth-muted">
+                <span aria-hidden="true" className="h-px flex-1 bg-auth-border" />
+                <span>{t('or')}</span>
+                <span aria-hidden="true" className="h-px flex-1 bg-auth-border" />
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                className="h-auto min-h-12 w-full rounded-full border-auth-input bg-auth-surface px-4 py-3 text-center whitespace-normal text-auth-foreground"
+                disabled
+              >
+                {t('googleComingSoon')}
+              </Button>
+            </div>
           )}
-          <p className="text-center text-sm text-[#444746] dark:text-[#c4c7c5]">
+          <p className="border-t border-auth-border pt-6 text-center text-sm leading-6 text-auth-muted">
             {isLogin ? t('noAccount') : t('haveAccount')}{' '}
             <Link
               href={isLogin ? '/register' : '/login'}
-              className="font-medium text-[#0b57d0] underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0b57d0] dark:text-[#a8c7fa] dark:focus-visible:outline-[#a8c7fa]"
+              className="font-medium text-auth-primary underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-auth-primary"
             >
               {isLogin ? t('createAccount') : t('signIn')}
             </Link>
