@@ -11,13 +11,19 @@ const subscribe = () => () => {};
 const getClientSnapshot = () => true;
 const getServerSnapshot = () => false;
 
-export function PreviewSubmit({ children }: { children: ReactNode }) {
+export function PreviewSubmit({
+  children,
+  disabled = false,
+}: {
+  children: ReactNode;
+  disabled?: boolean;
+}) {
   const isHydrated = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
   return (
     <Button
       type="submit"
       className="h-auto min-h-12 w-full rounded-full bg-auth-primary px-4 py-3 text-center text-base font-medium whitespace-normal text-auth-primary-foreground hover:bg-auth-primary-hover focus-visible:ring-auth-primary/40"
-      disabled={!isHydrated}
+      disabled={!isHydrated || disabled}
     >
       {children}
     </Button>

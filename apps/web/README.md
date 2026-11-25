@@ -36,10 +36,10 @@ user-specific cached data on logout or account changes.
 
 Use the `@/` alias for imports from the web app root.
 
-The sign-in, registration, forgot-password, and reset-password routes are UI
-previews only. Their forms do not call an API or create accounts, and Google
-sign-in is not available yet. Password reset and email verification still
-need token handling and API integration before they can be used.
+The registration form calls the API and sends an email verification link.
+Sign-in, forgot-password, and reset-password remain UI previews; Google sign-in
+and sessions are not available yet. See the repository README for the required
+API and Resend configuration and current security limitations.
 The form validation schemas live in `@repo/contracts` and use translation keys
 for their error messages; they describe form input, not API request payloads.
 

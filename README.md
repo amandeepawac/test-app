@@ -2,8 +2,9 @@
 
 RozgarLocal is a work-in-progress local employment platform. The repository
 contains a Next.js web app, a NestJS API, shared contracts and a Prisma
-database package. Authentication and marketplace features are not implemented;
-the web app includes UI-only authentication previews.
+database package. Registration and email verification are in development;
+sign-in, session management, account recovery and marketplace features are not
+implemented.
 
 ## Prerequisites
 
@@ -14,7 +15,7 @@ the web app includes UI-only authentication previews.
 ## Getting started
 
 ```sh
-pnpm install --frozen-lockfile
+pnpm install
 pnpm dev
 ```
 
@@ -35,8 +36,34 @@ environment or `apps/web/.env.local` when the API is on another HTTP(S)
 origin. The default is `http://127.0.0.1:3001`. The web app calls this
 address server-side; it must be reachable from the web server.
 
-The shared contracts package is built before application development,
-builds, and checks. Restart `pnpm dev` after changing a shared contract.
+The shared contracts and database packages are built before application
+development, builds, and checks. The database package generates Prisma Client
+as part of its build. Restart `pnpm dev` after changing a shared contract.
+
+Registration requires `DATABASE_URL`, `WEB_BASE_URL`, `AUTH_MAIL_FROM` and
+`RESEND_API_KEY` in the API environment, and a migrated database. Use an
+HTTPS web origin outside localhost and a verified Resend sender. The web
+server's `API_BASE_URL` must use HTTPS outside localhost. Registration sends
+verification emails via Resend; users must explicitly confirm their link.
+Existing accounts receive the same API response. Sign-in remains unavailable
+and no session cookies are issued yet. Future sign-in must reject unverified
+or inactive accounts, even when a password credential exists.
+
+The current auth rate limiter is process-local and sees requests from the web
+server when it proxies registration and verification. It is not sufficient
+for production or multiple instances: deploy shared per-client and per-account
+rate limiting and configure trusted proxies before exposing auth publicly.
+Email delivery is synchronous and failed deliveries must be retried by the
+user. Expired verification tokens need a retention job. Do not deploy this
+initial auth slice as a finished authentication system.
+
+The lockfile needs to be refreshed after the dependency changes on a machine
+where installation is permitted; frozen installation will fail until then.
+When running API commands directly, build `@repo/contracts` and `@repo/db`
+first. Turbo's current strict environment configuration does not pass
+`WEB_BASE_URL`, `AUTH_MAIL_FROM`, or `RESEND_API_KEY` from the process
+environment; use the root `.env` for development or launch the built API
+directly with these environment variables until Turbo is configured for them.
 
 ## Checks
 

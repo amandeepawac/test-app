@@ -1,27 +1,29 @@
 import { expect, test } from '@playwright/test';
 
-test('registration validates input and does not submit account details', async ({ page }) => {
+test('registration validates input before submitting account details', async ({ page }) => {
   await page.goto('/register');
   await page.getByRole('button', { name: 'Create account' }).click();
   await expect(page.getByText('Enter your name.')).toBeVisible();
   await expect(page.getByText('Enter your email address.', { exact: true })).toBeVisible();
 
   await page.getByLabel('Full name').fill('Example User');
+  await page.getByLabel('Password', { exact: true }).fill('short');
+  await page.getByLabel('Confirm password').fill('short');
+  await page.getByRole('button', { name: 'Create account' }).click();
+  await expect(page.getByText('Use at least 8 characters.')).toBeVisible();
   await page.getByLabel('Email address').fill('invalid');
-  await page.getByLabel('Password', { exact: true }).fill('first');
-  await page.getByLabel('Confirm password').fill('second');
+  await page.getByLabel('Password', { exact: true }).fill('first-password');
+  await page.getByLabel('Confirm password').fill('second-password');
   await page.getByRole('button', { name: 'Create account' }).click();
   await expect(page.getByText('Enter a valid email address.')).toBeVisible();
   await expect(page.getByText('Passwords do not match.')).toBeVisible();
 
-  await page.getByLabel('Email address').fill('user@example.com');
-  await page.getByLabel('Confirm password').fill('first');
   const requests: string[] = [];
   page.on('request', (request) => {
     if (request.method() === 'POST') requests.push(request.url());
   });
   await page.getByRole('button', { name: 'Create account' }).click();
-  await expect(page.getByText('Passwords do not match.')).toBeHidden();
+  await expect(page.getByText('Passwords do not match.')).toBeVisible();
   await expect(page).toHaveURL(/\/register$/);
   expect(requests).toEqual([]);
 });
@@ -31,6 +33,14 @@ test('auth forms do not show the preview notice', async ({ page }) => {
     await page.goto(path);
     await expect(page.getByText(/preview only/i)).toHaveCount(0);
   }
+});
+
+test('verification requires a token', async ({ page }) => {
+  await page.goto('/verify-email');
+  await expect(page.getByRole('alert')).toHaveText(
+    'This verification link is invalid or has expired.',
+  );
+  await expect(page.getByRole('button', { name: 'Verify email' })).toBeDisabled();
 });
 
 test('alternative sign-in is separated from the form only where available', async ({ page }) => {

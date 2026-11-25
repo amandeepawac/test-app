@@ -9,6 +9,9 @@ export function useAuthErrorMessage() {
     emailRequired: t('emailRequired'),
     emailInvalid: t('emailInvalid'),
     passwordRequired: t('passwordRequired'),
+    passwordTooShort: t('passwordTooShort'),
+    passwordTooLong: t('passwordTooLong'),
+    nameTooLong: t('nameTooLong'),
     confirmRequired: t('confirmRequired'),
     passwordsMismatch: t('passwordsMismatch'),
   };

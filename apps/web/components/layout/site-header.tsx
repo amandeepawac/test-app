@@ -1,8 +1,8 @@
-import Link from 'next/link';
+import { ThemeToggle } from '@/components/layout/theme-toggle';
+import { LanguageSelector } from '@/features/language/language-selector';
 import { BriefcaseBusiness } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
-import { LanguageSelector } from '@/features/language/language-selector';
-import { ThemeToggle } from '@/components/layout/theme-toggle';
+import Link from 'next/link';
 
 export async function SiteHeader() {
   const t = await getTranslations('Auth');
@@ -10,7 +10,7 @@ export async function SiteHeader() {
 
   return (
     <header className="border-b border-auth-border bg-auth-surface text-auth-foreground">
-      <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full container flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 py-4 sm:px-6 lg:px-8">
         <Link
           href="/"
           className="flex items-center gap-2 text-lg font-semibold tracking-tight sm:order-1"

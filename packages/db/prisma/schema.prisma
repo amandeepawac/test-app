@@ -278,12 +278,13 @@ model PasswordCredential {
 }
 
 model EmailVerificationToken {
-  id         String    @id @default(uuid(7)) @db.Uuid
-  userId     String    @db.Uuid
-  tokenHash  String    @unique
-  expiresAt  DateTime
-  consumedAt DateTime?
-  createdAt  DateTime  @default(now())
+  id                  String    @id @default(uuid(7)) @db.Uuid
+  userId              String    @db.Uuid
+  tokenHash           String    @unique
+  pendingPasswordHash String?
+  expiresAt           DateTime
+  consumedAt          DateTime?
+  createdAt           DateTime  @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

@@ -18,3 +18,5 @@ export type {
   RegisterFormValues,
   ResetPasswordFormValues,
 } from "./auth.js";
+export { registrationRequestSchema, verifyEmailRequestSchema } from "./auth-api.js";
+export type { RegistrationRequest, VerifyEmailRequest } from "./auth-api.js";

@@ -1,9 +1,9 @@
-import { BriefcaseBusiness, MapPin, Search, ShieldCheck, UserRound } from 'lucide-react';
-import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getApiHealth } from '@/features/home/api-health';
+import { BriefcaseBusiness, MapPin, Search, ShieldCheck, UserRound } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import Link from 'next/link';
 
 export default async function Home() {
   const apiHealth = await getApiHealth();
@@ -17,7 +17,7 @@ export default async function Home() {
   return (
     <main className="flex flex-1 flex-col text-auth-foreground">
       <section className="bg-auth-canvas">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-8 lg:py-20">
+        <div className="mx-auto grid container gap-10 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-8 lg:py-20">
           <div className="max-w-2xl">
             <p className="mb-4 text-sm font-semibold tracking-wide text-auth-primary">
               {t('eyebrow')}
@@ -92,7 +92,7 @@ export default async function Home() {
       </section>
 
       <section id="how-it-works" className="bg-auth-surface">
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+        <div className="mx-auto container px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
           <p className="text-sm font-semibold text-auth-primary">{t('forJobSeekers')}</p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight">{t('howItWorks')}</h2>
           <p className="mt-3 max-w-2xl leading-7 text-auth-muted">{t('journeyIntro')}</p>
@@ -111,7 +111,7 @@ export default async function Home() {
       </section>
 
       <section id="for-employers" className="bg-auth-canvas">
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+        <div className="mx-auto container px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
           <div className="flex flex-col gap-5 rounded-3xl bg-auth-surface p-6 ring-1 ring-auth-border sm:p-10 md:flex-row md:items-start md:gap-8">
             <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-auth-canvas text-auth-primary">
               <ShieldCheck className="size-6" aria-hidden="true" />
@@ -126,7 +126,7 @@ export default async function Home() {
       </section>
 
       <div className="mt-auto border-t border-auth-border bg-auth-surface">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-auth-muted sm:px-6 lg:px-8">
+        <div className="mx-auto flex container flex-col gap-2 px-4 py-6 text-sm text-auth-muted sm:px-6 lg:px-8">
           <p>{t('description')}</p>
           <p role="status">{t('apiStatus', { status: t(apiHealth) })}</p>
           <p>{t('apiNote')}</p>
