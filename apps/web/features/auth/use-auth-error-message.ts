@@ -1,0 +1,16 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
+
+export function useAuthErrorMessage() {
+  const t = useTranslations('Auth');
+  const messages: Record<string, string> = {
+    nameRequired: t('nameRequired'),
+    emailRequired: t('emailRequired'),
+    emailInvalid: t('emailInvalid'),
+    passwordRequired: t('passwordRequired'),
+    confirmRequired: t('confirmRequired'),
+    passwordsMismatch: t('passwordsMismatch'),
+  };
+  return (message: string) => messages[message] ?? message;
+}

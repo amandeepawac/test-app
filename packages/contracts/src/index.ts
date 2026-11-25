@@ -5,3 +5,16 @@ export const healthResponseSchema = z.object({
 });
 
 export type HealthResponse = z.infer<typeof healthResponseSchema>;
+
+export {
+  forgotPasswordFormSchema,
+  loginFormSchema,
+  registerFormSchema,
+  resetPasswordFormSchema,
+} from "./auth.js";
+export type {
+  ForgotPasswordFormValues,
+  LoginFormValues,
+  RegisterFormValues,
+  ResetPasswordFormValues,
+} from "./auth.js";

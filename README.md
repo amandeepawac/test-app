@@ -2,7 +2,8 @@
 
 RozgarLocal is a work-in-progress local employment platform. The repository
 contains a Next.js web app, a NestJS API, shared contracts and a Prisma
-database package. Authentication and marketplace features are not implemented.
+database package. Authentication and marketplace features are not implemented;
+the web app includes UI-only authentication previews.
 
 ## Prerequisites
 

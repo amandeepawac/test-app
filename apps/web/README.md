@@ -31,3 +31,31 @@ the browser reuses one client. When authentication is implemented, clear
 user-specific cached data on logout or account changes.
 
 Use the `@/` alias for imports from the web app root.
+
+The sign-in, registration, forgot-password, and reset-password routes are UI
+previews only. Their forms do not call an API or create accounts, and Google
+sign-in is not available yet. Password reset and email verification still
+need token handling and API integration before they can be used.
+The form validation schemas live in `@repo/contracts` and use translation keys
+for their error messages; they describe form input, not API request payloads.
+
+Reusable React Hook Form controls are in `components/form/`: text inputs,
+textareas, OTP inputs, checkboxes and checkbox groups, switches, radio groups,
+selects, native selects, comboboxes, and single-value sliders. Pass `control`,
+`name`, and `label`, and provide matching `defaultValues` to `useForm` (strings,
+booleans, string arrays, or numbers as appropriate). Choice controls use
+`{ value, label, disabled? }` options and store string values; an empty string
+represents no selection. `formatError` can translate validation messages.
+For other controls, compose `FormField` with the shadcn primitive and forward
+the controller's value, change, blur, ref, and accessibility properties.
+
+```tsx
+const form = useForm({ defaultValues: { email: '', alerts: false } });
+
+<FormInput control={form.control} name="email" label="Email" type="email" />;
+<FormCheckbox control={form.control} name="alerts" label="Receive alerts" />;
+```
+
+Import `FormInput` from `@/components/form/form-input` and `FormCheckbox` from
+`@/components/form/form-checkbox`. Numeric or date inputs using `FormInput`
+store strings; use an appropriate schema to parse them if needed.
