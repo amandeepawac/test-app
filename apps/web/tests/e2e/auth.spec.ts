@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 test('registration validates input and does not submit account details', async ({ page }) => {
   await page.goto('/register');
-  await expect(page.getByText(/preview only/i)).toBeVisible();
   await page.getByRole('button', { name: 'Create account' }).click();
   await expect(page.getByText('Enter your name.')).toBeVisible();
   await expect(page.getByText('Enter your email address.', { exact: true })).toBeVisible();
@@ -25,6 +24,13 @@ test('registration validates input and does not submit account details', async (
   await expect(page.getByText('Passwords do not match.')).toBeHidden();
   await expect(page).toHaveURL(/\/register$/);
   expect(requests).toEqual([]);
+});
+
+test('auth forms do not show the preview notice', async ({ page }) => {
+  for (const path of ['/login', '/register', '/forgot-password', '/reset-password']) {
+    await page.goto(path);
+    await expect(page.getByText(/preview only/i)).toHaveCount(0);
+  }
 });
 
 test('auth routes link together and Google sign-in is unavailable', async ({ page }) => {

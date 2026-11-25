@@ -44,9 +44,6 @@ export function AuthLayout({
           <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <p className="rounded-lg border bg-muted/50 p-3 text-sm text-muted-foreground">
-            {t('previewNotice')}
-          </p>
           {children}
           {showGoogle && (
             <Button type="button" variant="outline" className="h-10 w-full" disabled>
