@@ -47,10 +47,11 @@ test('auth routes link together and Google sign-in is unavailable', async ({ pag
 });
 
 test('auth screens follow the selected language', async ({ page }) => {
-  await page.goto('/login');
-  await page.getByLabel('Language').selectOption('hi');
-  await page.getByRole('button', { name: 'Apply' }).click();
+  await page.goto('/login?source=home#form');
+  await page.getByRole('button', { name: 'Language' }).click();
+  await page.getByRole('menuitemradio', { name: 'हिन्दी' }).click();
   await expect(page.getByRole('heading', { name: 'साइन इन करें' })).toBeVisible();
+  await expect(page).toHaveURL(/\/login\?source=home#form$/);
   await expect(page.getByLabel('ईमेल पता')).toBeVisible();
   await page.getByRole('button', { name: 'साइन इन करें' }).click();
   await expect(page.getByText('अपना ईमेल पता दर्ज करें।')).toBeVisible();

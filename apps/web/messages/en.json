@@ -40,7 +40,7 @@
   },
   "Language": {
     "label": "Language",
-    "apply": "Apply"
+    "error": "Could not change language. Please try again."
   },
   "Theme": {
     "toggle": "Toggle theme",
