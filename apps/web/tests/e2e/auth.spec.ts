@@ -75,6 +75,32 @@ test('auth pages use readable blue actions in light and dark themes', async ({ p
   }
 });
 
+test('auth pages keep the heading above the form in a centered card', async ({ page }) => {
+  for (const path of ['/login', '/register', '/forgot-password', '/reset-password']) {
+    await page.goto(path);
+    const card = page.locator('main [data-slot="card"]');
+    const heading = card.getByRole('heading', { level: 1 });
+    const form = card.locator('form');
+    const cardBox = await card.boundingBox();
+    const headingBox = await heading.boundingBox();
+    const formBox = await form.boundingBox();
+    const mainBox = await page.locator('main').boundingBox();
+    expect(cardBox).not.toBeNull();
+    expect(headingBox).not.toBeNull();
+    expect(formBox).not.toBeNull();
+    expect(mainBox).not.toBeNull();
+    if (!cardBox || !headingBox || !formBox || !mainBox) {
+      throw new Error('Auth layout is not visible');
+    }
+    expect(cardBox.width).toBeLessThanOrEqual(448);
+    expect(Math.abs(cardBox.x + cardBox.width / 2 - (mainBox.x + mainBox.width / 2))).toBeLessThan(
+      2,
+    );
+    expect(headingBox.y + headingBox.height).toBeLessThanOrEqual(formBox.y);
+    expect(Math.abs(headingBox.x - formBox.x)).toBeLessThan(2);
+  }
+});
+
 test('auth routes link together and Google sign-in is unavailable', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: 'Sign in' }).click();
