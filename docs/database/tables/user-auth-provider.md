@@ -11,14 +11,14 @@ where applicable, and must verify identity ownership before linking accounts.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary provider identity identifier. |
-| `userId` | `String` (UUID) | Account owning the identity. |
-| `provider` | `AuthProvider` | `EMAIL_PASSWORD` or `GOOGLE`. |
-| `providerUserId` | `String` | Stable identity within the provider. |
-| `createdAt` | `DateTime` (default now) | Identity creation time. |
-| `updatedAt` | `DateTime` (auto-updated) | Last identity update time. |
+| Field            | Prisma type                | Purpose                               |
+| ---------------- | -------------------------- | ------------------------------------- |
+| `id`             | `String` (UUID, generated) | Primary provider identity identifier. |
+| `userId`         | `String` (UUID)            | Account owning the identity.          |
+| `provider`       | `AuthProvider`             | `EMAIL_PASSWORD` or `GOOGLE`.         |
+| `providerUserId` | `String`                   | Stable identity within the provider.  |
+| `createdAt`      | `DateTime` (default now)   | Identity creation time.               |
+| `updatedAt`      | `DateTime` (auto-updated)  | Last identity update time.            |
 
 ## Relations and constraints
 

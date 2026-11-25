@@ -7,17 +7,17 @@ optional messages. It is the parent record for application status history.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary application identifier. |
-| `jobId` | `String` (UUID) | Job being applied to. |
-| `seekerProfileId` | `String` (UUID) | Job-seeker profile submitting the application. |
-| `status` | `ApplicationStatus` (default `APPLIED`) | Current application state. |
-| `coverMessage` | `String?` | Optional message supplied by the applicant. |
-| `employerNote` | `String?` | Optional employer-side note. |
-| `appliedAt` | `DateTime` (default now) | Application submission time. |
-| `updatedAt` | `DateTime` (auto-updated) | Last application update time. |
-| `withdrawnAt` | `DateTime?` | Time the applicant withdrew, if applicable. |
+| Field             | Prisma type                             | Purpose                                        |
+| ----------------- | --------------------------------------- | ---------------------------------------------- |
+| `id`              | `String` (UUID, generated)              | Primary application identifier.                |
+| `jobId`           | `String` (UUID)                         | Job being applied to.                          |
+| `seekerProfileId` | `String` (UUID)                         | Job-seeker profile submitting the application. |
+| `status`          | `ApplicationStatus` (default `APPLIED`) | Current application state.                     |
+| `coverMessage`    | `String?`                               | Optional message supplied by the applicant.    |
+| `employerNote`    | `String?`                               | Optional employer-side note.                   |
+| `appliedAt`       | `DateTime` (default now)                | Application submission time.                   |
+| `updatedAt`       | `DateTime` (auto-updated)               | Last application update time.                  |
+| `withdrawnAt`     | `DateTime?`                             | Time the applicant withdrew, if applicable.    |
 
 ## Relations
 

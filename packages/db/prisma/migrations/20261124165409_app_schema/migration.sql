@@ -5,6 +5,9 @@ CREATE TYPE "UserRole" AS ENUM ('JOB_SEEKER', 'EMPLOYER', 'ADMIN');
 CREATE TYPE "AccountStatus" AS ENUM ('ACTIVE', 'PENDING', 'SUSPENDED', 'DISABLED', 'DELETED');
 
 -- CreateEnum
+CREATE TYPE "AuthProvider" AS ENUM ('EMAIL_PASSWORD', 'GOOGLE');
+
+-- CreateEnum
 CREATE TYPE "OtpPurpose" AS ENUM ('SIGN_IN', 'PHONE_VERIFICATION', 'ACCOUNT_RECOVERY');
 
 -- CreateEnum
@@ -38,7 +41,7 @@ CREATE TYPE "SalaryPeriod" AS ENUM ('HOUR', 'DAY', 'WEEK', 'MONTH', 'YEAR', 'FIX
 CREATE TYPE "ExperienceLevel" AS ENUM ('NO_EXPERIENCE', 'ENTRY_LEVEL', 'LESS_THAN_1_YEAR', 'ONE_TO_THREE_YEARS', 'THREE_TO_FIVE_YEARS', 'FIVE_TO_TEN_YEARS', 'TEN_PLUS_YEARS');
 
 -- CreateEnum
-CREATE TYPE "JobStatus" AS ENUM ('DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'PAUSED', 'REJECTED', 'CLOSED', 'EXPIRED', 'REMOVED');
+CREATE TYPE "JobStatus" AS ENUM ('DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'PAUSED', 'REJECTED', 'CLOSED', 'FILLED', 'EXPIRED', 'REMOVED');
 
 -- CreateEnum
 CREATE TYPE "ApplicationStatus" AS ENUM ('APPLIED', 'REVIEWING', 'SHORTLISTED', 'CONTACTED', 'REJECTED', 'HIRED', 'WITHDRAWN');
@@ -59,7 +62,6 @@ CREATE TABLE "users" (
     "emailVerifiedAt" TIMESTAMP(3),
     "name" TEXT,
     "avatarUrl" TEXT,
-    "googleSubject" TEXT,
     "primaryRole" "UserRole" NOT NULL DEFAULT 'JOB_SEEKER',
     "status" "AccountStatus" NOT NULL DEFAULT 'ACTIVE',
     "preferredLanguage" VARCHAR(10) NOT NULL DEFAULT 'pa',
@@ -70,6 +72,18 @@ CREATE TABLE "users" (
     "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "user_auth_providers" (
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
+    "provider" "AuthProvider" NOT NULL,
+    "providerUserId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "user_auth_providers_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -163,6 +177,7 @@ CREATE TABLE "seeker_profiles" (
     "longitude" DECIMAL(10,7),
     "experienceLevel" "ExperienceLevel" NOT NULL DEFAULT 'NO_EXPERIENCE',
     "experienceSummary" TEXT,
+    "educationSummary" TEXT,
     "expectedSalaryMin" DECIMAL(12,2),
     "expectedSalaryMax" DECIMAL(12,2),
     "salaryPeriod" "SalaryPeriod",
@@ -432,9 +447,6 @@ CREATE TABLE "audit_logs" (
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_googleSubject_key" ON "users"("googleSubject");
-
--- CreateIndex
 CREATE UNIQUE INDEX "users_phone_key" ON "users"("phone");
 
 -- CreateIndex
@@ -442,6 +454,12 @@ CREATE INDEX "users_primaryRole_status_idx" ON "users"("primaryRole", "status");
 
 -- CreateIndex
 CREATE INDEX "users_createdAt_idx" ON "users"("createdAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_auth_providers_provider_providerUserId_key" ON "user_auth_providers"("provider", "providerUserId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_auth_providers_userId_provider_key" ON "user_auth_providers"("userId", "provider");
 
 -- CreateIndex
 CREATE INDEX "auth_sessions_userId_expiresAt_idx" ON "auth_sessions"("userId", "expiresAt");
@@ -631,6 +649,9 @@ CREATE INDEX "audit_logs_entityType_entityId_createdAt_idx" ON "audit_logs"("ent
 
 -- CreateIndex
 CREATE INDEX "audit_logs_action_createdAt_idx" ON "audit_logs"("action", "createdAt");
+
+-- AddForeignKey
+ALTER TABLE "user_auth_providers" ADD CONSTRAINT "user_auth_providers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "auth_sessions" ADD CONSTRAINT "auth_sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

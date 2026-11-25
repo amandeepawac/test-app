@@ -2,17 +2,17 @@ packages:
   - "apps/*"
   - "packages/*"
 allowBuilds:
-  '@prisma/engines': true
-  '@parcel/watcher': true
-  '@scarf/scarf': false
-  '@swc/core': true
+  "@prisma/engines": true
+  "@parcel/watcher": true
+  "@scarf/scarf": false
+  "@swc/core": true
   esbuild: true
   prisma: true
 minimumReleaseAgeExclude:
-  - '@oxlint-tsgolint/darwin-arm64@7.0.2008'
-  - '@oxlint-tsgolint/darwin-x64@7.0.2008'
-  - '@oxlint-tsgolint/linux-arm64@7.0.2008'
-  - '@oxlint-tsgolint/linux-x64@7.0.2008'
-  - '@oxlint-tsgolint/win32-arm64@7.0.2008'
-  - '@oxlint-tsgolint/win32-x64@7.0.2008'
+  - "@oxlint-tsgolint/darwin-arm64@7.0.2008"
+  - "@oxlint-tsgolint/darwin-x64@7.0.2008"
+  - "@oxlint-tsgolint/linux-arm64@7.0.2008"
+  - "@oxlint-tsgolint/linux-x64@7.0.2008"
+  - "@oxlint-tsgolint/win32-arm64@7.0.2008"
+  - "@oxlint-tsgolint/win32-x64@7.0.2008"
   - oxlint-tsgolint@7.0.2008

@@ -7,14 +7,14 @@ experience and proficiency context for that specific seeker-skill pair.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary association identifier. |
-| `seekerProfileId` | `String` (UUID) | Associated seeker profile. |
-| `skillId` | `String` (UUID) | Associated catalog skill. |
-| `experienceYears` | `Decimal?` (4,1) | Optional years of experience with this skill. |
-| `proficiencyNote` | `String?` | Optional free-form skill context. |
-| `createdAt` | `DateTime` (default now) | Association creation time. |
+| Field             | Prisma type                | Purpose                                       |
+| ----------------- | -------------------------- | --------------------------------------------- |
+| `id`              | `String` (UUID, generated) | Primary association identifier.               |
+| `seekerProfileId` | `String` (UUID)            | Associated seeker profile.                    |
+| `skillId`         | `String` (UUID)            | Associated catalog skill.                     |
+| `experienceYears` | `Decimal?` (4,1)           | Optional years of experience with this skill. |
+| `proficiencyNote` | `String?`                  | Optional free-form skill context.             |
+| `createdAt`       | `DateTime` (default now)   | Association creation time.                    |
 
 ## Relations
 

@@ -7,15 +7,15 @@ the prior state, new state, actor, optional note, and change time.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary history-record identifier. |
-| `applicationId` | `String` (UUID) | Application whose status changed. |
-| `oldStatus` | `ApplicationStatus?` | Previous status; nullable for the initial history entry. |
-| `newStatus` | `ApplicationStatus` | Status after the change. |
-| `changedById` | `String?` (UUID) | User responsible for the change, if recorded. |
-| `note` | `String?` | Optional explanation or message for the transition. |
-| `createdAt` | `DateTime` (default now) | Time the status change was recorded. |
+| Field           | Prisma type                | Purpose                                                  |
+| --------------- | -------------------------- | -------------------------------------------------------- |
+| `id`            | `String` (UUID, generated) | Primary history-record identifier.                       |
+| `applicationId` | `String` (UUID)            | Application whose status changed.                        |
+| `oldStatus`     | `ApplicationStatus?`       | Previous status; nullable for the initial history entry. |
+| `newStatus`     | `ApplicationStatus`        | Status after the change.                                 |
+| `changedById`   | `String?` (UUID)           | User responsible for the change, if recorded.            |
+| `note`          | `String?`                  | Optional explanation or message for the transition.      |
+| `createdAt`     | `DateTime` (default now)   | Time the status change was recorded.                     |
 
 ## Relations
 

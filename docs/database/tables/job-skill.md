@@ -7,13 +7,13 @@ skill is required or preferred.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary association identifier. |
-| `jobId` | `String` (UUID) | Associated job listing. |
-| `skillId` | `String` (UUID) | Associated catalog skill. |
+| Field        | Prisma type                | Purpose                                            |
+| ------------ | -------------------------- | -------------------------------------------------- |
+| `id`         | `String` (UUID, generated) | Primary association identifier.                    |
+| `jobId`      | `String` (UUID)            | Associated job listing.                            |
+| `skillId`    | `String` (UUID)            | Associated catalog skill.                          |
 | `isRequired` | `Boolean` (default `true`) | Whether applicants are expected to have the skill. |
-| `createdAt` | `DateTime` (default now) | Association creation time. |
+| `createdAt`  | `DateTime` (default now)   | Association creation time.                         |
 
 ## Relations
 

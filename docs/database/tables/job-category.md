@@ -7,17 +7,17 @@ filtering job discovery results.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary category identifier. |
-| `name` | `String` | Display name. |
-| `slug` | `String` (unique) | Stable, URL-friendly category identifier. |
-| `description` | `String?` | Optional explanation of the category. |
-| `parentId` | `String?` (UUID) | Optional parent category. |
-| `isActive` | `Boolean` (default `true`) | Whether the category is selectable. |
-| `sortOrder` | `Int` (default 0) | Relative display ordering. |
-| `createdAt` | `DateTime` (default now) | Record creation time. |
-| `updatedAt` | `DateTime` (auto-updated) | Last record update time. |
+| Field         | Prisma type                | Purpose                                   |
+| ------------- | -------------------------- | ----------------------------------------- |
+| `id`          | `String` (UUID, generated) | Primary category identifier.              |
+| `name`        | `String`                   | Display name.                             |
+| `slug`        | `String` (unique)          | Stable, URL-friendly category identifier. |
+| `description` | `String?`                  | Optional explanation of the category.     |
+| `parentId`    | `String?` (UUID)           | Optional parent category.                 |
+| `isActive`    | `Boolean` (default `true`) | Whether the category is selectable.       |
+| `sortOrder`   | `Int` (default 0)          | Relative display ordering.                |
+| `createdAt`   | `DateTime` (default now)   | Record creation time.                     |
+| `updatedAt`   | `DateTime` (auto-updated)  | Last record update time.                  |
 
 ## Relations
 

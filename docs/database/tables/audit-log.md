@@ -8,17 +8,17 @@ areas can record events.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary audit-record identifier. |
-| `actorId` | `String?` (UUID) | User who performed the action, when known. |
-| `action` | `String` | Action/event name. |
-| `entityType` | `String` | Type of entity affected. |
-| `entityId` | `String?` | Identifier of the affected entity. |
-| `metadata` | `Json?` | Optional structured event context. |
-| `ipAddress` | `String?` (max 64 chars) | Client IP address, if captured. |
-| `userAgent` | `String?` | Client user-agent string, if captured. |
-| `createdAt` | `DateTime` (default now) | Time the event was recorded. |
+| Field        | Prisma type                | Purpose                                    |
+| ------------ | -------------------------- | ------------------------------------------ |
+| `id`         | `String` (UUID, generated) | Primary audit-record identifier.           |
+| `actorId`    | `String?` (UUID)           | User who performed the action, when known. |
+| `action`     | `String`                   | Action/event name.                         |
+| `entityType` | `String`                   | Type of entity affected.                   |
+| `entityId`   | `String?`                  | Identifier of the affected entity.         |
+| `metadata`   | `Json?`                    | Optional structured event context.         |
+| `ipAddress`  | `String?` (max 64 chars)   | Client IP address, if captured.            |
+| `userAgent`  | `String?`                  | Client user-agent string, if captured.     |
+| `createdAt`  | `DateTime` (default now)   | Time the event was recorded.               |
 
 ## Relations
 

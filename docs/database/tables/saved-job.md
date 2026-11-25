@@ -6,12 +6,12 @@ Join table storing jobs bookmarked by job seekers for later viewing.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary saved-job identifier. |
-| `seekerProfileId` | `String` (UUID) | Seeker who saved the job. |
-| `jobId` | `String` (UUID) | Saved job listing. |
-| `createdAt` | `DateTime` (default now) | Time the job was saved. |
+| Field             | Prisma type                | Purpose                       |
+| ----------------- | -------------------------- | ----------------------------- |
+| `id`              | `String` (UUID, generated) | Primary saved-job identifier. |
+| `seekerProfileId` | `String` (UUID)            | Seeker who saved the job.     |
+| `jobId`           | `String` (UUID)            | Saved job listing.            |
+| `createdAt`       | `DateTime` (default now)   | Time the job was saved.       |
 
 ## Relations
 

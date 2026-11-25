@@ -7,16 +7,16 @@ allows logout for that device and invalidates its refresh-token family.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary session identifier. |
-| `userId` | `String` (UUID) | Owning account. |
-| `userAgent` | `String?` | Client user-agent string for session context. |
-| `ipAddress` | `String?` (max 64 chars) | Client IP address recorded for session context. |
-| `expiresAt` | `DateTime` | Session expiration time. |
-| `revokedAt` | `DateTime?` | Revocation time; null indicates not explicitly revoked. |
-| `createdAt` | `DateTime` (default now) | Session creation time. |
-| `lastUsedAt` | `DateTime?` | Most recent session use. |
+| Field        | Prisma type                | Purpose                                                 |
+| ------------ | -------------------------- | ------------------------------------------------------- |
+| `id`         | `String` (UUID, generated) | Primary session identifier.                             |
+| `userId`     | `String` (UUID)            | Owning account.                                         |
+| `userAgent`  | `String?`                  | Client user-agent string for session context.           |
+| `ipAddress`  | `String?` (max 64 chars)   | Client IP address recorded for session context.         |
+| `expiresAt`  | `DateTime`                 | Session expiration time.                                |
+| `revokedAt`  | `DateTime?`                | Revocation time; null indicates not explicitly revoked. |
+| `createdAt`  | `DateTime` (default now)   | Session creation time.                                  |
+| `lastUsedAt` | `DateTime?`                | Most recent session use.                                |
 
 ## Relations
 

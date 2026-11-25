@@ -8,21 +8,21 @@ employer profile; role-based access should be enforced in application logic.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary account identifier. |
-| `email` | `String` (unique) | Account email and sign-in identifier. |
-| `emailVerifiedAt` | `DateTime?` | When email ownership was verified; null means not verified. |
-| `name` | `String?` | Display name. |
-| `avatarUrl` | `String?` | URL for the account avatar. |
-| `primaryRole` | `UserRole` (default `JOB_SEEKER`) | Primary application role. |
-| `status` | `AccountStatus` (default `ACTIVE`) | Account lifecycle and access status. |
-| `preferredLanguage` | `String` (default `pa`, max 10 chars) | Preferred interface locale. |
-| `phone` | `String?` (unique, max 20 chars) | Optional phone number. |
-| `lastLoginAt` | `DateTime?` | Most recent successful login time. |
-| `createdAt` | `DateTime` (default now) | Account creation time. |
-| `updatedAt` | `DateTime` (auto-updated) | Last account record update. |
-| `deletedAt` | `DateTime?` | Soft-deletion timestamp, if deleted. |
+| Field               | Prisma type                           | Purpose                                                     |
+| ------------------- | ------------------------------------- | ----------------------------------------------------------- |
+| `id`                | `String` (UUID, generated)            | Primary account identifier.                                 |
+| `email`             | `String` (unique)                     | Account email and sign-in identifier.                       |
+| `emailVerifiedAt`   | `DateTime?`                           | When email ownership was verified; null means not verified. |
+| `name`              | `String?`                             | Display name.                                               |
+| `avatarUrl`         | `String?`                             | URL for the account avatar.                                 |
+| `primaryRole`       | `UserRole` (default `JOB_SEEKER`)     | Primary application role.                                   |
+| `status`            | `AccountStatus` (default `ACTIVE`)    | Account lifecycle and access status.                        |
+| `preferredLanguage` | `String` (default `pa`, max 10 chars) | Preferred interface locale.                                 |
+| `phone`             | `String?` (unique, max 20 chars)      | Optional phone number.                                      |
+| `lastLoginAt`       | `DateTime?`                           | Most recent successful login time.                          |
+| `createdAt`         | `DateTime` (default now)              | Account creation time.                                      |
+| `updatedAt`         | `DateTime` (auto-updated)             | Last account record update.                                 |
+| `deletedAt`         | `DateTime?`                           | Soft-deletion timestamp, if deleted.                        |
 
 ## Relations
 

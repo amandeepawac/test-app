@@ -7,15 +7,15 @@ and employers can request for jobs.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary skill identifier. |
-| `name` | `String` | Display name. |
-| `slug` | `String` (unique) | Stable, URL-friendly skill identifier. |
-| `description` | `String?` | Optional skill definition. |
-| `isActive` | `Boolean` (default `true`) | Whether the skill is available for selection. |
-| `createdAt` | `DateTime` (default now) | Record creation time. |
-| `updatedAt` | `DateTime` (auto-updated) | Last record update time. |
+| Field         | Prisma type                | Purpose                                       |
+| ------------- | -------------------------- | --------------------------------------------- |
+| `id`          | `String` (UUID, generated) | Primary skill identifier.                     |
+| `name`        | `String`                   | Display name.                                 |
+| `slug`        | `String` (unique)          | Stable, URL-friendly skill identifier.        |
+| `description` | `String?`                  | Optional skill definition.                    |
+| `isActive`    | `Boolean` (default `true`) | Whether the skill is available for selection. |
+| `createdAt`   | `DateTime` (default now)   | Record creation time.                         |
+| `updatedAt`   | `DateTime` (auto-updated)  | Last record update time.                      |
 
 ## Relations
 

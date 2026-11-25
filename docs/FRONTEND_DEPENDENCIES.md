@@ -15,9 +15,9 @@ The web app already declares the following core frontend packages in
 
 ## Additional requested package
 
-| Package | Suggested version | Status |
-| --- | --- | --- |
-| `react-hook-form` | `^7.92.0` | Not yet added to `apps/web/package.json` |
+| Package           | Suggested version | Status                                   |
+| ----------------- | ----------------- | ---------------------------------------- |
+| `react-hook-form` | `^7.92.0`         | Not yet added to `apps/web/package.json` |
 
 The package manager was not used to install or update dependencies. Add the
 requested package to the web app manifest and update the workspace lockfile

@@ -7,14 +7,14 @@ not the raw reset secret.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary token-record identifier. |
-| `userId` | `String` (UUID) | Account allowed to reset its password. |
-| `tokenHash` | `String` (unique) | Hash used to validate the presented reset token. |
-| `expiresAt` | `DateTime` | Latest time the token may be used. |
-| `consumedAt` | `DateTime?` | Consumption time; null means not yet consumed. |
-| `createdAt` | `DateTime` (default now) | Token-record creation time. |
+| Field        | Prisma type                | Purpose                                          |
+| ------------ | -------------------------- | ------------------------------------------------ |
+| `id`         | `String` (UUID, generated) | Primary token-record identifier.                 |
+| `userId`     | `String` (UUID)            | Account allowed to reset its password.           |
+| `tokenHash`  | `String` (unique)          | Hash used to validate the presented reset token. |
+| `expiresAt`  | `DateTime`                 | Latest time the token may be used.               |
+| `consumedAt` | `DateTime?`                | Consumption time; null means not yet consumed.   |
+| `createdAt`  | `DateTime` (default now)   | Token-record creation time.                      |
 
 ## Relations
 

@@ -7,21 +7,21 @@ administrative review outcome.
 
 ## Scalar fields
 
-| Field | Prisma type | Purpose |
-| --- | --- | --- |
-| `id` | `String` (UUID, generated) | Primary report identifier. |
-| `reporterId` | `String` (UUID) | User who filed the report. |
-| `targetJobId` | `String?` (UUID) | Optional reported job. |
-| `targetEmployerId` | `String?` (UUID) | Optional reported employer profile. |
-| `targetUserId` | `String?` (UUID) | Optional reported user. |
-| `reason` | `ReportReason` | Structured reason for the report. |
-| `description` | `String?` | Optional details supplied by the reporter. |
-| `status` | `ReportStatus` (default `OPEN`) | Current moderation/review state. |
-| `reviewedById` | `String?` (UUID) | User who reviewed the report. |
-| `reviewNote` | `String?` | Optional internal review outcome or note. |
-| `reviewedAt` | `DateTime?` | Time the report was reviewed. |
-| `createdAt` | `DateTime` (default now) | Report creation time. |
-| `updatedAt` | `DateTime` (auto-updated) | Last report update time. |
+| Field              | Prisma type                     | Purpose                                    |
+| ------------------ | ------------------------------- | ------------------------------------------ |
+| `id`               | `String` (UUID, generated)      | Primary report identifier.                 |
+| `reporterId`       | `String` (UUID)                 | User who filed the report.                 |
+| `targetJobId`      | `String?` (UUID)                | Optional reported job.                     |
+| `targetEmployerId` | `String?` (UUID)                | Optional reported employer profile.        |
+| `targetUserId`     | `String?` (UUID)                | Optional reported user.                    |
+| `reason`           | `ReportReason`                  | Structured reason for the report.          |
+| `description`      | `String?`                       | Optional details supplied by the reporter. |
+| `status`           | `ReportStatus` (default `OPEN`) | Current moderation/review state.           |
+| `reviewedById`     | `String?` (UUID)                | User who reviewed the report.              |
+| `reviewNote`       | `String?`                       | Optional internal review outcome or note.  |
+| `reviewedAt`       | `DateTime?`                     | Time the report was reviewed.              |
+| `createdAt`        | `DateTime` (default now)        | Report creation time.                      |
+| `updatedAt`        | `DateTime` (auto-updated)       | Last report update time.                   |
 
 ## Relations
 

@@ -44,7 +44,7 @@
     "@types/node": "^26.6.6",
     "@types/supertest": "^7.2.1",
     "@vitest/coverage-v8": "^5.1.1",
-    "oxlint": "^1.94.0",
+    "oxlint": "^1.95.0",
     "oxlint-tsgolint": "^7.0.2008",
     "prettier": "^3.10.1",
     "source-map-support": "^0.5.21",
