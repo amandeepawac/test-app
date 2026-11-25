@@ -26,7 +26,7 @@ export const registerFormSchema = z
 export const forgotPasswordFormSchema = z.object({ email });
 
 export const resetPasswordFormSchema = z
-  .object({ password, confirmPassword })
+  .object({ password: newPassword, confirmPassword })
   .refine((values) => values.password === values.confirmPassword, {
     path: ["confirmPassword"],
     message: "passwordsMismatch",

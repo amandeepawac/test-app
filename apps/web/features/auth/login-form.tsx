@@ -4,14 +4,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { loginFormSchema, type LoginFormValues } from '@repo/contracts';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormInput } from '@/components/form/form-input';
 import { useAuthErrorMessage } from '@/features/auth/use-auth-error-message';
 import { AuthLayout, PreviewSubmit } from '@/features/auth/auth-layout';
 import { FieldGroup } from '@/components/ui/field';
+import { signIn } from '@/features/auth/session-actions';
 
 export function LoginForm() {
   const t = useTranslations('Auth');
+  const router = useRouter();
+  const [result, setResult] = useState<'invalid' | 'unavailable' | null>(null);
   const formatError = useAuthErrorMessage();
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -20,7 +25,28 @@ export function LoginForm() {
 
   return (
     <AuthLayout title={t('signIn')} description={t('loginDescription')} showGoogle isLogin>
-      <form method="post" noValidate onSubmit={form.handleSubmit(() => {})}>
+      <form
+        method="post"
+        noValidate
+        onSubmit={form.handleSubmit(async (values) => {
+          setResult(null);
+          const submit = () => signIn(values);
+          try {
+            const outcome = navigator.locks
+              ? await navigator.locks.request('rozgarlocal-session', submit)
+              : await submit();
+            if (outcome === 'signed-in') {
+              router.push('/');
+              router.refresh();
+            } else {
+              setResult(outcome);
+            }
+          } catch (error) {
+            console.error('Sign-in action failed', error);
+            setResult('unavailable');
+          }
+        })}
+      >
         <FieldGroup>
           <FormInput
             control={form.control}
@@ -48,8 +74,13 @@ export function LoginForm() {
             }
           />
         </FieldGroup>
+        {result && (
+          <p role="alert" className="mt-4 text-sm text-destructive">
+            {t(result === 'invalid' ? 'loginInvalid' : 'sessionUnavailable')}
+          </p>
+        )}
         <div className="mt-8">
-          <PreviewSubmit>{t('signIn')}</PreviewSubmit>
+          <PreviewSubmit disabled={form.formState.isSubmitting}>{t('signIn')}</PreviewSubmit>
         </div>
       </form>
     </AuthLayout>

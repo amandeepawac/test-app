@@ -1,7 +1,7 @@
 'use server';
 
 import { verifyEmailRequestSchema } from '@repo/contracts';
-import { getAuthApiBaseUrl } from '@/lib/api-base-url';
+import { authApiFetch } from '@/lib/auth-api';
 
 export type VerificationState = 'idle' | 'verified' | 'invalid' | 'unavailable';
 
@@ -13,13 +13,10 @@ export async function verifyEmail(
   if (!parsed.success) return 'invalid';
 
   try {
-    const response = await fetch(new URL('/auth/verify-email', getAuthApiBaseUrl()), {
+    const response = await authApiFetch('/auth/verify-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(parsed.data),
-      cache: 'no-store',
-      redirect: 'error',
-      signal: AbortSignal.timeout(10000),
     });
     if (response.status === 204) return 'verified';
     if (response.status === 400) return 'invalid';

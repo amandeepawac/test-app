@@ -45,6 +45,25 @@ export class VerificationMailService {
     const text = token
       ? `Confirm your email address by opening this link: ${url.toString()}\n\nThis link expires in 24 hours.`
       : 'An attempt was made to register this email address. If this was not you, no action is required.';
+    await this.sendMessage(settings, email, 'Your RozgarLocal account', text);
+  }
+
+  async sendPasswordReset(email: string, token?: string) {
+    const settings = this.getSettings();
+    const url = new URL('/reset-password', settings.WEB_BASE_URL);
+    if (token) url.searchParams.set('token', token);
+    const text = token
+      ? `Reset your password by opening this link: ${url.toString()}\n\nThis link expires in 30 minutes. If you did not request it, ignore this email.`
+      : 'A password reset was requested for this email address. If this was not you, no action is required.';
+    await this.sendMessage(settings, email, 'Your RozgarLocal password reset', text);
+  }
+
+  private async sendMessage(
+    settings: z.infer<typeof mailConfigSchema>,
+    email: string,
+    subject: string,
+    text: string,
+  ) {
     let response: Response;
     try {
       response = await fetch('https://api.resend.com/emails', {
@@ -56,7 +75,7 @@ export class VerificationMailService {
         body: JSON.stringify({
           from: settings.AUTH_MAIL_FROM,
           to: [email],
-          subject: 'Your RozgarLocal account',
+          subject,
           text,
         }),
         signal: AbortSignal.timeout(10000),

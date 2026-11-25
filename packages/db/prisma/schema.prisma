@@ -191,6 +191,15 @@ enum ReportStatus {
 
 // Models
 
+model AuthRateLimit {
+  key       String   @id
+  attempts  Int
+  expiresAt DateTime
+
+  @@index([expiresAt])
+  @@map("auth_rate_limits")
+}
+
 model User {
   id                String        @id @default(uuid(7)) @db.Uuid
   email             String        @unique

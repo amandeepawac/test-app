@@ -31,15 +31,14 @@ sample listings or submit search requests.
 TanStack Query is available to Client Components through the root query
 provider. It uses the library defaults; choose query keys, freshness, and
 retry policies for each feature. Server renders use isolated clients, while
-the browser reuses one client. When authentication is implemented, clear
-user-specific cached data on logout or account changes.
+the browser reuses one client. Clear user-specific cached data on logout or
+account changes when such data is added.
 
 Use the `@/` alias for imports from the web app root.
 
-The registration form calls the API and sends an email verification link.
-Sign-in, forgot-password, and reset-password remain UI previews; Google sign-in
-and sessions are not available yet. See the repository README for the required
-API and Resend configuration and current security limitations.
+The email/password forms call the API through server actions. Google sign-in
+remains unavailable. See the repository README for the required API, proxy,
+session and Resend configuration and current security limitations.
 The form validation schemas live in `@repo/contracts` and use translation keys
 for their error messages; they describe form input, not API request payloads.
 

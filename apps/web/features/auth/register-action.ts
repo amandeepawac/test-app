@@ -1,7 +1,7 @@
 'use server';
 
 import { registrationRequestSchema } from '@repo/contracts';
-import { getAuthApiBaseUrl } from '@/lib/api-base-url';
+import { authApiFetch } from '@/lib/auth-api';
 
 export async function registerAccount(
   input: unknown,
@@ -10,13 +10,10 @@ export async function registerAccount(
   if (!parsed.success) return 'invalid';
 
   try {
-    const response = await fetch(new URL('/auth/register', getAuthApiBaseUrl()), {
+    const response = await authApiFetch('/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(parsed.data),
-      cache: 'no-store',
-      redirect: 'error',
-      signal: AbortSignal.timeout(15000),
     });
     if (response.status === 202) return 'accepted';
     if (response.status === 400) return 'invalid';

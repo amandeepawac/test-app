@@ -60,7 +60,7 @@ test('auth pages use readable blue actions in light and dark themes', async ({ p
     { path: '/login', submit: 'Sign in' },
     { path: '/register', submit: 'Create account' },
     { path: '/forgot-password', submit: 'Send reset link' },
-    { path: '/reset-password', submit: 'Reset password' },
+    { path: `/reset-password?token=${'a'.repeat(43)}`, submit: 'Reset password' },
   ];
 
   for (const colorScheme of ['light', 'dark'] as const) {
@@ -147,7 +147,7 @@ test('auth routes link together and Google sign-in is unavailable', async ({ pag
   await expect(page.getByRole('heading', { name: 'Forgot your password?' })).toBeVisible();
   await page.getByRole('button', { name: 'Send reset link' }).click();
   await expect(page.getByText('Enter your email address.', { exact: true })).toBeVisible();
-  await page.goto('/reset-password');
+  await page.goto(`/reset-password?token=${'a'.repeat(43)}`);
   await expect(page.getByRole('heading', { name: 'Set a new password' })).toBeVisible();
   await page.getByLabel('New password').fill('first');
   await page.getByLabel('Confirm password').fill('second');
@@ -155,6 +155,12 @@ test('auth routes link together and Google sign-in is unavailable', async ({ pag
   await expect(page.getByText('Passwords do not match.')).toBeVisible();
   await page.getByRole('link', { name: 'Sign in', exact: true }).last().click();
   await expect(page).toHaveURL(/\/login$/);
+});
+
+test('reset password requires a valid token', async ({ page }) => {
+  await page.goto('/reset-password');
+  await expect(page.getByRole('alert')).toHaveText('This reset link is invalid or has expired.');
+  await expect(page.getByRole('button', { name: 'Reset password' })).toBeDisabled();
 });
 
 test('auth screens follow the selected language', async ({ page }) => {
