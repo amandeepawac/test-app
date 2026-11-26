@@ -7,6 +7,7 @@ import { AppController } from '@/app.controller.js';
 import { AppService } from '@/app.service.js';
 import { ApiConfigModule } from '@/config/config.module.js';
 import { getTrustedClientIp } from '@/common/utils/trusted-client-ip.js';
+import { AdminModule } from '@/modules/admin/admin.module.js';
 import {
   getAccountThrottleKey,
   shouldSkipAccountThrottle,
@@ -43,6 +44,7 @@ import { AuthModule } from '@/modules/auth/auth.module.js';
       },
     }),
     AuthModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [
