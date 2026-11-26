@@ -1059,6 +1059,73 @@ verification submission; implementing the approved re-review policy
 requires a safe verification workflow. Future dashboard and job endpoints
 must enforce profile completion and verification as applicable.
 
+### 10.1 Pending profile-related API work
+
+The basic profile draft, retrieval, and completion routes described above
+are implemented in code for both roles. The following items remain pending;
+related job and application APIs are included because the profile journeys
+depend on them. Route names below are proposals unless already listed as
+implemented.
+
+**Job seeker**
+
+- [ ] Populate the active skills catalogue so the existing skills lookup
+      and profile skill selection can be used.
+- [ ] Implement applying to eligible jobs, application history and status
+      retrieval, and withdrawal. Confirm permitted withdrawal states and
+      reapplication rules before implementing those transitions.
+- [ ] Implement saved-job listing, saving, and unsaving against eligible
+      jobs.
+- [ ] Expose optional education and profile-image functionality (P1).
+      Define secure image handling before accepting uploads. Optional
+      address editing is also not exposed by the profile API.
+- [ ] In employer applicant responses, expose seeker email and phone only
+      when individually enabled and only to an authorized employer receiving
+      that seeker's application.
+
+**Employer**
+
+- [ ] Implement verification document upload, submission, replacement,
+      and resubmission after rejection. This depends on private Cloudinary
+      configuration and the legal/privacy review in Section 14.
+- [ ] Provide authorized admin access to verification documents and
+      integrate the submission flow with the existing admin review APIs.
+      Keep document storage keys and permanent public URLs private.
+- [ ] Implement sensitive business-name, employer-type, and evidence
+      changes with safe re-review. Until then, name and type changes after
+      verification submission are blocked. Re-review must block new
+      publication until approval while leaving existing published jobs
+      visible during review.
+- [ ] Implement employer job draft, listing, and publication APIs;
+      completed profiles may create drafts, but publication requires
+      `VERIFIED` status and any applicable job moderation.
+- [ ] Implement employer applicant listing and permitted application
+      status updates, including ownership checks and status history.
+- [ ] In public employer profile and job responses, expose email and phone
+      only when their respective visibility settings are enabled.
+
+**Shared dependencies and validation**
+
+- [ ] Enforce profile completion on future protected dashboard and
+      job/application APIs, while allowing onboarding and the existing
+      authentication/session actions needed to resume it.
+- [ ] Align and validate state/city data against the chosen reference
+      source. Existing profile APIs currently store state and city names.
+- [ ] Implement the approved account-deletion behavior for both roles:
+      close relevant employer jobs or withdraw eligible seeker
+      applications before deletion completes. Withdrawal states, retention,
+      anonymization, and deletion exceptions remain open.
+- [ ] Implement Google authentication and role selection for new Google
+      accounts, as required by the MVP.
+- [ ] Add remaining profile-related notifications and API integration/
+      end-to-end tests for onboarding, role and ownership checks, contact
+      privacy, verification, and deletion. Document the API contracts in
+      Swagger.
+- [ ] When dependencies and a target database are available, generate the
+      Prisma client, check and apply the profile migrations, and run the
+      API type-check, tests, and build. These validation and deployment
+      steps have not yet been verified.
+
 ---
 
 ## 11. Development plan: recommended implementation order
