@@ -10,3 +10,4 @@ export * from "./auth.js";
 export * from "./auth-api.js";
 export * from "./admin-api.js";
 export * from "./admin-operations-api.js";
+export * from "./job-seeker-api.js";

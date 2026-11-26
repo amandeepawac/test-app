@@ -987,7 +987,8 @@ Password reset `POST /auth/password/forgot`,
 Current user `GET /users/me`, `PATCH /users/me`
 
 Job seeker profile `GET /job-seeker/profile`,
-`PUT /job-seeker/profile`
+`PUT /job-seeker/profile`, `POST /job-seeker/profile/complete`,
+`GET /job-seeker/skills`
 
 Employers `POST /employers`, `GET /employers/me`,
 `PATCH /employers/me`
@@ -1023,9 +1024,22 @@ endpoints
 
 ---
 
-These are proposed route shapes, not confirmed existing endpoints.
+Except for the job seeker profile and skills routes described below,
+these are proposed route shapes, not confirmed existing endpoints.
 Finalize request/response contracts with Zod schemas and Swagger
 definitions before frontend integration.
+
+The job seeker profile and skills routes require an authenticated job
+seeker and return `Cache-Control: no-store`. `GET /job-seeker/profile`
+returns 404 until a draft is saved. `PUT /job-seeker/profile` creates or
+partially updates the caller's profile; omitted fields are preserved.
+It accepts the minimum profile fields, experience summary, skill IDs,
+and email/phone visibility settings. `POST /job-seeker/profile/complete`
+requires all minimum fields and records a completion timestamp; a
+repeated completion is safe. Enforcement on future dashboard and
+job/application endpoints must use that completion state.
+`GET /job-seeker/skills` lists active skills with pagination and optional
+search; populate the skill catalogue before relying on skill selection.
 
 ---
 
