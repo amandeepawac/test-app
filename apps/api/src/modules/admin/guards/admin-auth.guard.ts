@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import type { CanActivate, ExecutionContext } from '@nestjs/common';
 import type { Request } from 'express';
+import type { AdminRequest } from '@/modules/admin/admin-context.js';
 import { PrismaService } from '@/infrastructure/database/prisma.service.js';
 import { AuthService } from '@/modules/auth/services/auth.service.js';
 
@@ -28,6 +29,7 @@ export class AdminAuthGuard implements CanActivate {
     });
     if (user?.primaryRole !== 'ADMIN') throw new ForbiddenException('Admin access required');
 
+    (request as AdminRequest).user = { id: currentUser.id };
     return true;
   }
 }
