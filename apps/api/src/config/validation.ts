@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
 const environmentSchema = z.object({
+  THROTTLE_LIMIT: z.coerce.number().int().positive().default(100),
+  THROTTLE_TTL: z.coerce.number().int().positive().default(60_000),
   PORT: z
     .string()
     .regex(/^\d+$/)

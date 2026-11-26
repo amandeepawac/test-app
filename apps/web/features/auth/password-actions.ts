@@ -3,7 +3,9 @@
 import { forgotPasswordRequestSchema, resetPasswordRequestSchema } from '@repo/contracts';
 import { authApiFetch } from '@/lib/auth-api';
 
-export async function requestPasswordReset(input: unknown): Promise<'accepted' | 'invalid' | 'unavailable'> {
+export async function requestPasswordReset(
+  input: unknown,
+): Promise<'accepted' | 'invalid' | 'unavailable'> {
   const parsed = forgotPasswordRequestSchema.safeParse(input);
   if (!parsed.success) return 'invalid';
   try {

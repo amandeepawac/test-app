@@ -89,5 +89,78 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "Legal": {
+    "backToHome": "Back to home",
+    "placeholderLabel": "Draft policy",
+    "placeholderNotice": "Placeholder content for development only. Replace this sample with reviewed legal terms and privacy disclosures before launch.",
+    "updatedLabel": "Last updated",
+    "updatedPlaceholder": "Placeholder date",
+    "terms": {
+      "link": "Terms and conditions",
+      "title": "Terms and conditions",
+      "intro": "These sample terms describe general rules for using RozgarLocal, a platform being developed to connect people with local work opportunities.",
+      "acceptance": {
+        "title": "Agreement to these terms",
+        "body": "By accessing or using RozgarLocal, you agree to follow these terms. If you do not agree, please stop using the service. This paragraph is sample language and does not create a final legal agreement."
+      },
+      "account": {
+        "title": "Your account",
+        "body": "You are responsible for providing accurate account details, protecting your sign-in credentials, and activity performed through your account. Contact us at support@rozgarlocal.example if you believe your account has been accessed without permission."
+      },
+      "use": {
+        "title": "Acceptable use",
+        "body": "Use the service lawfully and respectfully. Do not post misleading job listings, impersonate another person, harass users, attempt to access accounts or systems without permission, or interfere with the service."
+      },
+      "content": {
+        "title": "Your content",
+        "body": "You keep ownership of content you submit. You give RozgarLocal permission to host and display that content as needed to provide the service. You are responsible for having the rights to share the content you submit."
+      },
+      "availability": {
+        "title": "Service availability",
+        "body": "RozgarLocal is under development. Features may change, be unavailable, or contain errors. Job search, applications, employer tools, and other features may not be available yet."
+      },
+      "liability": {
+        "title": "Disclaimers and liability",
+        "body": "This sample service is provided as available, without a promise that it will be uninterrupted or error-free. To the extent permitted by law, RozgarLocal is not responsible for indirect losses arising from use of the service. This draft needs legal review."
+      },
+      "changes": {
+        "title": "Changes and contact",
+        "body": "We may update these terms as the service develops. This placeholder does not specify a formal notice process. Questions can be directed to support@rozgarlocal.example."
+      }
+    },
+    "privacy": {
+      "link": "Privacy policy",
+      "title": "Privacy policy",
+      "intro": "This sample notice describes, at a high level, how RozgarLocal may handle information when people use the platform.",
+      "collection": {
+        "title": "Information we may collect",
+        "body": "Depending on the features you use, this may include your name, email address, account credentials, profile details, job-related activity, and basic technical or diagnostic information."
+      },
+      "use": {
+        "title": "How information may be used",
+        "body": "Information may be used to create and secure accounts, provide platform features, support job-seeker and employer workflows, respond to requests, and maintain the reliability of the service."
+      },
+      "sharing": {
+        "title": "When information may be shared",
+        "body": "Information may be shared with service providers that help operate RozgarLocal. Profile or application details may be shown to other users when you choose to use a relevant feature. This sample does not define every disclosure."
+      },
+      "retention": {
+        "title": "Retention",
+        "body": "Information may be kept for as long as needed to provide the service, meet operational needs, resolve disputes, and comply with applicable requirements. Specific retention periods are not set in this draft."
+      },
+      "security": {
+        "title": "Security",
+        "body": "We plan to use reasonable safeguards to protect information. No online service can guarantee absolute security, and this placeholder does not describe the safeguards used by a production service."
+      },
+      "choices": {
+        "title": "Your choices",
+        "body": "You may review or update some account details through the service when those controls are available. Contact support@rozgarlocal.example with privacy questions or requests. Applicable rights may depend on your location."
+      },
+      "contact": {
+        "title": "Contact and updates",
+        "body": "We may update this notice as RozgarLocal changes. For this sample, contact support@rozgarlocal.example. The address is a placeholder and is not monitored."
+      }
+    }
   }
 }

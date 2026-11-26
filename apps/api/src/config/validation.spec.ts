@@ -1,4 +1,4 @@
-import { validateEnvironment } from './config.js';
+import { validateEnvironment } from './validation.js';
 
 describe('API configuration', () => {
   it('uses the default port or parses a configured port', () => {

@@ -19,10 +19,7 @@ export function getApiBaseUrl() {
 export function getAuthApiBaseUrl() {
   const baseUrl = getApiBaseUrl();
   const url = new URL(baseUrl);
-  if (
-    url.protocol !== 'https:' &&
-    !['localhost', '127.0.0.1'].includes(url.hostname)
-  ) {
+  if (url.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(url.hostname)) {
     throw new Error('Authentication requires HTTPS for non-local API connections');
   }
   return baseUrl;

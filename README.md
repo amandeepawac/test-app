@@ -60,11 +60,15 @@ Production requires exactly one trusted reverse proxy in front of Next.js. It
 must overwrite `X-Forwarded-For` with exactly one validated client IP and
 remove client-supplied forwarding headers; block direct access to Next.js.
 The web server signs the IP with `AUTH_PROXY_SECRET` for the API, which uses
-PostgreSQL-backed per-IP and per-account limits. Keep the API private or ensure
-its direct clients' socket IPs are reliable, synchronize server clocks, and
-add edge-level abuse protection. Do not share the proxy secret with clients.
-Expired rate-limit records are removed opportunistically, but verification,
-reset and session records need a separately scheduled retention policy.
+Nest's throttler for global and endpoint-level per-IP limits (`THROTTLE_LIMIT`
+and `THROTTLE_TTL` set the global limit), tighter per-route limits, and a
+separate hashed account bucket for registration, login and password reset
+requests. The throttler's default storage is per-process; configure shared
+storage before running multiple API replicas. Keep the API private or ensure its
+direct clients' socket IPs are reliable, synchronize server clocks, and add
+edge-level abuse protection. Do not share the proxy secret with clients.
+Verification, reset and session records need a separately scheduled retention
+policy.
 Keep consumed refresh tokens until their session expires so replay detection
 continues to work.
 Protect token-bearing URLs from access logs and analytics. Email delivery is

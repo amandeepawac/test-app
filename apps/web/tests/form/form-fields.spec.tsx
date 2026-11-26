@@ -43,7 +43,12 @@ test('form controls render with their labels and configured defaults', () => {
         <FormInputOTP control={form.control} name="otp" label="Code" maxLength={4} />
         <FormCheckbox control={form.control} name="checked" label="Agree" />
         <FormSwitch control={form.control} name="enabled" label="Enabled" />
-        <FormCheckboxGroup control={form.control} name="choices" label="Choices" options={options} />
+        <FormCheckboxGroup
+          control={form.control}
+          name="choices"
+          label="Choices"
+          options={options}
+        />
         <FormRadioGroup control={form.control} name="radio" label="Radio" options={options} />
         <FormSelect
           control={form.control}

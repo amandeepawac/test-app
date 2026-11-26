@@ -19,7 +19,10 @@ export async function getCurrentUser() {
       console.error(`Session lookup failed with HTTP ${response.status}`);
       return { state: 'unavailable' } as const;
     }
-    return { state: 'signed-in', user: currentUserResponseSchema.parse(await response.json()) } as const;
+    return {
+      state: 'signed-in',
+      user: currentUserResponseSchema.parse(await response.json()),
+    } as const;
   } catch (error) {
     console.error('Session lookup failed', error);
     return { state: 'unavailable' } as const;

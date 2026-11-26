@@ -27,9 +27,14 @@ export function SessionControls({ refreshNeeded }: { refreshNeeded: boolean }) {
   }, [refreshNeeded, router]);
 
   useEffect(() => {
-    if (refreshNeeded) void refresh();
+    const initialRefresh = window.setTimeout(() => {
+      if (refreshNeeded) void refresh();
+    });
     const timer = window.setInterval(() => void refresh(), 4 * 60 * 1000);
-    return () => window.clearInterval(timer);
+    return () => {
+      window.clearTimeout(initialRefresh);
+      window.clearInterval(timer);
+    };
   }, [refresh, refreshNeeded]);
 
   async function logout() {
@@ -52,14 +57,27 @@ export function SessionControls({ refreshNeeded }: { refreshNeeded: boolean }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       {refreshNeeded && (
-        <button type="button" onClick={() => void refresh()} className="text-sm text-auth-primary hover:underline">
+        <button
+          type="button"
+          onClick={() => void refresh()}
+          className="text-sm text-auth-primary hover:underline"
+        >
           {t('resumeSession')}
         </button>
       )}
-      <button type="button" disabled={busy} onClick={() => void logout()} className="rounded-full px-3 py-2 text-sm font-medium text-auth-primary hover:underline disabled:opacity-50">
+      <button
+        type="button"
+        disabled={busy}
+        onClick={() => void logout()}
+        className="rounded-full px-3 py-2 text-sm font-medium text-auth-primary hover:underline disabled:opacity-50"
+      >
         {t('signOut')}
       </button>
-      {error && <span role="alert" className="text-sm text-destructive">{t('sessionUnavailable')}</span>}
+      {error && (
+        <span role="alert" className="text-sm text-destructive">
+          {t('sessionUnavailable')}
+        </span>
+      )}
     </div>
   );
 }

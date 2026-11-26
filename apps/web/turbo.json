@@ -1,0 +1,14 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "passThroughEnv": ["AUTH_PROXY_SECRET"]
+    },
+    "dev": {
+      "passThroughEnv": ["AUTH_PROXY_SECRET"]
+    },
+    "lint": {
+      "passThroughEnv": ["AUTH_PROXY_SECRET"]
+    }
+  }
+}

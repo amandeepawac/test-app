@@ -57,7 +57,9 @@ export function ForgotPasswordForm() {
             </p>
           )}
           <div className="mt-8">
-            <PreviewSubmit disabled={form.formState.isSubmitting}>{t('sendResetLink')}</PreviewSubmit>
+            <PreviewSubmit disabled={form.formState.isSubmitting}>
+              {t('sendResetLink')}
+            </PreviewSubmit>
           </div>
         </form>
       )}

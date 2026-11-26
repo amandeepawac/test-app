@@ -7,15 +7,15 @@ database read does not reveal a usable verification secret.
 
 ## Scalar fields
 
-| Field        | Prisma type                | Purpose                                                 |
-| ------------ | -------------------------- | ------------------------------------------------------- |
-| `id`         | `String` (UUID, generated) | Primary token-record identifier.                        |
-| `userId`     | `String` (UUID)            | Account whose email is being verified.                  |
-| `tokenHash`  | `String` (unique)          | Hash used to validate the presented verification token. |
-| `pendingPasswordHash` | `String?` | Argon2id hash for this registration attempt; cleared on verification. |
-| `expiresAt`  | `DateTime`                 | Latest time the token may be used.                      |
-| `consumedAt` | `DateTime?`                | Consumption time; null means not yet consumed.          |
-| `createdAt`  | `DateTime` (default now)   | Token-record creation time.                             |
+| Field                 | Prisma type                | Purpose                                                               |
+| --------------------- | -------------------------- | --------------------------------------------------------------------- |
+| `id`                  | `String` (UUID, generated) | Primary token-record identifier.                                      |
+| `userId`              | `String` (UUID)            | Account whose email is being verified.                                |
+| `tokenHash`           | `String` (unique)          | Hash used to validate the presented verification token.               |
+| `pendingPasswordHash` | `String?`                  | Argon2id hash for this registration attempt; cleared on verification. |
+| `expiresAt`           | `DateTime`                 | Latest time the token may be used.                                    |
+| `consumedAt`          | `DateTime?`                | Consumption time; null means not yet consumed.                        |
+| `createdAt`           | `DateTime` (default now)   | Token-record creation time.                                           |
 
 ## Relations
 

@@ -55,7 +55,7 @@ test('alternative sign-in is separated from the form only where available', asyn
   }
 });
 
-test('auth pages use readable blue actions in light and dark themes', async ({ page }) => {
+test('auth pages use readable green actions in light and dark themes', async ({ page }) => {
   const pages = [
     { path: '/login', submit: 'Sign in' },
     { path: '/register', submit: 'Create account' },
@@ -68,7 +68,7 @@ test('auth pages use readable blue actions in light and dark themes', async ({ p
     for (const { path, submit } of pages) {
       await page.goto(path);
       const button = page.getByRole('button', { name: submit, exact: true });
-      await expect(button).toBeEnabled();
+      await expect(button).toBeVisible();
       const { background, contrast } = await button.evaluate((element) => {
         const style = getComputedStyle(element);
         const channels = (color: string) => {
@@ -88,7 +88,7 @@ test('auth pages use readable blue actions in light and dark themes', async ({ p
         const levels = [luminance(background), luminance(foreground)].sort((a, b) => b - a);
         return { background, contrast: (levels[0]! + 0.05) / (levels[1]! + 0.05) };
       });
-      expect(background[2]!).toBeGreaterThan(background[0]!);
+      expect(background[1]!).toBeGreaterThan(background[0]!);
       expect(contrast).toBeGreaterThanOrEqual(4.5);
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
@@ -100,7 +100,7 @@ test('auth pages use readable blue actions in light and dark themes', async ({ p
 test('auth actions use the shared theme color', async ({ page }) => {
   await page.goto('/login');
   const button = page.getByRole('button', { name: 'Sign in', exact: true });
-  await expect(button).toBeEnabled();
+  await expect(button).toBeVisible();
   await page.evaluate(() => {
     document.documentElement.style.setProperty('--auth-primary', 'rgb(35, 75, 135)');
   });
@@ -111,30 +111,54 @@ test('auth actions use the shared theme color', async ({ page }) => {
   );
 });
 
-test('auth pages keep the heading above the form in a centered card', async ({ page }) => {
-  for (const path of ['/login', '/register', '/forgot-password', '/reset-password']) {
-    await page.goto(path);
-    const card = page.locator('main [data-slot="card"]');
-    const heading = card.getByRole('heading', { level: 1 });
-    const form = card.locator('form');
-    const cardBox = await card.boundingBox();
-    const headingBox = await heading.boundingBox();
-    const formBox = await form.boundingBox();
-    const mainBox = await page.locator('main').boundingBox();
-    expect(cardBox).not.toBeNull();
-    expect(headingBox).not.toBeNull();
-    expect(formBox).not.toBeNull();
-    expect(mainBox).not.toBeNull();
-    if (!cardBox || !headingBox || !formBox || !mainBox) {
-      throw new Error('Auth layout is not visible');
+test('auth pages keep forms aligned in a responsive split layout', async ({ page }) => {
+  for (const viewport of [
+    { width: 1440, height: 1000 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    for (const path of [
+      '/login',
+      '/register',
+      '/forgot-password',
+      '/reset-password',
+      '/verify-email',
+    ]) {
+      await page.goto(path);
+      const card = page.locator('main [data-slot="card"]');
+      const heading = card.getByRole('heading', { level: 1 });
+      const form = card.locator('form');
+      const cardBox = await card.boundingBox();
+      const headingBox = await heading.boundingBox();
+      const formBox = await form.boundingBox();
+      const mainBox = await page.locator('main').boundingBox();
+      expect(cardBox).not.toBeNull();
+      expect(headingBox).not.toBeNull();
+      expect(formBox).not.toBeNull();
+      expect(mainBox).not.toBeNull();
+      if (!cardBox || !headingBox || !formBox || !mainBox) {
+        throw new Error('Auth layout is not visible');
+      }
+      expect(mainBox.width).toBe(await page.evaluate(() => document.documentElement.clientWidth));
+      expect(cardBox.width).toBeLessThanOrEqual(mainBox.width);
+      expect(headingBox.y + headingBox.height).toBeLessThanOrEqual(formBox.y);
+      expect(Math.abs(headingBox.x - formBox.x)).toBeLessThan(2);
+
+      const brandPanel = page.locator('main aside');
+      if (viewport.width >= 1024) {
+        await expect(brandPanel).toBeVisible();
+        const panelBox = await brandPanel.boundingBox();
+        expect(panelBox).not.toBeNull();
+        if (!panelBox) throw new Error('Auth brand panel is not visible');
+        expect(cardBox.x).toBeGreaterThan(panelBox.x + panelBox.width);
+      } else {
+        await expect(brandPanel).toBeHidden();
+        expect(cardBox.width).toBeLessThanOrEqual(448);
+        expect(
+          Math.abs(cardBox.x + cardBox.width / 2 - (mainBox.x + mainBox.width / 2)),
+        ).toBeLessThan(2);
+      }
     }
-    expect(mainBox.width).toBe(await page.evaluate(() => document.documentElement.clientWidth));
-    expect(cardBox.width).toBeLessThanOrEqual(448);
-    expect(Math.abs(cardBox.x + cardBox.width / 2 - (mainBox.x + mainBox.width / 2))).toBeLessThan(
-      2,
-    );
-    expect(headingBox.y + headingBox.height).toBeLessThanOrEqual(formBox.y);
-    expect(Math.abs(headingBox.x - formBox.x)).toBeLessThan(2);
   }
 });
 

@@ -1,12 +1,11 @@
 import { z } from "zod";
 
 // Messages are translation keys so consumers can localize validation errors.
-const email = z
-  .string()
-  .min(1, "emailRequired")
-  .email("emailInvalid");
+const email = z.string().min(1, "emailRequired").email("emailInvalid");
 const password = z.string().min(1, "passwordRequired");
-const newPassword = password.min(8, "passwordTooShort").max(128, "passwordTooLong");
+const newPassword = password
+  .min(8, "passwordTooShort")
+  .max(128, "passwordTooLong");
 const confirmPassword = z.string().min(1, "confirmRequired");
 
 export const loginFormSchema = z.object({ email, password });

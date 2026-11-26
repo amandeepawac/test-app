@@ -3,7 +3,12 @@
 import { cookies } from 'next/headers';
 import { loginRequestSchema, sessionResponseSchema } from '@repo/contracts';
 import { authApiFetch } from '@/lib/auth-api';
-import { accessCookie, clearSessionCookies, refreshCookie, setSessionCookies } from './session-cookies';
+import {
+  accessCookie,
+  clearSessionCookies,
+  refreshCookie,
+  setSessionCookies,
+} from './session-cookies';
 
 export async function signIn(input: unknown): Promise<'signed-in' | 'invalid' | 'unavailable'> {
   const parsed = loginRequestSchema.safeParse(input);
@@ -28,7 +33,9 @@ export async function signIn(input: unknown): Promise<'signed-in' | 'invalid' | 
   }
 }
 
-export async function refreshSession(): Promise<'current' | 'refreshed' | 'signed-out' | 'unavailable'> {
+export async function refreshSession(): Promise<
+  'current' | 'refreshed' | 'signed-out' | 'unavailable'
+> {
   const store = await cookies();
   const access = store.get(accessCookie)?.value;
   const token = store.get(refreshCookie)?.value;

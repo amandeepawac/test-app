@@ -80,7 +80,9 @@ export function RegisterForm() {
             </p>
           )}
           <div className="mt-8">
-            <PreviewSubmit disabled={form.formState.isSubmitting}>{t('createAccount')}</PreviewSubmit>
+            <PreviewSubmit disabled={form.formState.isSubmitting}>
+              {t('createAccount')}
+            </PreviewSubmit>
           </div>
         </form>
       )}

@@ -2,12 +2,15 @@ import { Injectable, ServiceUnavailableException, UnauthorizedException } from '
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { createHash, randomBytes } from 'node:crypto';
+import { z } from 'zod';
 
 export const ACCESS_TTL_SECONDS = 15 * 60;
 export const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60;
 
+const UUID_SCHEMA = z.uuid();
+
 @Injectable()
-export class TokenService {
+export class TokenProvider {
   constructor(
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
@@ -19,6 +22,10 @@ export class TokenService {
 
   hash(token: string): string {
     return createHash('sha256').update(token).digest('hex');
+  }
+
+  assertConfigured(): void {
+    this.secret();
   }
 
   signAccess(userId: string, sessionId: string): string {
@@ -36,12 +43,11 @@ export class TokenService {
     } catch {
       throw new UnauthorizedException('Invalid session');
     }
-    const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (
       typeof payload.sub !== 'string' ||
       typeof payload.sid !== 'string' ||
-      !uuid.test(payload.sub) ||
-      !uuid.test(payload.sid) ||
+      !UUID_SCHEMA.safeParse(payload.sub).success ||
+      !UUID_SCHEMA.safeParse(payload.sid).success ||
       payload.type !== 'access'
     ) {
       throw new UnauthorizedException('Invalid session');
