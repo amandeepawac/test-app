@@ -22,9 +22,7 @@ describe('admin operation request schemas', () => {
   });
 
   it('requires a note for document rejection', () => {
-    expect(
-      adminEmployerDocumentReviewSchema.safeParse({ decision: 'REJECT' }).success,
-    ).toBe(false);
+    expect(adminEmployerDocumentReviewSchema.safeParse({ decision: 'REJECT' }).success).toBe(false);
   });
 
   it('rejects audit date ranges whose end precedes their start', () => {

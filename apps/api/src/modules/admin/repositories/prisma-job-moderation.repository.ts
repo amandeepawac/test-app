@@ -6,6 +6,7 @@ import type {
   AdminJobModerationDecisionResponse,
   AdminJobModerationQuery,
 } from '@repo/contracts';
+import type { Prisma } from '@repo/db/generated';
 import { PrismaService } from '@/infrastructure/database/prisma.service.js';
 import type { AdminActionContext } from '@/modules/admin/admin-context.js';
 import { AdminRecordNotFoundError, AdminStateConflictError } from '@/modules/admin/admin-errors.js';
@@ -16,7 +17,7 @@ export class PrismaJobModerationRepository implements JobModerationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async list(query: AdminJobModerationQuery): Promise<AdminJobListResponse> {
-    const where = { status: query.status ?? 'PENDING_REVIEW' };
+    const where: Prisma.JobWhereInput = query.status ? { status: query.status } : {};
     const [records, total] = await Promise.all([
       this.prisma.client.job.findMany({
         where,
@@ -118,8 +119,8 @@ export class PrismaJobModerationRepository implements JobModerationRepository {
 
       const allowedStatuses =
         input.decision === 'REMOVE'
-          ? ['DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'PAUSED'] as const
-          : ['PENDING_REVIEW'] as const;
+          ? (['DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'PAUSED'] as const)
+          : (['PENDING_REVIEW'] as const);
       if (!allowedStatuses.some((status) => status === current.status)) {
         throw new AdminStateConflictError();
       }
@@ -170,11 +171,14 @@ export class PrismaJobModerationRepository implements JobModerationRepository {
           title: 'Job listing removed',
           body: `Your job listing "${current.title}" was removed. ${input.reason}`,
         },
-      }[input.decision];
+      } satisfies Record<
+        AdminJobModerationDecision['decision'],
+        Pick<Prisma.NotificationCreateInput, 'type' | 'title' | 'body'>
+      >;
       await tx.notification.create({
         data: {
           userId: current.employer.userId,
-          ...notification,
+          ...notification[input.decision],
           resourceType: 'JOB',
           resourceId: id,
           data: { status },

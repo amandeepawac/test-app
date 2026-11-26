@@ -97,11 +97,17 @@ export function ReportQueue({
                 header: t('reason'),
                 cell: (item) => (
                   <div className="min-w-44">
-                    <Link href={`/admin/reports/${item.id}`} className="font-medium hover:underline">
+                    <Link
+                      href={`/admin/reports/${item.id}`}
+                      className="font-medium hover:underline"
+                    >
                       {item.reason.replaceAll('_', ' ')}
                     </Link>
                     <p className="text-xs text-muted-foreground">
-                      {item.target.job?.title ?? item.target.employer?.businessName ?? item.target.user?.email ?? '—'}
+                      {item.target.job?.title ??
+                        item.target.employer?.businessName ??
+                        item.target.user?.email ??
+                        '—'}
                     </p>
                   </div>
                 ),

@@ -11,9 +11,9 @@ export default async function AdminReportDetailPage({
 }) {
   const { id } = await params;
   if (!z.uuid().safeParse(id).success) notFound();
+  let data: Awaited<ReturnType<typeof getAdminReport>>;
   try {
-    const data = await getAdminReport(id);
-    return <ReportReview initialData={data} />;
+    data = await getAdminReport(id);
   } catch (error) {
     if (error instanceof AdminApiError && error.status === 404) notFound();
     if (error instanceof AdminApiError && error.status === 401) {
@@ -28,4 +28,5 @@ export default async function AdminReportDetailPage({
     );
     return <AdminRouteFailure />;
   }
+  return <ReportReview initialData={data} />;
 }

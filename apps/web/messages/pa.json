@@ -93,6 +93,7 @@
   "Admin": {
     "brand": "RozgarLocal ਐਡਮਿਨ",
     "adminConsole": "ਐਡਮਿਨ ਕੰਸੋਲ",
+    "accountMenu": "{name} ਦਾ ਖਾਤਾ ਮੀਨੂ ਖੋਲ੍ਹੋ",
     "navigation": "ਐਡਮਿਨ ਨੈਵੀਗੇਸ਼ਨ",
     "dashboard": "ਡੈਸ਼ਬੋਰਡ",
     "verifications": "ਤਸਦੀਕਾਂ",
@@ -136,6 +137,8 @@
     "noActivity": "ਕੋਈ ਹਾਲੀਆ ਸਰਗਰਮੀ ਨਹੀਂ",
     "noActivityDescription": "ਐਡਮਿਨ ਕਾਰਵਾਈਆਂ ਇੱਥੇ ਦਿਖਾਈ ਦੇਣਗੀਆਂ।",
     "reviewQueues": "ਸਮੀਖਿਆ ਕਤਾਰਾਂ",
+    "itemsAwaitingReview": "ਸਮੀਖਿਆ ਦੀ ਉਡੀਕ ਵਾਲੀਆਂ ਆਈਟਮਾਂ",
+    "viewQueues": "ਕਤਾਰਾਂ ਵੇਖੋ",
     "employerVerifications": "ਨਿਯੋਗਤਾ ਤਸਦੀਕਾਂ",
     "jobsPendingReview": "ਸਮੀਖਿਆ ਦੀ ਉਡੀਕ ਵਾਲੀਆਂ ਨੌਕਰੀਆਂ",
     "reportsUnderReview": "ਸਮੀਖਿਆ ਅਧੀਨ ਰਿਪੋਰਟਾਂ",

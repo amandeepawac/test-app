@@ -11,9 +11,9 @@ export default async function EmployerVerificationDetailPage({
 }) {
   const { id } = await params;
   if (!z.uuid().safeParse(id).success) notFound();
+  let data: Awaited<ReturnType<typeof getEmployerVerification>>;
   try {
-    const data = await getEmployerVerification(id);
-    return <EmployerVerificationReview initialData={data} />;
+    data = await getEmployerVerification(id);
   } catch (error) {
     if (error instanceof AdminApiError && error.status === 404) notFound();
     if (error instanceof AdminApiError && error.status === 401) {
@@ -28,4 +28,5 @@ export default async function EmployerVerificationDetailPage({
     );
     return <AdminRouteFailure />;
   }
+  return <EmployerVerificationReview initialData={data} />;
 }

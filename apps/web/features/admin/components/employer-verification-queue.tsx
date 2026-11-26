@@ -10,9 +10,7 @@ import type {
 import { adminEmployerVerificationQuerySchema } from '@repo/contracts';
 import { Card, CardContent } from '@/components/ui/card';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
-import {
-  listEmployerVerificationsAction,
-} from '@/features/admin/admin-actions';
+import { listEmployerVerificationsAction } from '@/features/admin/admin-actions';
 import { useAdminErrorMessage, useAdminQuery } from '@/features/admin/admin-hooks';
 import {
   AdminDataTable,
@@ -103,7 +101,10 @@ export function EmployerVerificationQueue({
                 header: t('business'),
                 cell: (item) => (
                   <div className="min-w-44">
-                    <Link href={`/admin/verifications/${item.id}`} className="font-medium hover:underline">
+                    <Link
+                      href={`/admin/verifications/${item.id}`}
+                      className="font-medium hover:underline"
+                    >
                       {item.businessName}
                     </Link>
                     <p className="text-xs text-muted-foreground">{item.user.email}</p>
@@ -123,7 +124,10 @@ export function EmployerVerificationQueue({
               {
                 header: t('action'),
                 cell: (item) => (
-                  <Link href={`/admin/verifications/${item.id}`} className="text-primary hover:underline">
+                  <Link
+                    href={`/admin/verifications/${item.id}`}
+                    className="text-primary hover:underline"
+                  >
                     {t('review')}
                   </Link>
                 ),

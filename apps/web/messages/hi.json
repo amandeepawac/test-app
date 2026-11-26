@@ -93,6 +93,7 @@
   "Admin": {
     "brand": "RozgarLocal एडमिन",
     "adminConsole": "एडमिन कंसोल",
+    "accountMenu": "{name} का खाता मेनू खोलें",
     "navigation": "एडमिन नेविगेशन",
     "dashboard": "डैशबोर्ड",
     "verifications": "सत्यापन",
@@ -136,6 +137,8 @@
     "noActivity": "कोई हाल की गतिविधि नहीं",
     "noActivityDescription": "एडमिन कार्रवाइयाँ यहाँ दिखाई देंगी।",
     "reviewQueues": "समीक्षा कतारें",
+    "itemsAwaitingReview": "समीक्षा की प्रतीक्षा में आइटम",
+    "viewQueues": "कतारें देखें",
     "employerVerifications": "नियोक्ता सत्यापन",
     "jobsPendingReview": "समीक्षा की प्रतीक्षा में नौकरियाँ",
     "reportsUnderReview": "समीक्षाधीन रिपोर्ट",

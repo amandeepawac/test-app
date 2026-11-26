@@ -144,6 +144,44 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.admin-theme {
+  --background: var(--auth-canvas);
+  --foreground: var(--auth-foreground);
+  --card: var(--auth-surface);
+  --card-foreground: var(--auth-foreground);
+  --popover: var(--auth-surface);
+  --popover-foreground: var(--auth-foreground);
+  --primary: var(--auth-primary);
+  --primary-foreground: var(--auth-primary-foreground);
+  --secondary: color-mix(in oklab, var(--auth-primary) 9%, var(--auth-surface));
+  --secondary-foreground: var(--auth-foreground);
+  --muted: color-mix(in oklab, var(--auth-primary) 5%, var(--auth-canvas));
+  --muted-foreground: var(--auth-muted);
+  --accent: color-mix(in oklab, var(--auth-primary) 10%, var(--auth-canvas));
+  --accent-foreground: var(--auth-primary);
+  --border: var(--auth-border);
+  --input: var(--auth-border);
+  --ring: var(--auth-primary);
+  --sidebar: var(--auth-surface);
+  --sidebar-foreground: var(--auth-foreground);
+  --sidebar-primary: var(--auth-primary);
+  --sidebar-primary-foreground: var(--auth-primary-foreground);
+  --sidebar-accent: color-mix(in oklab, var(--auth-primary) 8%, var(--auth-canvas));
+  --sidebar-accent-foreground: var(--auth-foreground);
+  --sidebar-border: var(--auth-border);
+  --sidebar-ring: var(--auth-primary);
+  --radius: 0.875rem;
+}
+
+.admin-theme [data-slot='card'] {
+  border-color: var(--auth-border);
+  box-shadow: 0 2px 8px color-mix(in oklab, var(--auth-foreground) 4%, transparent);
+}
+
+.admin-theme [data-slot='card']:has([data-slot='table']) {
+  padding-block: 0;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

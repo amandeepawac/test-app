@@ -48,8 +48,7 @@ import {
 } from './admin-api';
 
 export type AdminActionResult<T> =
-  | { ok: true; data: T }
-  | { ok: false; error: { status: number; message: string } };
+  { ok: true; data: T } | { ok: false; error: { status: number; message: string } };
 
 function failure<T>(error: unknown): AdminActionResult<T> {
   if (error instanceof AdminApiError) {
@@ -82,7 +81,9 @@ function parseId(id: string) {
   return z.uuid().safeParse(id);
 }
 
-export async function getAdminDashboardAction(): Promise<AdminActionResult<AdminDashboardResponse>> {
+export async function getAdminDashboardAction(): Promise<
+  AdminActionResult<AdminDashboardResponse>
+> {
   return execute(getAdminDashboard);
 }
 
@@ -135,7 +136,9 @@ export async function listAdminJobsAction(
   return query.success ? execute(() => listAdminJobs(query.data)) : invalid<AdminJobListResponse>();
 }
 
-export async function getAdminJobAction(id: string): Promise<AdminActionResult<AdminJobDetailResponse>> {
+export async function getAdminJobAction(
+  id: string,
+): Promise<AdminActionResult<AdminJobDetailResponse>> {
   const parsedId = parseId(id);
   return parsedId.success
     ? execute(() => getAdminJob(parsedId.data))
@@ -157,10 +160,14 @@ export async function listAdminReportsAction(
   input: AdminReportQuery,
 ): Promise<AdminActionResult<AdminReportListResponse>> {
   const query = adminReportQuerySchema.safeParse(input);
-  return query.success ? execute(() => listAdminReports(query.data)) : invalid<AdminReportListResponse>();
+  return query.success
+    ? execute(() => listAdminReports(query.data))
+    : invalid<AdminReportListResponse>();
 }
 
-export async function getAdminReportAction(id: string): Promise<AdminActionResult<AdminReportDetailResponse>> {
+export async function getAdminReportAction(
+  id: string,
+): Promise<AdminActionResult<AdminReportDetailResponse>> {
   const parsedId = parseId(id);
   return parsedId.success
     ? execute(() => getAdminReport(parsedId.data))

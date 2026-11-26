@@ -8,6 +8,7 @@ import type {
   AdminEmployerVerificationListResponse,
   AdminEmployerVerificationQuery,
 } from '@repo/contracts';
+import type { Prisma } from '@repo/db/generated';
 import { PrismaService } from '@/infrastructure/database/prisma.service.js';
 import type { AdminActionContext } from '@/modules/admin/admin-context.js';
 import { AdminRecordNotFoundError, AdminStateConflictError } from '@/modules/admin/admin-errors.js';
@@ -17,12 +18,12 @@ import { EmployerVerificationRepository } from './employer-verification.reposito
 export class PrismaEmployerVerificationRepository implements EmployerVerificationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async list(query: AdminEmployerVerificationQuery): Promise<AdminEmployerVerificationListResponse> {
-    const where = {
-      verificationStatus: query.status
-        ? query.status
-        : { in: ['PENDING', 'UNDER_REVIEW'] as const },
-    };
+  async list(
+    query: AdminEmployerVerificationQuery,
+  ): Promise<AdminEmployerVerificationListResponse> {
+    const where: Prisma.EmployerProfileWhereInput = query.status
+      ? { verificationStatus: query.status }
+      : {};
     const [records, total] = await Promise.all([
       this.prisma.client.employerProfile.findMany({
         where,
@@ -37,7 +38,7 @@ export class PrismaEmployerVerificationRepository implements EmployerVerificatio
           verificationSubmittedAt: true,
           _count: { select: { documents: { where: { reviewStatus: 'PENDING' } } } },
           user: { select: { id: true, name: true, email: true } },
-        },
+        } satisfies Prisma.EmployerProfileSelect,
       }),
       this.prisma.client.employerProfile.count({ where }),
     ]);
@@ -203,11 +204,15 @@ export class PrismaEmployerVerificationRepository implements EmployerVerificatio
             title: 'More verification information required',
             body: `Please provide more information for your employer verification. ${note ?? ''}`,
           },
-        }[input.decision];
+        } satisfies Record<
+          'APPROVE' | 'REJECT' | 'NEEDS_MORE_INFO',
+          Pick<Prisma.NotificationCreateInput, 'type' | 'title' | 'body'>
+        >;
+        const notificationForDecision = notification[input.decision];
         await tx.notification.create({
           data: {
             userId: current.userId,
-            ...notification,
+            ...notificationForDecision,
             resourceType: 'EMPLOYER_VERIFICATION',
             resourceId: id,
             data: { status },

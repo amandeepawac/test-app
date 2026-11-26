@@ -66,38 +66,38 @@ const adminEmployerSummarySchema = z.strictObject({
 export const adminEmployerVerificationQuerySchema = pageQuerySchema.extend({
   status: employerVerificationStatusSchema.optional(),
 });
-export const adminEmployerVerificationListResponseSchema = paginatedResponseSchema(
-  adminEmployerSummarySchema,
-);
-export const adminEmployerVerificationDetailResponseSchema = adminEmployerSummarySchema.extend({
-  verificationLevel: z.enum(["NONE", "BASIC", "BUSINESS", "TRUSTED"]),
-  contactPersonName: z.string().nullable(),
-  businessDescription: z.string().nullable(),
-  businessPhone: z.string().nullable(),
-  websiteUrl: z.string().nullable(),
-  addressLine: z.string().nullable(),
-  cityName: z.string().nullable(),
-  districtName: z.string().nullable(),
-  stateName: z.string().nullable(),
-  postalCode: z.string().nullable(),
-  verificationNote: z.string().nullable(),
-  rejectionReason: z.string().nullable(),
-  documents: z.array(
-    z.strictObject({
-      id: z.uuid(),
-      documentType: employerDocumentTypeSchema,
-      storageKey: z.string(),
-      originalName: z.string().nullable(),
-      mimeType: z.string().nullable(),
-      fileSizeBytes: z.string().nullable(),
-      documentNumber: z.string().nullable(),
-      issuedAt: z.iso.datetime().nullable(),
-      expiresAt: z.iso.datetime().nullable(),
-      reviewStatus: z.enum(["PENDING", "APPROVED", "REJECTED", "EXPIRED"]),
-      reviewNote: z.string().nullable(),
-    }),
-  ),
-});
+export const adminEmployerVerificationListResponseSchema =
+  paginatedResponseSchema(adminEmployerSummarySchema);
+export const adminEmployerVerificationDetailResponseSchema =
+  adminEmployerSummarySchema.extend({
+    verificationLevel: z.enum(["NONE", "BASIC", "BUSINESS", "TRUSTED"]),
+    contactPersonName: z.string().nullable(),
+    businessDescription: z.string().nullable(),
+    businessPhone: z.string().nullable(),
+    websiteUrl: z.string().nullable(),
+    addressLine: z.string().nullable(),
+    cityName: z.string().nullable(),
+    districtName: z.string().nullable(),
+    stateName: z.string().nullable(),
+    postalCode: z.string().nullable(),
+    verificationNote: z.string().nullable(),
+    rejectionReason: z.string().nullable(),
+    documents: z.array(
+      z.strictObject({
+        id: z.uuid(),
+        documentType: employerDocumentTypeSchema,
+        storageKey: z.string(),
+        originalName: z.string().nullable(),
+        mimeType: z.string().nullable(),
+        fileSizeBytes: z.string().nullable(),
+        documentNumber: z.string().nullable(),
+        issuedAt: z.iso.datetime().nullable(),
+        expiresAt: z.iso.datetime().nullable(),
+        reviewStatus: z.enum(["PENDING", "APPROVED", "REJECTED", "EXPIRED"]),
+        reviewNote: z.string().nullable(),
+      }),
+    ),
+  });
 export const adminEmployerVerificationDecisionSchema = z
   .strictObject({
     decision: z.enum(["UNDER_REVIEW", "APPROVE", "REJECT", "NEEDS_MORE_INFO"]),
@@ -118,7 +118,9 @@ export const adminEmployerVerificationDecisionResponseSchema = z.strictObject({
   verificationNote: z.string().nullable(),
   rejectionReason: z.string().nullable(),
 });
-export type AdminEmployerVerificationQuery = z.infer<typeof adminEmployerVerificationQuerySchema>;
+export type AdminEmployerVerificationQuery = z.infer<
+  typeof adminEmployerVerificationQuerySchema
+>;
 export type AdminEmployerVerificationDecision = z.infer<
   typeof adminEmployerVerificationDecisionSchema
 >;
@@ -151,7 +153,9 @@ export const adminEmployerDocumentReviewResponseSchema = z.strictObject({
   reviewNote: z.string().nullable(),
   reviewedAt: z.iso.datetime(),
 });
-export type AdminEmployerDocumentReview = z.infer<typeof adminEmployerDocumentReviewSchema>;
+export type AdminEmployerDocumentReview = z.infer<
+  typeof adminEmployerDocumentReviewSchema
+>;
 export type AdminEmployerDocumentReviewResponse = z.infer<
   typeof adminEmployerDocumentReviewResponseSchema
 >;
@@ -187,13 +191,19 @@ const adminJobSummarySchema = z.strictObject({
   employer: z.strictObject({
     id: z.uuid(),
     businessName: z.string(),
-    user: z.strictObject({ id: z.uuid(), name: z.string().nullable(), email: z.string().email() }),
+    user: z.strictObject({
+      id: z.uuid(),
+      name: z.string().nullable(),
+      email: z.string().email(),
+    }),
   }),
 });
 export const adminJobModerationQuerySchema = pageQuerySchema.extend({
   status: jobStatusSchema.optional(),
 });
-export const adminJobListResponseSchema = paginatedResponseSchema(adminJobSummarySchema);
+export const adminJobListResponseSchema = paginatedResponseSchema(
+  adminJobSummarySchema,
+);
 export const adminJobDetailResponseSchema = adminJobSummarySchema.extend({
   description: z.string(),
   responsibilities: z.string().nullable(),
@@ -209,7 +219,15 @@ export const adminJobDetailResponseSchema = adminJobSummarySchema.extend({
   ]),
   salaryMin: z.string().nullable(),
   salaryMax: z.string().nullable(),
-  salaryPeriod: z.enum(["HOUR", "DAY", "WEEK", "MONTH", "YEAR", "FIXED", "NEGOTIABLE"]),
+  salaryPeriod: z.enum([
+    "HOUR",
+    "DAY",
+    "WEEK",
+    "MONTH",
+    "YEAR",
+    "FIXED",
+    "NEGOTIABLE",
+  ]),
   salaryCurrency: z.string(),
   openings: z.number().int().positive(),
   addressLine: z.string().nullable(),
@@ -227,16 +245,34 @@ export const adminJobModerationDecisionResponseSchema = z.strictObject({
   moderationNote: z.string(),
   moderatedAt: z.iso.datetime(),
 });
-export type AdminJobModerationQuery = z.infer<typeof adminJobModerationQuerySchema>;
-export type AdminJobModerationDecision = z.infer<typeof adminJobModerationDecisionSchema>;
+export type AdminJobModerationQuery = z.infer<
+  typeof adminJobModerationQuerySchema
+>;
+export type AdminJobModerationDecision = z.infer<
+  typeof adminJobModerationDecisionSchema
+>;
 export type AdminJobListResponse = z.infer<typeof adminJobListResponseSchema>;
-export type AdminJobDetailResponse = z.infer<typeof adminJobDetailResponseSchema>;
+export type AdminJobDetailResponse = z.infer<
+  typeof adminJobDetailResponseSchema
+>;
 export type AdminJobModerationDecisionResponse = z.infer<
   typeof adminJobModerationDecisionResponseSchema
 >;
 
-const reportStatusSchema = z.enum(["OPEN", "UNDER_REVIEW", "ACTION_TAKEN", "DISMISSED", "CLOSED"]);
-const accountStatusSchema = z.enum(["ACTIVE", "PENDING", "SUSPENDED", "DISABLED", "DELETED"]);
+const reportStatusSchema = z.enum([
+  "OPEN",
+  "UNDER_REVIEW",
+  "ACTION_TAKEN",
+  "DISMISSED",
+  "CLOSED",
+]);
+const accountStatusSchema = z.enum([
+  "ACTIVE",
+  "PENDING",
+  "SUSPENDED",
+  "DISABLED",
+  "DELETED",
+]);
 const reportReasonSchema = z.enum([
   "FAKE_JOB",
   "FRAUD_OR_SCAM",
@@ -250,8 +286,12 @@ const reportReasonSchema = z.enum([
   "OTHER",
 ]);
 const reportTargetSchema = z.strictObject({
-  job: z.strictObject({ id: z.uuid(), title: z.string(), status: jobStatusSchema }).nullable(),
-  employer: z.strictObject({ id: z.uuid(), businessName: z.string() }).nullable(),
+  job: z
+    .strictObject({ id: z.uuid(), title: z.string(), status: jobStatusSchema })
+    .nullable(),
+  employer: z
+    .strictObject({ id: z.uuid(), businessName: z.string() })
+    .nullable(),
   user: z
     .strictObject({
       id: z.uuid(),
@@ -276,13 +316,19 @@ const adminReportSummarySchema = z.strictObject({
 export const adminReportQuerySchema = pageQuerySchema.extend({
   status: reportStatusSchema.optional(),
 });
-export const adminReportListResponseSchema = paginatedResponseSchema(adminReportSummarySchema);
+export const adminReportListResponseSchema = paginatedResponseSchema(
+  adminReportSummarySchema,
+);
 export const adminReportDetailResponseSchema = adminReportSummarySchema.extend({
   description: z.string().nullable(),
   reviewNote: z.string().nullable(),
   reviewedAt: z.iso.datetime().nullable(),
   reviewedBy: z
-    .strictObject({ id: z.uuid(), name: z.string().nullable(), email: z.string().email() })
+    .strictObject({
+      id: z.uuid(),
+      name: z.string().nullable(),
+      email: z.string().email(),
+    })
     .nullable(),
 });
 export const adminReportUpdateSchema = z.strictObject({
@@ -297,9 +343,15 @@ export const adminReportUpdateResponseSchema = z.strictObject({
 });
 export type AdminReportQuery = z.infer<typeof adminReportQuerySchema>;
 export type AdminReportUpdate = z.infer<typeof adminReportUpdateSchema>;
-export type AdminReportListResponse = z.infer<typeof adminReportListResponseSchema>;
-export type AdminReportDetailResponse = z.infer<typeof adminReportDetailResponseSchema>;
-export type AdminReportUpdateResponse = z.infer<typeof adminReportUpdateResponseSchema>;
+export type AdminReportListResponse = z.infer<
+  typeof adminReportListResponseSchema
+>;
+export type AdminReportDetailResponse = z.infer<
+  typeof adminReportDetailResponseSchema
+>;
+export type AdminReportUpdateResponse = z.infer<
+  typeof adminReportUpdateResponseSchema
+>;
 
 export const adminAuditLogQuerySchema = pageQuerySchema
   .extend({
@@ -330,9 +382,15 @@ export const adminAuditLogListResponseSchema = paginatedResponseSchema(
     userAgent: z.string().nullable(),
     createdAt: z.iso.datetime(),
     actor: z
-      .strictObject({ id: z.uuid(), name: z.string().nullable(), email: z.string().email() })
+      .strictObject({
+        id: z.uuid(),
+        name: z.string().nullable(),
+        email: z.string().email(),
+      })
       .nullable(),
   }),
 );
 export type AdminAuditLogQuery = z.infer<typeof adminAuditLogQuerySchema>;
-export type AdminAuditLogListResponse = z.infer<typeof adminAuditLogListResponseSchema>;
+export type AdminAuditLogListResponse = z.infer<
+  typeof adminAuditLogListResponseSchema
+>;

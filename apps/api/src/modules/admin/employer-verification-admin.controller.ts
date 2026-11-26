@@ -32,7 +32,9 @@ export class EmployerVerificationAdminController {
 
   @Get()
   @Header('Cache-Control', 'no-store')
-  list(@Query({ schema: adminEmployerVerificationQuerySchema }) query: AdminEmployerVerificationQuery) {
+  list(
+    @Query({ schema: adminEmployerVerificationQuerySchema }) query: AdminEmployerVerificationQuery,
+  ) {
     return this.verifications.list(query);
   }
 
@@ -61,11 +63,6 @@ export class EmployerVerificationAdminController {
     @Body({ schema: adminEmployerDocumentReviewSchema }) body: AdminEmployerDocumentReview,
     @Req() request: AdminRequest,
   ) {
-    return this.verifications.reviewDocument(
-      id,
-      documentId,
-      body,
-      getAdminActionContext(request),
-    );
+    return this.verifications.reviewDocument(id, documentId, body, getAdminActionContext(request));
   }
 }

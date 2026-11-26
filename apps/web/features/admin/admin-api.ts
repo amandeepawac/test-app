@@ -119,14 +119,15 @@ export function getEmployerVerification(id: string) {
   );
 }
 
-export function reviewEmployerVerification(
-  id: string,
-  body: AdminEmployerVerificationDecision,
-) {
+export function reviewEmployerVerification(id: string, body: AdminEmployerVerificationDecision) {
   return request(
     `/admin/employer-verifications/${encodeURIComponent(id)}`,
     adminEmployerVerificationDecisionResponseSchema,
-    { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
   );
 }
 
@@ -138,7 +139,11 @@ export function reviewEmployerDocument(
   return request(
     `/admin/employer-verifications/${encodeURIComponent(id)}/documents/${encodeURIComponent(documentId)}`,
     adminEmployerDocumentReviewResponseSchema,
-    { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
   );
 }
 
@@ -154,7 +159,11 @@ export function moderateAdminJob(id: string, body: AdminJobModerationDecision) {
   return request(
     `/admin/jobs/${encodeURIComponent(id)}/moderation`,
     adminJobModerationDecisionResponseSchema,
-    { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
   );
 }
 
@@ -167,16 +176,13 @@ export function getAdminReport(id: string) {
 }
 
 export function updateAdminReport(id: string, body: AdminReportUpdate) {
-  return request(
-    `/admin/reports/${encodeURIComponent(id)}`,
-    adminReportUpdateResponseSchema,
-    { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
-  );
+  return request(`/admin/reports/${encodeURIComponent(id)}`, adminReportUpdateResponseSchema, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
 }
 
 export function listAdminAuditLogs(query: AdminAuditLogQuery) {
-  return request(
-    `/admin/audit-logs${queryString(query)}`,
-    adminAuditLogListResponseSchema,
-  );
+  return request(`/admin/audit-logs${queryString(query)}`, adminAuditLogListResponseSchema);
 }

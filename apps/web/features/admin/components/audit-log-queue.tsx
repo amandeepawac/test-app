@@ -17,7 +17,10 @@ import {
 } from './admin-primitives';
 
 type AuditEntry = AdminAuditLogListResponse['items'][number];
-type AuditFilters = Pick<AdminAuditLogQuery, 'actorId' | 'action' | 'entityType' | 'entityId' | 'from' | 'to'>;
+type AuditFilters = Pick<
+  AdminAuditLogQuery,
+  'actorId' | 'action' | 'entityType' | 'entityId' | 'from' | 'to'
+>;
 
 function dateTime(value: string, endOfDay: boolean): string | null {
   if (!value) return null;
@@ -97,11 +100,7 @@ export function AuditLogQueue({ initialData }: { initialData: AdminAuditLogListR
         <CardContent className="p-4">
           <form onSubmit={applyFilters} className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             <Input name="action" placeholder={t('actionFilter')} aria-label={t('actionFilter')} />
-            <Input
-              name="entityType"
-              placeholder={t('entityType')}
-              aria-label={t('entityType')}
-            />
+            <Input name="entityType" placeholder={t('entityType')} aria-label={t('entityType')} />
             <Input name="entityId" placeholder={t('entityId')} aria-label={t('entityId')} />
             <Input name="actorId" placeholder={t('actorId')} aria-label={t('actorId')} />
             <Input name="from" type="date" aria-label={t('fromDate')} />
@@ -146,7 +145,7 @@ export function AuditLogQueue({ initialData }: { initialData: AdminAuditLogListR
                   item.metadata ? (
                     <details>
                       <summary className="cursor-pointer text-primary">{t('view')}</summary>
-                      <pre className="mt-2 max-w-xs overflow-auto whitespace-pre-wrap text-xs">
+                      <pre className="mt-2 max-w-xs overflow-auto text-xs whitespace-pre-wrap">
                         {JSON.stringify(item.metadata, null, 2)}
                       </pre>
                     </details>

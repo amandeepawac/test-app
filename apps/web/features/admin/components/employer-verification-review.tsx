@@ -13,7 +13,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { getEmployerVerificationAction, reviewEmployerDocumentAction, reviewEmployerVerificationAction } from '@/features/admin/admin-actions';
+import {
+  getEmployerVerificationAction,
+  reviewEmployerDocumentAction,
+  reviewEmployerVerificationAction,
+} from '@/features/admin/admin-actions';
 import {
   useAdminErrorMessage,
   useAdminMutation,
@@ -112,7 +116,9 @@ export function EmployerVerificationReview({
         />
       )}
       {(saved || documentMutation.isSuccess) && (
-        <p role="status" className="text-sm text-emerald-700">{t('saved')}</p>
+        <p role="status" className="text-sm text-emerald-700">
+          {t('saved')}
+        </p>
       )}
 
       <div className="grid gap-6 xl:grid-cols-2">
@@ -126,7 +132,10 @@ export function EmployerVerificationReview({
             <Detail label={t('phone')} value={data.businessPhone} />
             <Detail label={t('website')} value={data.websiteUrl} />
             <Detail label={t('businessType')} value={formatAdminEnum(data.employerType)} />
-            <Detail label={t('verificationLevel')} value={formatAdminEnum(data.verificationLevel)} />
+            <Detail
+              label={t('verificationLevel')}
+              value={formatAdminEnum(data.verificationLevel)}
+            />
             <Detail label={t('address')} value={data.addressLine} />
             <Detail
               label={t('location')}
@@ -163,18 +172,37 @@ export function EmployerVerificationReview({
               onChange={(event) => setNote(event.target.value)}
               placeholder={t('reviewNotePlaceholder')}
             />
-            {formError && <p role="alert" className="text-sm text-destructive">{formError}</p>}
+            {formError && (
+              <p role="alert" className="text-sm text-destructive">
+                {formError}
+              </p>
+            )}
             <div className="flex flex-wrap gap-2">
-              <Button type="button" variant="outline" disabled={busy} onClick={() => decide('UNDER_REVIEW')}>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={busy}
+                onClick={() => decide('UNDER_REVIEW')}
+              >
                 {t('startReview')}
               </Button>
               <Button type="button" disabled={busy} onClick={() => decide('APPROVE')}>
                 {t('approve')}
               </Button>
-              <Button type="button" variant="secondary" disabled={busy} onClick={() => decide('NEEDS_MORE_INFO')}>
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={busy}
+                onClick={() => decide('NEEDS_MORE_INFO')}
+              >
                 {t('requestInformation')}
               </Button>
-              <Button type="button" variant="destructive" disabled={busy} onClick={() => decide('REJECT')}>
+              <Button
+                type="button"
+                variant="destructive"
+                disabled={busy}
+                onClick={() => decide('REJECT')}
+              >
                 {t('reject')}
               </Button>
             </div>
@@ -195,7 +223,9 @@ export function EmployerVerificationReview({
                 document={document}
                 locale={locale}
                 disabled={busy}
-                onReview={(decision, documentNote) => reviewDocument(document, decision, documentNote)}
+                onReview={(decision, documentNote) =>
+                  reviewDocument(document, decision, documentNote)
+                }
               />
             ))
           ) : (
@@ -211,7 +241,7 @@ function Detail({ label, value }: { label: string; value: string | null | undefi
   return (
     <div className="min-w-0">
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
-      <p className="mt-1 break-words text-sm">{value || '—'}</p>
+      <p className="mt-1 text-sm break-words">{value || '—'}</p>
     </div>
   );
 }
@@ -273,7 +303,11 @@ function DocumentReview({
           />
           <span>{t('externalReviewConfirmed')}</span>
         </div>
-        {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+        {error && (
+          <p role="alert" className="text-sm text-destructive">
+            {error}
+          </p>
+        )}
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"

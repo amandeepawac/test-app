@@ -42,4 +42,6 @@ export const adminDashboardResponseSchema = z.strictObject({
   ),
 });
 
-export type AdminDashboardResponse = z.infer<typeof adminDashboardResponseSchema>;
+export type AdminDashboardResponse = z.infer<
+  typeof adminDashboardResponseSchema
+>;

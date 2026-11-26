@@ -82,7 +82,11 @@ export function JobModerationReview({ initialData }: { initialData: AdminJobDeta
           retryText={t('retry')}
         />
       )}
-      {saved && <p role="status" className="text-sm text-emerald-700">{t('saved')}</p>}
+      {saved && (
+        <p role="status" className="text-sm text-emerald-700">
+          {t('saved')}
+        </p>
+      )}
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)]">
         <Card>
           <CardHeader>
@@ -104,21 +108,26 @@ export function JobModerationReview({ initialData }: { initialData: AdminJobDeta
               <Detail label={t('published')} value={formatAdminDate(data.publishedAt, locale)} />
               <Detail
                 label={t('salary')}
-                value={[data.salaryMin, data.salaryMax, data.salaryCurrency, formatAdminEnum(data.salaryPeriod)]
+                value={[
+                  data.salaryMin,
+                  data.salaryMax,
+                  data.salaryCurrency,
+                  formatAdminEnum(data.salaryPeriod),
+                ]
                   .filter(Boolean)
                   .join(' ')}
               />
             </div>
             <section>
               <h2 className="text-sm font-medium">{t('description')}</h2>
-              <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
+              <p className="mt-2 text-sm leading-6 whitespace-pre-wrap text-muted-foreground">
                 {data.description}
               </p>
             </section>
             {data.responsibilities && (
               <section>
                 <h2 className="text-sm font-medium">{t('responsibilities')}</h2>
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
+                <p className="mt-2 text-sm leading-6 whitespace-pre-wrap text-muted-foreground">
                   {data.responsibilities}
                 </p>
               </section>
@@ -126,7 +135,7 @@ export function JobModerationReview({ initialData }: { initialData: AdminJobDeta
             {data.moderationNote && (
               <section>
                 <h2 className="text-sm font-medium">{t('previousModerationNote')}</h2>
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
+                <p className="mt-2 text-sm leading-6 whitespace-pre-wrap text-muted-foreground">
                   {data.moderationNote}
                 </p>
               </section>
@@ -207,7 +216,7 @@ function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
-      <p className="mt-1 break-words text-sm">{value || '—'}</p>
+      <p className="mt-1 text-sm break-words">{value || '—'}</p>
     </div>
   );
 }

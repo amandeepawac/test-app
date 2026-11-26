@@ -93,6 +93,7 @@
   "Admin": {
     "brand": "RozgarLocal Admin",
     "adminConsole": "Admin console",
+    "accountMenu": "Open account menu for {name}",
     "navigation": "Admin navigation",
     "dashboard": "Dashboard",
     "verifications": "Verifications",
@@ -136,6 +137,8 @@
     "noActivity": "No recent activity",
     "noActivityDescription": "Administrative actions will appear here.",
     "reviewQueues": "Review queues",
+    "itemsAwaitingReview": "Items awaiting review",
+    "viewQueues": "View queues",
     "employerVerifications": "Employer verifications",
     "jobsPendingReview": "Jobs pending review",
     "reportsUnderReview": "Reports under review",

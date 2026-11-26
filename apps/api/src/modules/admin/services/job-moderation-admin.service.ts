@@ -1,8 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type {
-  AdminJobModerationDecision,
-  AdminJobModerationQuery,
-} from '@repo/contracts';
+import type { AdminJobModerationDecision, AdminJobModerationQuery } from '@repo/contracts';
 import type { AdminActionContext } from '@/modules/admin/admin-context.js';
 import { mapAdminRepositoryErrors } from '@/modules/admin/admin-errors.js';
 import { JobModerationRepository } from '@/modules/admin/repositories/job-moderation.repository.js';

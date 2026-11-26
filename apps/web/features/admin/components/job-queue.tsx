@@ -76,9 +76,7 @@ export function JobQueue({
           aria-label={t('filterByStatus')}
           value={status ?? 'ALL'}
           onChange={(event) => {
-            const parsed = adminJobModerationQuerySchema.shape.status.safeParse(
-              event.target.value,
-            );
+            const parsed = adminJobModerationQuerySchema.shape.status.safeParse(event.target.value);
             setStatus(parsed.success ? parsed.data : undefined);
             setPage(1);
           }}
@@ -114,7 +112,10 @@ export function JobQueue({
                 header: t('location'),
                 cell: (item) => [item.cityName, item.stateName].filter(Boolean).join(', ') || '—',
               },
-              { header: t('employmentType'), cell: (item) => item.employmentType.replaceAll('_', ' ') },
+              {
+                header: t('employmentType'),
+                cell: (item) => item.employmentType.replaceAll('_', ' '),
+              },
               { header: t('status'), cell: (item) => <AdminStatusBadge status={item.status} /> },
               { header: t('created'), cell: (item) => formatAdminDate(item.createdAt, locale) },
               {

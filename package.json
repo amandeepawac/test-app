@@ -14,6 +14,7 @@
     "db:reset": "pnpm --filter @repo/db db:reset",
     "db:studio": "turbo run db:studio",
     "db:test": "turbo run db:test",
+    "db:seed-users": "pnpm --filter api seed:demo-users",
     "prepare": "husky"
   },
   "lint-staged": {

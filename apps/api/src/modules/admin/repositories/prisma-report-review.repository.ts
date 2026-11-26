@@ -6,6 +6,7 @@ import type {
   AdminReportUpdate,
   AdminReportUpdateResponse,
 } from '@repo/contracts';
+import type { Prisma } from '@repo/db/generated';
 import { PrismaService } from '@/infrastructure/database/prisma.service.js';
 import type { AdminActionContext } from '@/modules/admin/admin-context.js';
 import { AdminRecordNotFoundError, AdminStateConflictError } from '@/modules/admin/admin-errors.js';
@@ -16,9 +17,7 @@ export class PrismaReportReviewRepository implements ReportReviewRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async list(query: AdminReportQuery): Promise<AdminReportListResponse> {
-    const where = {
-      status: query.status ? query.status : { in: ['OPEN', 'UNDER_REVIEW'] as const },
-    };
+    const where: Prisma.ReportWhereInput = query.status ? { status: query.status } : {};
     const [records, total] = await Promise.all([
       this.prisma.client.report.findMany({
         where,

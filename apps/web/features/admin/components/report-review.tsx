@@ -81,7 +81,11 @@ export function ReportReview({ initialData }: { initialData: AdminReportDetailRe
           retryText={t('retry')}
         />
       )}
-      {saved && <p role="status" className="text-sm text-emerald-700">{t('saved')}</p>}
+      {saved && (
+        <p role="status" className="text-sm text-emerald-700">
+          {t('saved')}
+        </p>
+      )}
       <div className="grid gap-6 xl:grid-cols-2">
         <Card>
           <CardHeader>
@@ -94,15 +98,12 @@ export function ReportReview({ initialData }: { initialData: AdminReportDetailRe
             <Detail label={t('reviewedAt')} value={formatAdminDate(data.reviewedAt, locale)} />
             <Detail label={t('target')} value={target} />
             {data.target.user && (
-              <Detail
-                label={t('accountStatus')}
-                value={data.target.user.status}
-              />
+              <Detail label={t('accountStatus')} value={data.target.user.status} />
             )}
             {data.description && (
               <div>
                 <p className="text-xs font-medium text-muted-foreground">{t('description')}</p>
-                <p className="mt-1 whitespace-pre-wrap text-sm">{data.description}</p>
+                <p className="mt-1 text-sm whitespace-pre-wrap">{data.description}</p>
               </div>
             )}
           </CardContent>
@@ -113,7 +114,9 @@ export function ReportReview({ initialData }: { initialData: AdminReportDetailRe
           </CardHeader>
           <CardContent>
             <form onSubmit={submit} className="space-y-4">
-              <label htmlFor="report-status" className="text-sm font-medium">{t('status')}</label>
+              <label htmlFor="report-status" className="text-sm font-medium">
+                {t('status')}
+              </label>
               <NativeSelect
                 id="report-status"
                 value={status}
@@ -146,7 +149,11 @@ export function ReportReview({ initialData }: { initialData: AdminReportDetailRe
                 maxLength={2000}
                 placeholder={t('reviewNotePlaceholder')}
               />
-              {formError && <p role="alert" className="text-sm text-destructive">{formError}</p>}
+              {formError && (
+                <p role="alert" className="text-sm text-destructive">
+                  {formError}
+                </p>
+              )}
               <Button type="submit" disabled={mutation.isPending}>
                 {t('saveDisposition')}
               </Button>
@@ -167,7 +174,7 @@ function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
-      <p className="mt-1 break-words text-sm">{value || '—'}</p>
+      <p className="mt-1 text-sm break-words">{value || '—'}</p>
     </div>
   );
 }
