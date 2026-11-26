@@ -13,6 +13,7 @@ export const registrationRequestSchema = z.strictObject({
   name: z.string().trim().min(1).max(200),
   email,
   password: newPassword,
+  role: z.enum(["JOB_SEEKER", "EMPLOYER"]).optional(),
 });
 
 export const verifyEmailRequestSchema = z.strictObject({
@@ -38,6 +39,7 @@ export const currentUserResponseSchema = z.strictObject({
   id: z.uuid(),
   email: z.string().email(),
   name: z.string().nullable(),
+  role: z.enum(["JOB_SEEKER", "EMPLOYER", "ADMIN"]),
 });
 
 export type RegistrationRequest = z.infer<typeof registrationRequestSchema>;

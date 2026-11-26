@@ -35,7 +35,12 @@ export abstract class SessionRepository {
     userId: string,
     sessionId: string,
     now: Date,
-  ): Promise<{ id: string; name: string | null; email: string } | null>;
+  ): Promise<{
+    id: string;
+    name: string | null;
+    email: string;
+    role: 'JOB_SEEKER' | 'EMPLOYER' | 'ADMIN';
+  } | null>;
 
   abstract revokeByRefreshToken(tokenHash: string, now: Date): Promise<void>;
 }

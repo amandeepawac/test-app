@@ -63,7 +63,7 @@ export function ReportReview({ initialData }: { initialData: AdminReportDetailRe
   const target = data.target.job
     ? `${t('job')}: ${data.target.job.title}`
     : data.target.employer
-      ? `${t('business')}: ${data.target.employer.businessName}`
+      ? `${t('business')}: ${data.target.employer.businessName ?? '—'}`
       : data.target.user
         ? `${t('user')}: ${data.target.user.email}`
         : '—';

@@ -990,8 +990,8 @@ Job seeker profile `GET /job-seeker/profile`,
 `PUT /job-seeker/profile`, `POST /job-seeker/profile/complete`,
 `GET /job-seeker/skills`
 
-Employers `POST /employers`, `GET /employers/me`,
-`PATCH /employers/me`
+Employers `GET /employers/me`, `PUT /employers/me`,
+`POST /employers/me/complete`
 
 Employer verification `POST /employers/me/verification`,
 `GET /employers/me/verification`
@@ -1024,7 +1024,7 @@ endpoints
 
 ---
 
-Except for the job seeker profile and skills routes described below,
+Except for the job seeker and employer profile routes described below,
 these are proposed route shapes, not confirmed existing endpoints.
 Finalize request/response contracts with Zod schemas and Swagger
 definitions before frontend integration.
@@ -1040,6 +1040,24 @@ repeated completion is safe. Enforcement on future dashboard and
 job/application endpoints must use that completion state.
 `GET /job-seeker/skills` lists active skills with pagination and optional
 search; populate the skill catalogue before relying on skill selection.
+
+Email registration accepts `JOB_SEEKER` or `EMPLOYER` as its public role;
+omitting it preserves the existing `JOB_SEEKER` default. Existing account
+roles are not changed by another registration attempt. `GET /auth/me`
+returns the current role. The existing web registration form does not yet
+provide a role selection.
+
+The employer profile routes require an authenticated employer and return
+`Cache-Control: no-store`. `GET /employers/me` returns 404 until a draft
+is saved; `PUT /employers/me` creates or partially updates the caller's
+profile. `POST /employers/me/complete` validates the minimum fields and
+records completion without changing verification status. The read-only
+`GET /employers/me/verification` returns the status and reviewer feedback;
+document submission is not implemented. Email and phone visibility default
+to hidden. Business name and type cannot currently be changed after
+verification submission; implementing the approved re-review policy
+requires a safe verification workflow. Future dashboard and job endpoints
+must enforce profile completion and verification as applicable.
 
 ---
 

@@ -105,13 +105,16 @@ export function EmployerVerificationQueue({
                       href={`/admin/verifications/${item.id}`}
                       className="font-medium hover:underline"
                     >
-                      {item.businessName}
+                      {item.businessName ?? item.user.email}
                     </Link>
                     <p className="text-xs text-muted-foreground">{item.user.email}</p>
                   </div>
                 ),
               },
-              { header: t('type'), cell: (item) => item.employerType.replaceAll('_', ' ') },
+              {
+                header: t('type'),
+                cell: (item) => item.employerType?.replaceAll('_', ' ') ?? '—',
+              },
               {
                 header: t('status'),
                 cell: (item) => <AdminStatusBadge status={item.verificationStatus} />,

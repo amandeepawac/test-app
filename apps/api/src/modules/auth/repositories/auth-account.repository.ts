@@ -9,6 +9,7 @@ export abstract class AuthAccountRepository {
     email: string;
     name: string;
     passwordHash: string;
+    role: 'JOB_SEEKER' | 'EMPLOYER';
   }): Promise<RegistrationAccount>;
 
   abstract createVerificationToken(input: {

@@ -394,8 +394,8 @@ model SeekerProfile {
 model EmployerProfile {
   id                      String                     @id @default(uuid(7)) @db.Uuid
   userId                  String                     @unique @db.Uuid
-  employerType            EmployerType               @default(OTHER)
-  businessName            String
+  employerType            EmployerType?
+  businessName            String?
   contactPersonName       String?
   businessDescription     String?
   businessPhone           String?                    @db.VarChar(20)
@@ -416,6 +416,9 @@ model EmployerProfile {
   rejectionReason         String?
   verificationNote        String?
   nextReviewAt            DateTime?
+  showEmail               Boolean                    @default(false)
+  showPhone               Boolean                    @default(false)
+  completedAt             DateTime?
   createdAt               DateTime                   @default(now())
   updatedAt               DateTime                   @updatedAt
 

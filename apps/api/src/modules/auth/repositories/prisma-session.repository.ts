@@ -147,9 +147,11 @@ export class PrismaSessionRepository implements SessionRepository {
         expiresAt: { gt: now },
         user: { status: 'ACTIVE', deletedAt: null, emailVerifiedAt: { not: null } },
       },
-      select: { user: { select: { id: true, name: true, email: true } } },
+      select: { user: { select: { id: true, name: true, email: true, primaryRole: true } } },
     });
-    return session?.user ?? null;
+    if (!session) return null;
+    const { primaryRole, ...user } = session.user;
+    return { ...user, role: primaryRole };
   }
 
   async revokeByRefreshToken(tokenHash: string, now: Date): Promise<void> {

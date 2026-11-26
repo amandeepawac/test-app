@@ -13,6 +13,7 @@ export class PrismaAuthAccountRepository implements AuthAccountRepository {
     email: string;
     name: string;
     passwordHash: string;
+    role: 'JOB_SEEKER' | 'EMPLOYER';
   }): Promise<RegistrationAccount> {
     const db = this.prisma.client;
     const existing = await db.user.findUnique({
@@ -27,6 +28,7 @@ export class PrismaAuthAccountRepository implements AuthAccountRepository {
           data: {
             email: input.email,
             name: input.name,
+            primaryRole: input.role,
             passwordCredential: { create: { passwordHash: input.passwordHash } },
           },
           select: { id: true, emailVerifiedAt: true, status: true },

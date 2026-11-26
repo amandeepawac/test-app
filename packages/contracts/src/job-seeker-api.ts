@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { phoneNumberSchema } from "./contact.js";
 
 const experienceLevelSchema = z.enum([
   "NO_EXPERIENCE",
@@ -29,16 +30,7 @@ export const jobSeekerSkillsResponseSchema = z.strictObject({
 export const jobSeekerProfileUpdateSchema = z
   .strictObject({
     fullName: z.string().trim().min(1).max(200).optional(),
-    phone: z
-      .string()
-      .trim()
-      .max(20)
-      .regex(/^\+?[0-9][0-9 ()-]*$/)
-      .refine((value) => {
-        const digits = value.replace(/\D/g, "");
-        return digits.length >= 7 && digits.length <= 15;
-      }, "Phone number must contain 7 to 15 digits")
-      .optional(),
+    phone: phoneNumberSchema.optional(),
     stateName: z.string().trim().min(1).max(100).optional(),
     cityName: z.string().trim().min(1).max(100).optional(),
     experienceLevel: experienceLevelSchema.optional(),

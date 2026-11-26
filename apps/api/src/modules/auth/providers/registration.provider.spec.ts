@@ -48,6 +48,7 @@ describe('RegistrationProvider', () => {
       email: 'user@example.com',
       name: 'Example',
       passwordHash: 'password-hash',
+      role: 'JOB_SEEKER',
     });
     const token = mail.send.mock.calls[0]?.[1];
     expect(token).toMatch(/^[A-Za-z0-9_-]{43}$/);
@@ -57,6 +58,18 @@ describe('RegistrationProvider', () => {
       pendingPasswordHash: 'password-hash',
       expiresAt: expect.any(Date),
     });
+  });
+
+  it('passes the chosen employer role when registering', async () => {
+    await provider.register({
+      name: 'Example',
+      email: 'user@example.com',
+      password: 'password123',
+      role: 'EMPLOYER',
+    });
+    expect(accounts.findOrCreateRegistrationAccount).toHaveBeenCalledWith(
+      expect.objectContaining({ role: 'EMPLOYER' }),
+    );
   });
 
   it('does not issue another verification token for a verified account', async () => {

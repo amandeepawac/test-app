@@ -102,8 +102,8 @@ export function EmployerVerificationReview({
   return (
     <div className="space-y-6">
       <AdminPageHeader
-        title={data.businessName}
-        description={`${data.user.name ?? data.user.email} · ${formatAdminEnum(data.employerType)}`}
+        title={data.businessName ?? data.user.email}
+        description={`${data.user.name ?? data.user.email} · ${data.employerType ? formatAdminEnum(data.employerType) : '—'}`}
       >
         <AdminStatusBadge status={data.verificationStatus} />
       </AdminPageHeader>
@@ -131,7 +131,10 @@ export function EmployerVerificationReview({
             <Detail label={t('email')} value={data.user.email} />
             <Detail label={t('phone')} value={data.businessPhone} />
             <Detail label={t('website')} value={data.websiteUrl} />
-            <Detail label={t('businessType')} value={formatAdminEnum(data.employerType)} />
+            <Detail
+              label={t('businessType')}
+              value={data.employerType ? formatAdminEnum(data.employerType) : null}
+            />
             <Detail
               label={t('verificationLevel')}
               value={formatAdminEnum(data.verificationLevel)}

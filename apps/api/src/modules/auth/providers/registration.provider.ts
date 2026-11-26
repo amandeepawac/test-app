@@ -24,6 +24,7 @@ export class RegistrationProvider {
       email: input.email,
       name: input.name,
       passwordHash,
+      role: input.role ?? 'JOB_SEEKER',
     });
 
     const verificationToken = this.createVerificationTokenIfEligible(account);

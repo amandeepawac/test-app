@@ -15,7 +15,7 @@ const pageInfoSchema = z.strictObject({
 const paginatedResponseSchema = <T extends z.ZodType>(item: T) =>
   z.strictObject({ items: z.array(item), pageInfo: pageInfoSchema });
 
-const employerVerificationStatusSchema = z.enum([
+export const employerVerificationStatusSchema = z.enum([
   "NOT_SUBMITTED",
   "PENDING",
   "UNDER_REVIEW",
@@ -24,7 +24,7 @@ const employerVerificationStatusSchema = z.enum([
   "NEEDS_MORE_INFO",
   "SUSPENDED",
 ]);
-const employerTypeSchema = z.enum([
+export const employerTypeSchema = z.enum([
   "COMPANY",
   "SMALL_BUSINESS",
   "SHOP",
@@ -51,8 +51,8 @@ const employerDocumentTypeSchema = z.enum([
 
 const adminEmployerSummarySchema = z.strictObject({
   id: z.uuid(),
-  businessName: z.string(),
-  employerType: employerTypeSchema,
+  businessName: z.string().nullable(),
+  employerType: employerTypeSchema.nullable(),
   verificationStatus: employerVerificationStatusSchema,
   verificationSubmittedAt: z.iso.datetime().nullable(),
   pendingDocuments: z.number().int().nonnegative(),
@@ -190,7 +190,7 @@ const adminJobSummarySchema = z.strictObject({
   createdAt: z.iso.datetime(),
   employer: z.strictObject({
     id: z.uuid(),
-    businessName: z.string(),
+    businessName: z.string().nullable(),
     user: z.strictObject({
       id: z.uuid(),
       name: z.string().nullable(),
@@ -290,7 +290,7 @@ const reportTargetSchema = z.strictObject({
     .strictObject({ id: z.uuid(), title: z.string(), status: jobStatusSchema })
     .nullable(),
   employer: z
-    .strictObject({ id: z.uuid(), businessName: z.string() })
+    .strictObject({ id: z.uuid(), businessName: z.string().nullable() })
     .nullable(),
   user: z
     .strictObject({

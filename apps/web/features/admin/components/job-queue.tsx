@@ -104,7 +104,9 @@ export function JobQueue({
                     <Link href={`/admin/jobs/${item.id}`} className="font-medium hover:underline">
                       {item.title}
                     </Link>
-                    <p className="text-xs text-muted-foreground">{item.employer.businessName}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {item.employer.businessName ?? '—'}
+                    </p>
                   </div>
                 ),
               },

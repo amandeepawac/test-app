@@ -71,7 +71,7 @@ export function JobModerationReview({ initialData }: { initialData: AdminJobDeta
 
   return (
     <div className="space-y-6">
-      <AdminPageHeader title={data.title} description={data.employer.businessName}>
+      <AdminPageHeader title={data.title} description={data.employer.businessName ?? undefined}>
         <AdminStatusBadge status={data.status} />
       </AdminPageHeader>
       {(job.isError || mutation.isError) && (
