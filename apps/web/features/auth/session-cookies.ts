@@ -1,8 +1,8 @@
 import { cookies } from 'next/headers';
 import type { SessionResponse } from '@repo/contracts';
+import { accessCookie, refreshCookie } from './session-cookie-names';
 
-export const accessCookie = 'rozgarlocal_access';
-export const refreshCookie = 'rozgarlocal_refresh';
+export { accessCookie, refreshCookie } from './session-cookie-names';
 
 export async function setSessionCookies(session: SessionResponse) {
   const store = await cookies();
