@@ -33,17 +33,17 @@ and English.
 
 ### 1.2 Product principles
 
-1.  **Mobile-first:** Most user journeys must work comfortably on a
-    phone.
-2.  **Low friction:** Keep registration, job discovery, and applying
-    straightforward.
-3.  **Trust and safety:** Verify employers and provide reporting and
-    moderation tools.
-4.  **Local relevance:** Start with Punjab and support location-based
-    discovery.
-5.  **Accessible language:** Support Punjabi, Hindi, and English.
-6.  **Maintainable engineering:** Use a modular monolith and shared
-    validation/types rather than premature microservices.
+1. **Mobile-first:** Most user journeys must work comfortably on a
+   phone.
+2. **Low friction:** Keep registration, job discovery, and applying
+   straightforward.
+3. **Trust and safety:** Verify employers and provide reporting and
+   moderation tools.
+4. **Local relevance:** Start with Punjab and support location-based
+   discovery.
+5. **Accessible language:** Support Punjabi, Hindi, and English.
+6. **Maintainable engineering:** Use a modular monolith and shared
+   validation/types rather than premature microservices.
 
 ---
 
@@ -102,7 +102,8 @@ moderation resolution time
 
 Reliability API availability, error rate, and
 key journey completion rate
------------------------------------------------------------------------
+
+---
 
 ---
 
@@ -129,14 +130,18 @@ records.
 ### 3.4 Account and authorization principles
 
 - A user account is the identity boundary.
+- Each public account is either a job seeker or an employer, not both.
+  The role is selected during registration and cannot be changed in the
+  MVP. Google registration must also select a role for a new account.
 - Authentication provider information is kept separately from the user
   profile through `UserAuthProvider`.
 - A user may authenticate using email/password, Google, or both when
   linked safely.
 - Application permissions must be enforced by the API, not only by
   hiding UI controls.
-- Job seekers must not manage employer-only resources unless they also
-  have the required authorization.
+- Job seekers must not manage employer-only resources; employers must
+  not manage job-seeker-only resources. Enforce role and ownership
+  checks in the API.
 - Administrative actions must be permission-protected and auditable.
 
 > **Schema alignment note:** The repository's
@@ -144,6 +149,21 @@ records.
 > [table reference](./database/tables/README.md) describe the intended
 > database. The web and API are currently starter applications; schema
 > models do not imply that these product features are implemented.
+
+### 3.5 Profile onboarding
+
+- After account creation and email verification, the user must complete
+  the minimum profile for their selected role before accessing their
+  dashboard or other authenticated pages. Verified Google identities
+  follow the same profile-completion requirement.
+- Users can save an incomplete profile, return to onboarding later, and
+  log out. Onboarding and the authentication/session actions needed to
+  resume it remain accessible.
+- Visitors can browse public jobs without registering. Public browsing
+  remains available to visitors; it does not remove the onboarding
+  requirement for signed-in users.
+- Employer profile completion is separate from verification submission.
+  Profile completion alone does not grant publication access.
 
 ---
 
@@ -266,7 +286,8 @@ endpoints are
 rate-limited and  
 protected against brute
 force and token replay.
------------------------------------------------------------------------
+
+---
 
 **Confirmed authentication design decisions**
 
@@ -327,11 +348,15 @@ SEEK-08 A job seeker can P0
 withdraw an application
 where the application  
 state permits it.
------------------------------------------------------------------------
 
-The final set of required profile fields should be kept lean. Do not
-force a long resume-style profile before allowing a user to discover
-jobs.
+---
+
+**MVP minimum profile:** name, phone, state, city, and
+experience level, including a no-experience option. The account supplies
+the email address. Skills, detailed experience, address, education, and
+profile image are optional. A completed minimum profile is required
+before an authenticated job seeker can apply; visitors can browse public
+jobs without a profile.
 
 ### 5.3 Employer profile and verification
 
@@ -372,11 +397,56 @@ updated, with sensitive
 changes subject to  
 re-review where  
 required.
------------------------------------------------------------------------
 
-Define the exact verification evidence and manual review policy before
-implementing the admin workflow. Do not assume a particular government
-identity document is mandatory until that policy is approved.
+---
+
+**MVP minimum profile:** business or display name, employer type, contact
+person name, phone, state, and city. The account supplies the
+email address. Additional business description, website, and street
+address are optional.
+
+**Verification evidence and review:**
+
+- Employers choose and submit one document they consider relevant to
+  verification; no single document type is mandatory. Examples for
+  businesses include a GST certificate, Udyam certificate, shop
+  registration, trade licence, or incorporation certificate. The admin
+  decides whether the submitted evidence is sufficient.
+- If an employer chooses Aadhaar, accept only an already masked copy,
+  subject to legal and privacy review before implementing or launching
+  that flow. Do not collect or store the full Aadhaar number. Resolve
+  safe handling of accidentally unmasked uploads before implementation.
+- Store evidence privately in Cloudinary. Authorize every upload and
+  reviewer access server-side, restrict review to authorized admins,
+  and do not expose storage keys or permanent public document URLs.
+  Confirm Cloudinary's private-access and delivery configuration before
+  implementing document access. The Cloudinary account will be created
+  and its credentials added to the environment later; keep credentials
+  out of source control.
+- Reviewers check that evidence is readable, relevant to the employer,
+  matches the employer identity where applicable, and has not expired.
+  Rejections require a reason and feedback. The employer must upload a
+  replacement and resubmit for review after rejection.
+- Only employers with `VERIFIED` status may publish jobs. An employer
+  who has completed their profile may create drafts before verification.
+  Separate job moderation requirements still apply.
+- When employer profile editing is implemented (P1), changes to business
+  name, employer type, or verification evidence trigger re-review and
+  prevent new publication until approval. Existing published jobs remain
+  visible while the re-review is pending.
+
+### 5.3.1 Contact privacy
+
+- Email and phone visibility have separate settings and are off by
+  default for both roles. Profile completion does not make contact
+  details public.
+- If an employer enables a contact field, it may be shown publicly on
+  that employer's profile and jobs.
+- If a job seeker enables a contact field, it may be shown only to an
+  authorized employer receiving that seeker's application. It must not
+  be exposed in a public profile or job listing.
+- Enforce visibility and ownership in API responses and access checks,
+  not only in the user interface.
 
 ### 5.4 Job posting and lifecycle
 
@@ -400,8 +470,8 @@ ID Requirement Priority
 
 ---
 
-JOB-01 An authorized employer P0
-can create a job draft.
+JOB-01 An employer with a completed P0
+profile can create a job draft.
 
 JOB-02 An employer can edit its P0
 own draft or eligible  
@@ -441,7 +511,8 @@ listings.
 JOB-10 The system records P1
 relevant job lifecycle  
 changes.
-------------------------------------------------------------------------
+
+---
 
 **Schema job status values:** `DRAFT`, `PENDING_REVIEW`, `PUBLISHED`,
 `PAUSED`, `REJECTED`, `CLOSED`, `FILLED`, `EXPIRED`, `REMOVED`.
@@ -449,7 +520,8 @@ changes.
 
 Implement allowed transitions explicitly. For example, a rejected job
 must not become publicly visible simply because a client sends
-`status: PUBLISHED`.
+`status: PUBLISHED`. Publication requires employer verification, even
+when the employer is allowed to create a draft.
 
 ### 5.5 Job discovery
 
@@ -490,12 +562,13 @@ DISC-08 Empty, loading, and P0
 error states are  
 designed for search  
 results.
------------------------------------------------------------------------
 
-For the Punjab launch, location search should support the location
-granularity agreed in the data model (for example, city/district/state).
-Avoid hardcoding Punjab-only assumptions into the database so expansion
-to other Indian states remains possible.
+---
+
+For the Punjab launch, use state → city. Use `country-state-city` for
+available state and city reference data. District is not required for
+MVP profiles or location selection. Avoid hardcoding Punjab-only
+assumptions so the model can expand to other Indian states.
 
 ### 5.6 Applications and application history
 
@@ -535,7 +608,8 @@ where allowed.
 
 APP-08 Relevant status changes P0
 generate notifications.
------------------------------------------------------------------------
+
+---
 
 **Schema application status values:** `APPLIED`, `REVIEWING`,
 `SHORTLISTED`, `CONTACTED`, `REJECTED`, `HIRED`, `WITHDRAWN`.
@@ -546,6 +620,25 @@ before implementing the transition rules.
 The application history must preserve who changed a status, the previous
 and new status, and when the change occurred, according to the final
 schema design.
+
+### 5.6.1 Account deletion
+
+- On a confirmed employer account deletion request, the system
+  automatically closes that employer's published, paused, and
+  pending-review jobs before completing deletion. Drafts do not block
+  deletion.
+- On a confirmed job seeker account deletion request, the system
+  automatically withdraws active applications where the application
+  state permits withdrawal. Completed and non-withdrawable applications
+  do not block deletion.
+- Enforce these actions and legal state transitions in the API, including
+  concurrent changes. Do not report deletion as complete if the required
+  closures or withdrawals fail. Record applicable status history and audit
+  events, and revoke the deleted account's sessions.
+- The precise application states permitting withdrawal remain to be
+  defined. Retention, anonymization, and deletion of account data, drafts,
+  application history, and evidence remain subject to the pre-launch
+  legal/privacy policy.
 
 ### 5.7 Notifications
 
@@ -582,7 +675,8 @@ NOT-06 Notification delivery P1
 failures are logged and
 retried safely where  
 appropriate.
------------------------------------------------------------------------
+
+---
 
 Push notifications may be added as a PWA enhancement after the core
 in-app and email notification flows work reliably.
@@ -624,7 +718,8 @@ logs.
 MOD-07 Admin routes and P0
 operations require  
 explicit authorization.
------------------------------------------------------------------------
+
+---
 
 Define moderation reason codes, evidence retention, escalation rules,
 and response expectations before launch.
@@ -651,12 +746,13 @@ and response expectations before launch.
 ### 6.2 Employer journey
 
 1.  Visitor registers or signs in.
-2.  User creates an employer profile.
-3.  Employer submits verification information.
+2.  User completes an employer profile and may create job drafts.
+3.  Employer submits verification evidence.
 4.  Admin reviews the submission.
-5.  Employer sees approval/rejection and any feedback.
-6.  Verified/authorized employer creates a job draft.
-7.  Employer submits the job for publication/moderation if required.
+5.  Employer sees approval/rejection and feedback, and resubmits a
+    replacement document if rejected.
+6.  Once verified, the employer submits a draft for publication.
+7.  The job goes through moderation if required.
 8.  Job becomes active when approved and published.
 9.  Employer views applicants.
 10. Employer updates application statuses.
@@ -696,17 +792,18 @@ Requirements:
 
 - Keep UI copy in translation resources, not hardcoded throughout
   components.
-- Store the user's preferred locale.
+- Persist the browser's preferred locale.
 - Provide a language selector.
 - Ensure fonts and layouts render Punjabi and Devanagari text
   correctly.
 - Do not assume job descriptions are available in all three languages;
   user-generated content should be displayed as submitted.
 
-The current web shell defaults to English and stores the selected language
-in a browser cookie without changing URLs. Account-level preference
-synchronization is not implemented; reconcile the account default and
-cookie preference when profiles are built.
+Persist the selected language in a Zustand store using localStorage, and
+mirror it to a cookie so server-rendered pages use the same locale.
+Preference is per browser and is not synchronized between devices.
+The current web shell uses a cookie; this describes the desired behavior,
+not an already implemented migration.
 
 ### 7.3 PWA
 
@@ -799,6 +896,8 @@ API style REST
 API documentation Swagger / OpenAPI
 Client state Zustand
 Server state TanStack Query
+Location reference data country-state-city
+Verification document storage Cloudinary with private authorized access
 Unit/integration testing Vitest
 End-to-end testing Playwright
 
@@ -921,7 +1020,8 @@ moderation endpoints
 
 Admin Employer verification and job moderation
 endpoints
-----------------------------------------------------------------------------------
+
+---
 
 These are proposed route shapes, not confirmed existing endpoints.
 Finalize request/response contracts with Zod schemas and Swagger
@@ -939,14 +1039,14 @@ working, tested increment.
 
 **Deliverables** - Review the repository Prisma schema and migrations,
 including field names, relations, constraints, and indexes. - Confirm
-the MVP state transitions for jobs and applications. - Confirm
-employer verification policy and required evidence. - Confirm the
-required profile fields and location hierarchy. - Record unresolved
-decisions in an architecture decision log.
+the MVP state transitions for jobs and applications. - Resolve the
+remaining evidence, legal, and secure document access questions in
+Section 14. - Record unresolved decisions in an architecture
+decision log.
 
-**Exit criteria** - PRD and Prisma schema do not contradict each
-other. - No guessed database fields or enum values remain in
-implementation tickets.
+**Exit criteria** - Required schema and migration changes are identified
+for the agreed PRD. - No guessed database fields or enum values remain
+in implementation tickets.
 
 ### Phase 1 --- Monorepo and developer foundation
 
@@ -988,8 +1088,10 @@ role/ownership guards and audit events. 7. Build the corresponding web
 forms and dashboards.
 
 **Exit criteria** - A job seeker can complete the minimum profile. - An
-employer can submit verification. - An admin can approve/reject it. -
-Unverified employers cannot bypass publication authorization.
+employer can submit verification. - An admin can approve/reject it and
+the employer can resubmit after rejection. - Role, onboarding, contact
+visibility, and publication rules cannot be bypassed through direct API
+calls. - Unverified employers can create drafts but cannot publish.
 
 ### Phase 4 --- Job posting and discovery
 
@@ -1138,7 +1240,13 @@ a profile, submits verification, and receives approval. 3. Verified
 employer creates a job and reviews an application. 4. Employer updates
 application status and job seeker sees the update. 5. Admin rejects a
 reported job and the action is audited. 6. User resets password and old
-sessions are revoked as specified.
+sessions are revoked as specified. 7. An incomplete profile can be saved
+and resumed but cannot access protected pages. 8. Contact visibility is
+private by default and respects each field's setting and audience. 9. An unverified employer creates a draft but cannot publish; rejected
+evidence can be replaced and resubmitted. 10. Deleting an employer
+account closes its published, paused, and pending-review jobs. 11.
+Deleting a job seeker account withdraws eligible active applications
+without being blocked by non-withdrawable applications.
 
 ---
 
@@ -1154,23 +1262,24 @@ Schema and deployment The repository schema may differ from a deployed
 database. Check migration status and drift against the target database
 before deployment; use the repository schema as the intended model.
 
-Employer verification Required evidence and approval policy Define acceptable
-are not fully specified here. evidence, reviewer
-checklist, and
-rejection reasons.
+Employer evidence and privacy Employers choose their evidence, but legal
+and privacy requirements for collecting and handling documents remain
+open. Obtain legal/privacy review before implementing or launching the
+flow, including masked Aadhaar if supported, and define safe handling of
+unmasked uploads.
+
+Document access Cloudinary is selected; account creation and environment
+credentials will be provided later. Secure upload, private storage,
+authorized reviewer delivery, and configuration remain to be designed
+and verified before evidence handling is implemented.
 
 Job moderation Whether every job requires approval Choose a launch policy
 or only flagged jobs needs and encode allowed
 confirmation. transitions.
 
-Location model Exact state/district/city Confirm the location
-representation must match the schema. hierarchy and
-seed/reference-data
-strategy.
-
-Contact privacy Public visibility of phone/email Define what is visible
-needs a product decision. before application and
-after application.
+Location data Align state and city reference data from
+country-state-city with the Prisma schema and confirm coverage and
+updates before implementation.
 
 Notifications Exact email provider, queue, and push Keep notification
 strategy are not confirmed here. delivery behind a
@@ -1185,8 +1294,10 @@ state clearly.
 
 Data retention Retention for accounts, applications, Define retention and
 reports, and verification evidence is deletion policy before
-not specified. public launch.
--------------------------------------------------------------------------------------
+not specified. public launch, with legal/privacy review. Define which
+application states permit withdrawal before implementing account deletion.
+
+---
 
 ---
 
@@ -1198,6 +1309,12 @@ The MVP is ready for a controlled launch when:
       discover jobs, save jobs, apply, and track applications.
 - [ ] Employers can register, create a profile, submit verification,
       publish/manage jobs after authorization, and manage applicants.
+- [ ] Single-role onboarding, profile completion, and private-by-default
+      contact visibility are enforced by the API.
+- [ ] Account deletion closes relevant employer jobs or withdraws eligible
+      job seeker applications before deletion completes.
+- [ ] Verification evidence is securely handled and reviewed, with
+      legal/privacy requirements resolved before the relevant flow launches.
 - [ ] Admins can review verification requests, moderate jobs, process
       reports, and inspect audit records.
 - [ ] Job and application status transitions are enforced server-side.
@@ -1216,8 +1333,8 @@ The MVP is ready for a controlled launch when:
 
 1.  Verify migration status and drift against the target database before
     deploying schema changes.
-2.  Resolve the open decisions in Section 14, especially employer
-    verification and job moderation.
+2.  Resolve the open decisions in Section 14, especially evidence
+    handling, retention, and job moderation.
 3.  Create `docs/PRD.md` and `docs/ARCHITECTURE.md` in the monorepo.
 4.  Convert Phases 1--3 into small issues with acceptance criteria.
 5.  Start Sprint 1: Turborepo, Next.js, NestJS, PostgreSQL, Prisma,
