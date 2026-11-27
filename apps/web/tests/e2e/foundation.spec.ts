@@ -104,6 +104,25 @@ test('switches languages, preserves the URL, and remembers the selection', async
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 });
 
+test('terms and privacy drafts show product-specific sections in all supported languages', async ({
+  page, context,
+}) => {
+  for (const locale of [
+    { code: 'en', terms: 'Job seekers and employers', privacy: 'Profile and contact visibility', draft: 'Draft policy' },
+    { code: 'hi', terms: 'नौकरी खोजने वाले और नियोक्ता', privacy: 'प्रोफ़ाइल और संपर्क दृश्यता', draft: 'नीति का मसौदा' },
+    { code: 'pa', terms: 'ਨੌਕਰੀ ਲੱਭਣ ਵਾਲੇ ਅਤੇ ਰੁਜ਼ਗਾਰਦਾਤਾ', privacy: 'ਪ੍ਰੋਫਾਈਲ ਅਤੇ ਸੰਪਰਕ ਦੀ ਦਿੱਖ', draft: 'ਨੀਤੀ ਦਾ ਮਸੌਦਾ' },
+  ]) {
+    await context.addCookies([{ name: 'rozgarlocal_locale', value: locale.code, url: 'http://127.0.0.1:3000' }]);
+    for (const [path, heading] of [['/terms', locale.terms], ['/privacy', locale.privacy]] as const) {
+      await page.goto(path);
+      await expect(page.getByRole('heading', { name: new RegExp(heading) })).toBeVisible();
+      await expect(page.getByText(locale.draft, { exact: false })).toBeVisible();
+      await expect(page.getByRole('note')).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    }
+  }
+});
+
 test('falls back to English for an unsupported cookie', async ({ page, context }) => {
   await context.addCookies([
     { name: 'rozgarlocal_locale', value: 'unsupported', url: 'http://127.0.0.1:3000' },

@@ -385,73 +385,91 @@
   "Legal": {
     "backToHome": "Back to home",
     "placeholderLabel": "Draft policy",
-    "placeholderNotice": "Placeholder content for development only. Replace this sample with reviewed legal terms and privacy disclosures before launch.",
-    "updatedLabel": "Last updated",
-    "updatedPlaceholder": "Placeholder date",
+    "placeholderNotice": "Draft for review, not a final policy. Before launch, the operator must confirm its legal identity, contact and grievance details, retention and deletion procedures, and have this document reviewed for applicable law.",
     "terms": {
       "link": "Terms and conditions",
       "title": "Terms and conditions",
-      "intro": "These sample terms describe general rules for using RozgarLocal, a platform being developed to connect people with local work opportunities.",
+      "intro": "These draft terms describe the proposed rules for using RozgarLocal, a platform being developed to connect job seekers and employers with local opportunities.",
       "acceptance": {
         "title": "Agreement to these terms",
-        "body": "By accessing or using RozgarLocal, you agree to follow these terms. If you do not agree, please stop using the service. This paragraph is sample language and does not create a final legal agreement."
+        "body": "These terms apply to visitors, job seekers and employers using RozgarLocal. Review them and the privacy policy before using the service. If you do not agree to the final terms when published, do not use the service."
       },
       "account": {
         "title": "Your account",
-        "body": "You are responsible for providing accurate account details, protecting your sign-in credentials, and activity performed through your account. Contact us at support@rozgarlocal.example if you believe your account has been accessed without permission."
+        "body": "Provide accurate, current information and use an email address you control. Keep your credentials and devices secure and do not share access to your account. Each public account is either a job seeker or an employer; changing roles is not currently supported. Complete the required profile before accessing your workspace. If you suspect unauthorized access, secure your email and sign-in accounts."
       },
       "use": {
         "title": "Acceptable use",
-        "body": "Use the service lawfully and respectfully. Do not post misleading job listings, impersonate another person, harass users, attempt to access accounts or systems without permission, or interfere with the service."
+        "body": "Use the service lawfully and respectfully. Do not impersonate others, provide false information, post fraudulent or discriminatory opportunities, harass or exploit users, collect their information without permission, send spam, or access accounts or systems without authorization. Do not interfere with the service or bypass its safeguards."
+      },
+      "hiring": {
+        "title": "Job seekers and employers",
+        "body": "When hiring features become available, employers are responsible for accurate, lawful listings and fair treatment of applicants; job seekers are responsible for accurate applications. Each party should independently verify opportunities and the identity of the other party before sharing sensitive information or making payments. RozgarLocal does not guarantee a job, hire, wage, listing accuracy or the conduct of another user."
       },
       "content": {
         "title": "Your content",
-        "body": "You keep ownership of content you submit. You give RozgarLocal permission to host and display that content as needed to provide the service. You are responsible for having the rights to share the content you submit."
+        "body": "You retain rights in the content you submit and must have permission to share it. You grant RozgarLocal permission to store, process and display that content as needed to operate the service, subject to your settings and the privacy policy. Do not submit confidential or sensitive documents unless a supported feature specifically requests them."
+      },
+      "accountClosure": {
+        "title": "Account restrictions and deletion",
+        "body": "Accounts may be restricted where needed to address misuse, security risks or legal requirements. Account deletion is not yet available. The planned deletion process requires closing applicable employer jobs or withdrawing eligible job seeker applications; the relevant states, retention rules and exceptions must be finalized before that feature launches."
       },
       "availability": {
         "title": "Service availability",
-        "body": "RozgarLocal is under development. Features may change, be unavailable, or contain errors. Job search, applications, employer tools, and other features may not be available yet."
+        "body": "RozgarLocal is under development. Features may change, be interrupted or contain errors. Job search, applications, job posting and document submission are not currently available."
       },
       "liability": {
         "title": "Disclaimers and liability",
-        "body": "This sample service is provided as available, without a promise that it will be uninterrupted or error-free. To the extent permitted by law, RozgarLocal is not responsible for indirect losses arising from use of the service. This draft needs legal review."
+        "body": "The service is provided as available, without a promise of uninterrupted or error-free operation. Users remain responsible for their decisions and dealings with others. Any limitation of liability is subject to applicable law and does not remove rights that cannot lawfully be excluded."
       },
       "changes": {
         "title": "Changes and contact",
-        "body": "We may update these terms as the service develops. This placeholder does not specify a formal notice process. Questions can be directed to support@rozgarlocal.example."
+        "body": "These terms may be updated as the service develops. The operator's legal identity, contact details, notice process and effective date must be published before the final terms take effect."
       }
     },
     "privacy": {
       "link": "Privacy policy",
       "title": "Privacy policy",
-      "intro": "This sample notice describes, at a high level, how RozgarLocal may handle information when people use the platform.",
+      "intro": "This draft explains how RozgarLocal handles information for the features currently implemented, and identifies important policies that must be finalized before launch.",
       "collection": {
         "title": "Information we may collect",
-        "body": "Depending on the features you use, this may include your name, email address, account credentials, profile details, job-related activity, and basic technical or diagnostic information."
+        "body": "Account information includes your name, email, selected role, account status and authentication records. Passwords are stored as hashes, not plaintext. If you use Google sign-in, the service receives a Google account identifier, verified email and, when provided, your name. Profile information can include phone, state, city, skills and experience, or business and contact details. Technical information may include session records, IP addresses and security or diagnostic logs."
       },
       "use": {
         "title": "How information may be used",
-        "body": "Information may be used to create and secure accounts, provide platform features, support job-seeker and employer workflows, respond to requests, and maintain the reliability of the service."
+        "body": "Information is used to create and secure accounts, authenticate users, send verification and password-reset emails, save profiles and preferences, enforce access controls, support administration and maintain the service. Where required by law, additional notice or consent will be provided for specific processing."
+      },
+      "visibility": {
+        "title": "Profile and contact visibility",
+        "body": "Email and phone visibility are controlled separately and are off by default. The intended policy is that an employer may make enabled contact details public on its profile and jobs, while a job seeker's enabled details may be shown only to an authorized employer receiving that person's application, not publicly. Public job and application features are not yet available; these visibility rules must be enforced before they launch."
       },
       "sharing": {
         "title": "When information may be shared",
-        "body": "Information may be shared with service providers that help operate RozgarLocal. Profile or application details may be shown to other users when you choose to use a relevant feature. This sample does not define every disclosure."
+        "body": "Authorized administrators may access information needed to operate and review the service. Service providers may process information to provide hosting, database, security and email services; the authentication email integration uses Resend. If you choose Google sign-in, Google processes the authentication under its own policies. Information may also be disclosed where required by applicable law."
+      },
+      "cookies": {
+        "title": "Cookies and local storage",
+        "body": "The service uses cookies for authentication sessions, Google sign-in security and language preference. Browser storage may also be used for interface preferences such as theme. Blocking or clearing these can sign you out or reset preferences. Optional analytics and advertising cookies are not currently used."
+      },
+      "futureFeatures": {
+        "title": "Future job and verification features",
+        "body": "Job listings, applications and employer verification document uploads are planned but not yet available. Before these launch, the operator must define and disclose what additional information is collected, who can access it, the storage provider and safeguards, retention periods and deletion procedures. Do not upload verification evidence through unsupported channels."
       },
       "retention": {
         "title": "Retention",
-        "body": "Information may be kept for as long as needed to provide the service, meet operational needs, resolve disputes, and comply with applicable requirements. Specific retention periods are not set in this draft."
+        "body": "Retention periods and deletion exceptions for accounts, sessions, logs, applications and verification evidence have not yet been finalized. These must be documented before launch, taking account of operational needs, security and applicable legal obligations."
       },
       "security": {
         "title": "Security",
-        "body": "We plan to use reasonable safeguards to protect information. No online service can guarantee absolute security, and this placeholder does not describe the safeguards used by a production service."
+        "body": "The implementation uses measures including hashed passwords and refresh tokens, protected session cookies and role-based API access controls. Deployment configuration, provider security, monitoring and incident procedures require validation. No online service can guarantee absolute security."
       },
       "choices": {
         "title": "Your choices",
-        "body": "You may review or update some account details through the service when those controls are available. Contact support@rozgarlocal.example with privacy questions or requests. Applicable rights may depend on your location."
+        "body": "You can edit supported profile fields and change contact visibility settings. Depending on applicable law, you may have rights relating to access, correction, erasure or withdrawal of consent. Account deletion and a privacy request process are not yet available; the operator must publish an accessible request and grievance process before launch."
       },
       "contact": {
         "title": "Contact and updates",
-        "body": "We may update this notice as RozgarLocal changes. For this sample, contact support@rozgarlocal.example. The address is a placeholder and is not monitored."
+        "body": "The operator's legal name, privacy and grievance contact, effective date and process for notifying users of material changes have not yet been provided. They must be added after legal review and before this notice is published as final."
       }
     }
   }

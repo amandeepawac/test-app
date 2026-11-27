@@ -12,7 +12,9 @@ export async function LegalDocument({ kind }: { kind: LegalDocumentKind }) {
         { title: t('terms.acceptance.title'), body: t('terms.acceptance.body') },
         { title: t('terms.account.title'), body: t('terms.account.body') },
         { title: t('terms.use.title'), body: t('terms.use.body') },
+        { title: t('terms.hiring.title'), body: t('terms.hiring.body') },
         { title: t('terms.content.title'), body: t('terms.content.body') },
+        { title: t('terms.accountClosure.title'), body: t('terms.accountClosure.body') },
         { title: t('terms.availability.title'), body: t('terms.availability.body') },
         { title: t('terms.liability.title'), body: t('terms.liability.body') },
         { title: t('terms.changes.title'), body: t('terms.changes.body') },
@@ -20,7 +22,10 @@ export async function LegalDocument({ kind }: { kind: LegalDocumentKind }) {
     : [
         { title: t('privacy.collection.title'), body: t('privacy.collection.body') },
         { title: t('privacy.use.title'), body: t('privacy.use.body') },
+        { title: t('privacy.visibility.title'), body: t('privacy.visibility.body') },
         { title: t('privacy.sharing.title'), body: t('privacy.sharing.body') },
+        { title: t('privacy.cookies.title'), body: t('privacy.cookies.body') },
+        { title: t('privacy.futureFeatures.title'), body: t('privacy.futureFeatures.body') },
         { title: t('privacy.retention.title'), body: t('privacy.retention.body') },
         { title: t('privacy.security.title'), body: t('privacy.security.body') },
         { title: t('privacy.choices.title'), body: t('privacy.choices.body') },
@@ -47,9 +52,6 @@ export async function LegalDocument({ kind }: { kind: LegalDocumentKind }) {
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-auth-muted">
             {t(isTerms ? 'terms.intro' : 'privacy.intro')}
-          </p>
-          <p className="mt-4 text-sm text-auth-muted">
-            {t('updatedLabel')}: {t('updatedPlaceholder')}
           </p>
         </header>
 
