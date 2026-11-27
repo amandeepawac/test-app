@@ -1059,6 +1059,14 @@ verification submission; implementing the approved re-review policy
 requires a safe verification workflow. Future dashboard and job endpoints
 must enforce profile completion and verification as applicable.
 
+The web now has separate employer and job seeker profile and contact
+settings pages, plus an employer verification-status page. Profile forms
+use React Hook Form and the shared form controls, and support first-time
+draft creation and save-and-complete. Incomplete profiles are redirected
+to onboarding before accessing overview, settings, or verification pages.
+Document uploads and job/application pages remain unavailable until their
+corresponding APIs and policies are implemented.
+
 ### 10.1 Pending profile-related API work
 
 The basic profile draft, retrieval, and completion routes described above

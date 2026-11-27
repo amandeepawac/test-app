@@ -1,4 +1,37 @@
 {
+  "Portal": {
+    "required": "ਪ੍ਰੋਫਾਈਲ ਪੂਰੀ ਕਰਨ ਲਈ ਇਹ ਜਾਣਕਾਰੀ ਲਾਜ਼ਮੀ ਹੈ।",
+    "overview": "ਸੰਖੇਪ", "profile": "ਮੇਰੀ ਪ੍ਰੋਫਾਈਲ", "settings": "ਸੰਪਰਕ ਸੈਟਿੰਗਾਂ",
+    "navigation": "ਵਰਕਸਪੇਸ ਨੈਵੀਗੇਸ਼ਨ", "verification": "ਰੁਜ਼ਗਾਰਦਾਤਾ ਤਸਦੀਕ",
+    "businessDetails": "ਕਾਰੋਬਾਰ ਦੇ ਵੇਰਵੇ", "yourDetails": "ਤੁਹਾਡੇ ਵੇਰਵੇ",
+    "draftHint": "ਕਦੇ ਵੀ ਡਰਾਫਟ ਸੰਭਾਲੋ। ਪ੍ਰੋਫਾਈਲ ਪੂਰੀ ਕਰਨ ਲਈ ਨਾਮ, ਫ਼ੋਨ, ਰਾਜ, ਸ਼ਹਿਰ ਅਤੇ ਭੂਮਿਕਾ ਸੰਬੰਧੀ ਵੇਰਵੇ ਚਾਹੀਦੇ ਹਨ।",
+    "businessName": "ਕਾਰੋਬਾਰ ਦਾ ਨਾਮ", "employerType": "ਸੰਸਥਾ ਦੀ ਕਿਸਮ", "contactPersonName": "ਸੰਪਰਕ ਵਿਅਕਤੀ",
+    "fullName": "ਪੂਰਾ ਨਾਮ", "phone": "ਫ਼ੋਨ", "stateName": "ਰਾਜ", "cityName": "ਸ਼ਹਿਰ",
+    "websiteUrl": "ਵੈੱਬਸਾਈਟ", "addressLine": "ਕਾਰੋਬਾਰ ਦਾ ਪਤਾ", "businessDescription": "ਕਾਰੋਬਾਰ ਬਾਰੇ",
+    "experienceLevel": "ਤਜਰਬੇ ਦਾ ਪੱਧਰ", "experienceSummary": "ਤਜਰਬੇ ਦਾ ਸੰਖੇਪ", "select": "ਵਿਕਲਪ ਚੁਣੋ",
+    "skills": "ਹੁਨਰ", "skillsHint": "ਵੱਧ ਤੋਂ ਵੱਧ 50 ਹੁਨਰ ਚੁਣੋ। ਪੰਨਾ ਬਦਲਣ ਤੇ ਚੁਣੇ ਹੁਨਰ ਉਪਲਬਧ ਰਹਿੰਦੇ ਹਨ।",
+    "searchSkills": "ਹੁਨਰ ਖੋਜੋ", "noSkills": "ਕੋਈ ਮਿਲਦਾ ਹੁਨਰ ਨਹੀਂ ਮਿਲਿਆ।",
+    "showEmail": "ਈਮੇਲ ਦਿਖਾਓ", "showPhone": "ਫ਼ੋਨ ਨੰਬਰ ਦਿਖਾਓ",
+    "employerPrivacy": "ਸੰਪਰਕ ਵੇਰਵੇ ਮੂਲ ਰੂਪ ਵਿੱਚ ਲੁਕੇ ਰਹਿੰਦੇ ਹਨ। ਸਮਰੱਥ ਵੇਰਵੇ ਤੁਹਾਡੀ ਪ੍ਰੋਫਾਈਲ ਅਤੇ ਨੌਕਰੀਆਂ ਤੇ ਜਨਤਕ ਦਿਸਦੇ ਹਨ।",
+    "seekerPrivacy": "ਸੰਪਰਕ ਵੇਰਵੇ ਮੂਲ ਰੂਪ ਵਿੱਚ ਲੁਕੇ ਰਹਿੰਦੇ ਹਨ। ਸਮਰੱਥ ਵੇਰਵੇ ਸਿਰਫ਼ ਤੁਹਾਡੀਆਂ ਅਰਜ਼ੀਆਂ ਪ੍ਰਾਪਤ ਕਰਨ ਵਾਲੇ ਰੁਜ਼ਗਾਰਦਾਤਿਆਂ ਨੂੰ ਦਿਸਦੇ ਹਨ, ਜਨਤਕ ਨਹੀਂ।",
+    "verificationDescription": "ਤਸਦੀਕ ਦੀ ਸਥਿਤੀ ਅਤੇ ਪ੍ਰਬੰਧਕ ਦੀ ਰਾਏ ਵੇਖੋ।",
+    "verificationLevel": "ਤਸਦੀਕ ਦਾ ਪੱਧਰ", "reason": "ਕਾਰਨ", "note": "ਸਮੀਖਿਅਕ ਦੀ ਟਿੱਪਣੀ",
+    "uploadUnavailable": "ਦਸਤਾਵੇਜ਼ ਜਮ੍ਹਾਂ ਕਰਨਾ ਅਜੇ ਉਪਲਬਧ ਨਹੀਂ ਹੈ। ਇੱਥੇ ਸਿਰਫ਼ ਤਸਦੀਕ ਦੀ ਸਥਿਤੀ ਦਿਖਾਈ ਜਾਂਦੀ ਹੈ।",
+    "save": "ਬਦਲਾਅ ਸੰਭਾਲੋ", "saving": "ਸੰਭਾਲਿਆ ਜਾ ਰਿਹਾ ਹੈ...", "saved": "ਬਦਲਾਅ ਸੰਭਾਲੇ ਗਏ।", "complete": "ਸੰਭਾਲੋ ਅਤੇ ਪੂਰਾ ਕਰੋ",
+    "requestFailed": "ਬੇਨਤੀ ਪੂਰੀ ਨਹੀਂ ਹੋਈ। ਜਾਣਕਾਰੀ ਜਾਂਚੋ ਅਤੇ ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "identityLocked": "ਤਸਦੀਕ ਜਮ੍ਹਾਂ ਕਰਨ ਤੋਂ ਬਾਅਦ ਕਾਰੋਬਾਰ ਦਾ ਨਾਮ ਅਤੇ ਕਿਸਮ ਨਹੀਂ ਬਦਲੇ ਜਾ ਸਕਦੇ।",
+    "retry": "ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ", "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...", "previous": "ਪਿਛਲਾ", "next": "ਅਗਲਾ",
+    "employerTypes": {
+      "COMPANY": "ਕੰਪਨੀ", "SMALL_BUSINESS": "ਛੋਟਾ ਕਾਰੋਬਾਰ", "SHOP": "ਦੁਕਾਨ", "FACTORY": "ਫੈਕਟਰੀ",
+      "RESTAURANT": "ਰੈਸਟੋਰੈਂਟ", "CONTRACTOR": "ਠੇਕੇਦਾਰ", "NON_PROFIT": "ਗੈਰ-ਮੁਨਾਫ਼ਾ",
+      "HOUSEHOLD": "ਘਰ", "INDIVIDUAL": "ਵਿਅਕਤੀ", "OTHER": "ਹੋਰ"
+    },
+    "experienceLevels": {
+      "NO_EXPERIENCE": "ਕੋਈ ਤਜਰਬਾ ਨਹੀਂ", "ENTRY_LEVEL": "ਸ਼ੁਰੂਆਤੀ ਪੱਧਰ", "LESS_THAN_1_YEAR": "1 ਸਾਲ ਤੋਂ ਘੱਟ",
+      "ONE_TO_THREE_YEARS": "1–3 ਸਾਲ", "THREE_TO_FIVE_YEARS": "3–5 ਸਾਲ",
+      "FIVE_TO_TEN_YEARS": "5–10 ਸਾਲ", "TEN_PLUS_YEARS": "10+ ਸਾਲ"
+    }
+  },
   "Metadata": {
     "description": "ਸਥਾਨਕ ਲੋਕਾਂ ਨੂੰ ਰੁਜ਼ਗਾਰ ਦੇ ਮੌਕਿਆਂ ਨਾਲ ਜੋੜਨਾ।"
   },

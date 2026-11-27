@@ -12,6 +12,7 @@ import { useAuthErrorMessage } from '@/features/auth/use-auth-error-message';
 import { AuthLayout, PreviewSubmit } from '@/features/auth/auth-layout';
 import { FieldGroup } from '@/components/ui/field';
 import { signIn } from '@/features/auth/session-actions';
+import { getWorkspacePathAction } from '@/features/portals/portal-actions';
 
 export function LoginForm() {
   const t = useTranslations('Auth');
@@ -36,7 +37,7 @@ export function LoginForm() {
               ? await navigator.locks.request('rozgarlocal-session', submit)
               : await submit();
             if (outcome === 'signed-in') {
-              router.push('/');
+              router.push(await getWorkspacePathAction());
               router.refresh();
             } else {
               setResult(outcome);

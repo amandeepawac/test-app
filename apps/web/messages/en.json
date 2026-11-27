@@ -1,4 +1,37 @@
 {
+  "Portal": {
+    "required": "This field is required to complete your profile.",
+    "overview": "Overview", "profile": "My profile", "settings": "Contact settings",
+    "navigation": "Workspace navigation", "verification": "Employer verification",
+    "businessDetails": "Business details", "yourDetails": "Your details",
+    "draftHint": "Save a draft at any time. Name, phone, state, city and your role-specific details are needed to complete your profile.",
+    "businessName": "Business name", "employerType": "Organization type", "contactPersonName": "Contact person",
+    "fullName": "Full name", "phone": "Phone", "stateName": "State", "cityName": "City",
+    "websiteUrl": "Website", "addressLine": "Business address", "businessDescription": "About your business",
+    "experienceLevel": "Experience level", "experienceSummary": "Experience summary", "select": "Select an option",
+    "skills": "Skills", "skillsHint": "Select up to 50 skills. Selected skills remain available when changing pages.",
+    "searchSkills": "Search skills", "noSkills": "No matching skills found.",
+    "showEmail": "Show email address", "showPhone": "Show phone number",
+    "employerPrivacy": "Contact details are hidden by default. Enabled fields are visible publicly on your profile and jobs.",
+    "seekerPrivacy": "Contact details are hidden by default. Enabled fields are visible only to employers receiving your applications, not publicly.",
+    "verificationDescription": "Review your verification status and administrator feedback.",
+    "verificationLevel": "Verification level", "reason": "Reason", "note": "Reviewer note",
+    "uploadUnavailable": "Document submission is not available yet. This page shows verification status only.",
+    "save": "Save changes", "saving": "Saving...", "saved": "Changes saved.", "complete": "Save and complete",
+    "requestFailed": "The request could not be completed. Check your information and try again.",
+    "identityLocked": "Business name and organization type cannot be changed after verification submission.",
+    "retry": "Retry", "loading": "Loading...", "previous": "Previous", "next": "Next",
+    "employerTypes": {
+      "COMPANY": "Company", "SMALL_BUSINESS": "Small business", "SHOP": "Shop", "FACTORY": "Factory",
+      "RESTAURANT": "Restaurant", "CONTRACTOR": "Contractor", "NON_PROFIT": "Non-profit",
+      "HOUSEHOLD": "Household", "INDIVIDUAL": "Individual", "OTHER": "Other"
+    },
+    "experienceLevels": {
+      "NO_EXPERIENCE": "No experience", "ENTRY_LEVEL": "Entry level", "LESS_THAN_1_YEAR": "Less than 1 year",
+      "ONE_TO_THREE_YEARS": "1–3 years", "THREE_TO_FIVE_YEARS": "3–5 years",
+      "FIVE_TO_TEN_YEARS": "5–10 years", "TEN_PLUS_YEARS": "10+ years"
+    }
+  },
   "Metadata": {
     "description": "Connecting local people and opportunities."
   },

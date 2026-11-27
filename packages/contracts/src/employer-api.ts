@@ -10,7 +10,10 @@ const websiteSchema = z
   .trim()
   .max(2048)
   .url()
-  .refine((value) => /^https?:\/\//i.test(value), "Website must use HTTP or HTTPS");
+  .refine(
+    (value) => /^https?:\/\//i.test(value),
+    "Website must use HTTP or HTTPS",
+  );
 
 export const employerProfileUpdateSchema = z.strictObject({
   businessName: z.string().trim().min(1).max(200).optional(),
@@ -54,5 +57,9 @@ export const employerProfileResponseSchema = z.strictObject({
 });
 
 export type EmployerProfileUpdate = z.infer<typeof employerProfileUpdateSchema>;
-export type EmployerProfileResponse = z.infer<typeof employerProfileResponseSchema>;
-export type EmployerVerificationResponse = z.infer<typeof employerVerificationResponseSchema>;
+export type EmployerProfileResponse = z.infer<
+  typeof employerProfileResponseSchema
+>;
+export type EmployerVerificationResponse = z.infer<
+  typeof employerVerificationResponseSchema
+>;

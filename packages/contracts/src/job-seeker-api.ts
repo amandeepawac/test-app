@@ -40,7 +40,8 @@ export const jobSeekerProfileUpdateSchema = z
     showPhone: z.boolean().optional(),
   })
   .refine(
-    (value) => !value.skillIds || new Set(value.skillIds).size === value.skillIds.length,
+    (value) =>
+      !value.skillIds || new Set(value.skillIds).size === value.skillIds.length,
     { path: ["skillIds"], message: "Skills must not contain duplicates" },
   );
 
@@ -59,7 +60,13 @@ export const jobSeekerProfileResponseSchema = z.strictObject({
   completedAt: z.iso.datetime().nullable(),
 });
 
-export type JobSeekerProfileUpdate = z.infer<typeof jobSeekerProfileUpdateSchema>;
-export type JobSeekerProfileResponse = z.infer<typeof jobSeekerProfileResponseSchema>;
+export type JobSeekerProfileUpdate = z.infer<
+  typeof jobSeekerProfileUpdateSchema
+>;
+export type JobSeekerProfileResponse = z.infer<
+  typeof jobSeekerProfileResponseSchema
+>;
 export type JobSeekerSkillsQuery = z.infer<typeof jobSeekerSkillsQuerySchema>;
-export type JobSeekerSkillsResponse = z.infer<typeof jobSeekerSkillsResponseSchema>;
+export type JobSeekerSkillsResponse = z.infer<
+  typeof jobSeekerSkillsResponseSchema
+>;

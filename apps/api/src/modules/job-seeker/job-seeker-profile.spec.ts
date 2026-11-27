@@ -100,10 +100,7 @@ describe('PrismaJobSeekerProfileRepository', () => {
     vi.resetAllMocks();
     prisma.client.$transaction.mockImplementation((operation) => operation(tx));
     const module = await Test.createTestingModule({
-      providers: [
-        PrismaJobSeekerProfileRepository,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [PrismaJobSeekerProfileRepository, { provide: PrismaService, useValue: prisma }],
     }).compile();
     repository = module.get(PrismaJobSeekerProfileRepository);
   });

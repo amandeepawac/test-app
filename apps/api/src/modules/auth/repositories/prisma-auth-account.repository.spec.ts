@@ -21,10 +21,7 @@ describe('PrismaAuthAccountRepository registration roles', () => {
     prisma.client.$transaction.mockImplementation((operation) => operation(tx));
     tx.user.create.mockResolvedValue(account);
     const module = await Test.createTestingModule({
-      providers: [
-        PrismaAuthAccountRepository,
-        { provide: PrismaService, useValue: prisma },
-      ],
+      providers: [PrismaAuthAccountRepository, { provide: PrismaService, useValue: prisma }],
     }).compile();
     repository = module.get(PrismaAuthAccountRepository);
   });

@@ -1,5 +1,15 @@
 import { expect, test } from '@playwright/test';
 
+test('role workspaces redirect signed-out visitors to login', async ({ page }) => {
+  for (const path of [
+    '/employer/profile', '/employer/settings', '/employer/verification',
+    '/job-seeker/profile', '/job-seeker/settings',
+  ]) {
+    await page.goto(path);
+    await expect(page).toHaveURL(/\/login\?reason=expired$/);
+  }
+});
+
 test('registration validates input before submitting account details', async ({ page }) => {
   await page.goto('/register');
   await page.getByRole('button', { name: 'Create account' }).click();
