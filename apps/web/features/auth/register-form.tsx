@@ -11,8 +11,9 @@ import { useAuthErrorMessage } from '@/features/auth/use-auth-error-message';
 import { AuthLayout, PreviewSubmit } from '@/features/auth/auth-layout';
 import { FieldGroup } from '@/components/ui/field';
 import { registerAccount } from '@/features/auth/register-action';
+import { GoogleButton } from './google-button';
 
-export function RegisterForm() {
+export function RegisterForm({ googleError }: { googleError?: string }) {
   const t = useTranslations('Auth');
   const formatError = useAuthErrorMessage();
   const [result, setResult] = useState<'accepted' | 'invalid' | 'unavailable' | null>(null);
@@ -22,7 +23,8 @@ export function RegisterForm() {
   });
 
   return (
-    <AuthLayout title={t('createAccount')} description={t('registerDescription')} showGoogle>
+    <AuthLayout title={t('createAccount')} description={t('registerDescription')}
+      google={<GoogleButton mode="signup" role={form.watch('role')} />}>
       {result === 'accepted' ? (
         <p role="status" className="text-sm leading-6">
           {t('registerAccepted')}
@@ -92,6 +94,11 @@ export function RegisterForm() {
           {result === 'unavailable' && (
             <p role="alert" className="mt-4 text-sm text-destructive">
               {t('registerUnavailable')}
+            </p>
+          )}
+          {googleError && (
+            <p role="alert" className="mt-4 text-sm text-destructive">
+              {t(googleError === 'unavailable' ? 'sessionUnavailable' : 'googleFailed')}
             </p>
           )}
           <div className="mt-8">

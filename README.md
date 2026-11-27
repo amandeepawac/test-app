@@ -4,7 +4,9 @@ RozgarLocal is a work-in-progress local employment platform. The repository
 contains a Next.js web app, a NestJS API, shared contracts and a Prisma
 database package. Email/password registration, verification, sign-in, session
 management and password recovery are implemented but require deployment
-configuration and end-to-end testing. Marketplace features are not implemented.
+configuration and end-to-end testing. Google signup/sign-in and authenticated
+provider linking are implemented in code and also require configuration and
+end-to-end testing. Marketplace features are not implemented.
 
 ## Prerequisites
 
@@ -49,6 +51,26 @@ and contain at least 32 UTF-8 bytes. Never commit secrets. Use HTTPS for the
 public web origin and the API connection outside localhost, and a verified
 Resend sender.
 
+For Google sign-in, create a Google OAuth **web application** client and
+register the exact callback `https://YOUR-WEB-ORIGIN/auth/google/callback`
+(locally `http://localhost:3000/auth/google/callback`). Set
+`GOOGLE_CLIENT_ID` and `GOOGLE_CALLBACK_URL` to the same values in both API
+and web environments, and `GOOGLE_CLIENT_SECRET` in the API environment only.
+Set `WEB_BASE_URL` in the web environment to the same public origin used by
+the callback. The callback must be on that origin and HTTPS in production.
+Configure the Google consent screen and test users as needed. Do not commit
+the client secret.
+
+The web server initiates OAuth with state, nonce, and PKCE, and the API checks
+the Google token and verified email. Signup creates a job seeker or employer
+with the selected role; sign-in never changes the role. Google cannot implicitly
+take over an existing email account: first sign in using the existing method,
+then link a Google account with the same verified email from role settings.
+Google-only accounts sign in through Google; public Google login cannot access
+admin accounts. Google credentials, scopes, account linking, protected
+callbacks, and session behavior require end-to-end verification in the target
+environment before launch.
+
 The web server stores access and rotating refresh tokens in HttpOnly,
 SameSite=Lax cookies (Secure in production). It uses Next.js server actions'
 origin/host CSRF checks; configure the reverse proxy to overwrite the Host and
@@ -79,7 +101,8 @@ The lockfile needs to be refreshed after the dependency changes on a machine
 where installation is permitted; frozen installation will fail until then.
 When running API commands directly, build `@repo/contracts` and `@repo/db`
 first. Turbo's current strict environment configuration does not pass
-`WEB_BASE_URL`, `AUTH_MAIL_FROM`, `RESEND_API_KEY`, `AUTH_JWT_SECRET`, or
+`WEB_BASE_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_CALLBACK_URL`,
+`AUTH_MAIL_FROM`, `RESEND_API_KEY`, `AUTH_JWT_SECRET`, or
 `AUTH_PROXY_SECRET` from the process
 environment; use the root `.env` for development or launch the built API
 directly with these environment variables until Turbo is configured for them.

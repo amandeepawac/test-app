@@ -36,9 +36,14 @@ account changes when such data is added.
 
 Use the `@/` alias for imports from the web app root.
 
-The email/password forms call the API through server actions. Google sign-in
-remains unavailable. See the repository README for the required API, proxy,
-session and Resend configuration and current security limitations.
+The email/password forms call the API through server actions. Google uses
+server-side OAuth code exchange and a browser-bound state/PKCE flow. New
+Google users choose a single role at registration; returning users retain their
+existing role. Accounts are never linked just because their emails match:
+sign in with the existing method and use Google linking in role settings.
+Google linking requires the same verified email on both accounts.
+See the repository README for Google, API, proxy, session and Resend
+configuration and current security limitations.
 The form validation schemas live in `@repo/contracts` and use translation keys
 for their error messages; they describe form input, not API request payloads.
 

@@ -1,5 +1,7 @@
 import { RegisterForm } from '@/features/auth/register-form';
 
-export default function RegisterPage() {
-  return <RegisterForm />;
+export default async function RegisterPage({ searchParams }: {
+  searchParams: Promise<{ google?: string }>;
+}) {
+  return <RegisterForm googleError={(await searchParams).google} />;
 }

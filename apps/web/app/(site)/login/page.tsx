@@ -1,5 +1,7 @@
 import { LoginForm } from '@/features/auth/login-form';
 
-export default function LoginPage() {
-  return <LoginForm />;
+export default async function LoginPage({ searchParams }: {
+  searchParams: Promise<{ google?: string }>;
+}) {
+  return <LoginForm googleError={(await searchParams).google} />;
 }

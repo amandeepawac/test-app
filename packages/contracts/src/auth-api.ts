@@ -23,6 +23,21 @@ export const loginRequestSchema = z.strictObject({
   email,
   password: z.string().min(1).max(128),
 });
+const googleExchangeFields = {
+  code: z.string().min(1).max(4096),
+  codeVerifier: z.string().regex(/^[A-Za-z0-9_-]{43,128}$/),
+  nonce: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
+};
+export const googleAuthRequestSchema = z.discriminatedUnion("mode", [
+  z.strictObject({ ...googleExchangeFields, mode: z.literal("login") }),
+  z.strictObject({
+    ...googleExchangeFields,
+    mode: z.literal("signup"),
+    role: z.enum(["JOB_SEEKER", "EMPLOYER"]),
+  }),
+  z.strictObject({ ...googleExchangeFields, mode: z.literal("link") }),
+]);
+export type GoogleAuthRequest = z.infer<typeof googleAuthRequestSchema>;
 export const forgotPasswordRequestSchema = z.strictObject({ email });
 export const resetPasswordRequestSchema = z.strictObject({
   token,

@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import type {
   ForgotPasswordRequest,
   LoginRequest,
+  GoogleAuthRequest,
   RegistrationRequest,
   ResetPasswordRequest,
 } from '@repo/contracts';
 import { EmailVerificationProvider } from '@/modules/auth/providers/email-verification.provider.js';
 import { LoginProvider } from '@/modules/auth/providers/login.provider.js';
+import { GoogleAuthProvider } from '@/modules/auth/providers/google-auth.provider.js';
 import { PasswordRecoveryProvider } from '@/modules/auth/providers/password-recovery.provider.js';
 import { RegistrationProvider } from '@/modules/auth/providers/registration.provider.js';
 import { SessionProvider } from '@/modules/auth/providers/session.provider.js';
@@ -19,6 +21,7 @@ export class AuthService {
     private readonly loginProvider: LoginProvider,
     private readonly sessions: SessionProvider,
     private readonly passwordRecovery: PasswordRecoveryProvider,
+    private readonly googleAuth: GoogleAuthProvider,
   ) {}
 
   register(input: RegistrationRequest): Promise<void> {
@@ -31,6 +34,10 @@ export class AuthService {
 
   login(input: LoginRequest) {
     return this.loginProvider.login(input);
+  }
+
+  google(input: GoogleAuthRequest, authorization?: string) {
+    return this.googleAuth.authenticate(input, authorization);
   }
 
   refresh(refreshToken: string) {

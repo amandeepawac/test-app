@@ -155,6 +155,11 @@
     "apiNote": "यह स्थिति केवल API प्रक्रिया की जाँच करती है, डेटाबेस की नहीं।"
   },
   "Auth": {
+    "continueGoogle": "Google से जारी रखें", "linkGoogle": "Google खाता जोड़ें",
+    "googleAccount": "Google साइन इन",
+    "googleLinkDescription": "Google जोड़ने के लिए उसी सत्यापित ईमेल पते वाले Google खाते से साइन इन करें।",
+    "googleLinked": "आपका Google खाता जोड़ दिया गया है।",
+    "googleFailed": "Google प्रमाणीकरण पूरा नहीं हुआ। खाता जोड़ने के लिए अपने मौजूदा तरीके से साइन इन करें या फिर कोशिश करें।",
     "accountRole": "खाते का प्रकार",
     "selectRole": "खाते का प्रकार चुनें",
     "noMatchingOptions": "कोई मेल खाने वाला विकल्प नहीं मिला।",
@@ -195,7 +200,6 @@
     "resetInvalid": "यह रीसेट लिंक अमान्य है या इसकी समय सीमा समाप्त हो गई है।",
     "signOut": "साइन आउट करें",
     "resumeSession": "सत्र फिर से शुरू करें",
-    "googleComingSoon": "Google से जारी रखें (जल्द आ रहा है)",
     "noAccount": "RozgarLocal पर नए हैं?",
     "haveAccount": "पहले से खाता है?",
     "nameRequired": "अपना नाम दर्ज करें।",

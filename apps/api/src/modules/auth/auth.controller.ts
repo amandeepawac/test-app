@@ -15,12 +15,14 @@ import {
   registrationRequestSchema,
   verifyEmailRequestSchema,
   loginRequestSchema,
+  googleAuthRequestSchema,
   forgotPasswordRequestSchema,
   resetPasswordRequestSchema,
   refreshRequestSchema,
   type RegistrationRequest,
   type VerifyEmailRequest,
   type LoginRequest,
+  type GoogleAuthRequest,
   type ForgotPasswordRequest,
   type ResetPasswordRequest,
   type RefreshRequest,
@@ -54,6 +56,15 @@ export class AuthController {
   @Header('Cache-Control', 'no-store')
   login(@Body({ schema: loginRequestSchema }) body: LoginRequest) {
     return this.auth.login(body);
+  }
+
+  @Post('google')
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  @HttpCode(200)
+  @Header('Cache-Control', 'no-store')
+  google(@Body({ schema: googleAuthRequestSchema }) body: GoogleAuthRequest,
+    @Headers('authorization') authorization?: string) {
+    return this.auth.google(body, authorization);
   }
 
   @Post('refresh')

@@ -155,6 +155,11 @@
     "apiNote": "This status checks the API process only, not the database."
   },
   "Auth": {
+    "continueGoogle": "Continue with Google", "linkGoogle": "Link Google account",
+    "googleAccount": "Google sign-in",
+    "googleLinkDescription": "To link Google, sign in with a Google account using the same verified email address.",
+    "googleLinked": "Your Google account is linked.",
+    "googleFailed": "Google authentication could not be completed. Sign in with your existing method to link an account, or try again.",
     "accountRole": "Account type",
     "selectRole": "Select an account type",
     "noMatchingOptions": "No matching options found.",
@@ -195,7 +200,6 @@
     "resetInvalid": "This reset link is invalid or has expired.",
     "signOut": "Sign out",
     "resumeSession": "Resume session",
-    "googleComingSoon": "Continue with Google (coming soon)",
     "noAccount": "New to RozgarLocal?",
     "haveAccount": "Already have an account?",
     "nameRequired": "Enter your name.",

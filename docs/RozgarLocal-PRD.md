@@ -58,7 +58,7 @@ public workflow is available.
 | Area                          | Status                                                         | Implemented now                                                                                                                                                               | Still pending                                                                                                                         |
 | ----------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | Engineering foundation        | Implemented in code; deployment readiness pending              | Turborepo workspace, Next.js web app, NestJS API, shared contracts, Prisma schema/migrations, environment validation, and API health route                                    | Production deployment, CI/deployment pipeline, operational monitoring, backups, and clean-environment validation                      |
-| Authentication                | Core email/password flows implemented                          | Role-selecting registration, email verification, sign-in/out, access and rotating refresh sessions, password reset, authenticated session lookup, and rate limiting           | Google OAuth/linking, resend-verification endpoint, and production configuration/flow validation                                      |
+| Authentication                | Email/password and Google flows implemented in code            | Role-selecting registration, email verification, Google OAuth and authenticated linking, sessions, password reset, and rate limiting | Resend-verification endpoint and configuration/security/end-to-end validation |
 | Job-seeker profile            | Core profile journey implemented                               | Save and complete profile, state/city comboboxes, searchable paginated skill selection, private-by-default email/phone settings, workspace overview, and loading/error states | Education/image upload, public job discovery, saved jobs, applications, application history, and withdrawal                           |
 | Employer profile              | Core profile journey implemented                               | Save and complete business profile, contact visibility settings, workspace overview, and read-only verification status/feedback                                               | Evidence upload/resubmission, fully connected verification submission/review, job drafts/publication, and applicant management        |
 | Admin console                 | Review tools implemented; workflows depend on incoming records | Dashboard, employer verification review, job moderation, report review, and audit-log views have API and web implementations                                                  | Employer evidence intake and report submission; job moderation cannot be exercised through a public job workflow until job APIs exist |
@@ -164,7 +164,9 @@ records.
 - Authentication provider information is kept separately from the user
   profile through `UserAuthProvider`.
 - A user may authenticate using email/password, Google, or both when
-  linked safely.
+  linked safely. Existing accounts must sign in first and explicitly link a
+  Google identity with the same verified email; email matching alone never
+  links accounts. Google sign-in uses an existing role without changing it.
 - Application permissions must be enforced by the API, not only by
   hiding UI controls.
 - Job seekers must not manage employer-only resources; employers must
@@ -1195,8 +1197,8 @@ implemented.
       close relevant employer jobs or withdraw eligible seeker
       applications before deletion completes. Withdrawal states, retention,
       anonymization, and deletion exceptions remain open.
-- [ ] Implement Google authentication and role selection for new Google
-      accounts, as required by the MVP.
+- [ ] Configure and validate Google signup, sign-in, role preservation, and
+      authenticated provider linking end to end in the target deployment.
 - [ ] Add remaining profile-related and marketplace notifications and API
       integration/end-to-end tests for onboarding, role and ownership checks, contact
       privacy, verification, and deletion. Document the API contracts in
@@ -1242,10 +1244,10 @@ workflows. 8. Add CI checks for lint, typecheck, tests, and build.
 works. - Prisma connects to PostgreSQL. - A migration can be applied to
 a clean database. - CI runs successfully.
 
-### Phase 2 --- Database and authentication foundation — core flows implemented; Google and validation pending
+### Phase 2 --- Database and authentication foundation — auth flows implemented; validation pending
 
 **Remaining work** 1. Confirm the existing schema and migrations against
-the target database and run the expanded master-data seed successfully. 2. Implement Google sign-in and safe account/provider linking. 3. Add a
+the target database and run the expanded master-data seed successfully. 2. Configure and validate Google sign-in and authenticated provider linking. 3. Add a
 resend-verification endpoint. 4. Confirm the generated API documentation,
 security checks, and auth flows in the configured deployment environment.
 
@@ -1498,7 +1500,7 @@ The MVP is ready for a controlled launch when:
     public job discovery.
 4.  Implement applications, saved jobs, applicant management, reporting
     intake, and user-facing notification flows.
-5.  Complete Google authentication, account deletion, PWA behavior, and
+5.  Validate Google authentication and complete account deletion, PWA behavior, and
     launch readiness checks as those dependencies become actionable.
 
 **Recommended build order:** data validation → verification intake → job

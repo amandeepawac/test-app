@@ -50,6 +50,7 @@ test('registration lets users choose one role and preserves it after validation'
   await role.click();
   await page.getByRole('option', { name: 'Employer', exact: true }).click();
   await expect(role).toContainText('Employer');
+  await expect(page.locator('form[action="/auth/google/start"] input[name="role"]')).toHaveValue('EMPLOYER');
   await page.getByRole('button', { name: 'Create account' }).click();
   await expect(page.getByText('Enter your name.')).toBeVisible();
   await expect(role).toContainText('Employer');
@@ -57,6 +58,40 @@ test('registration lets users choose one role and preserves it after validation'
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   );
+});
+
+test('Google signup submits the selected role without submitting password fields', async ({ page }) => {
+  await page.goto('/register');
+  await page.getByRole('combobox', { name: 'Account type' }).click();
+  await page.getByRole('option', { name: 'Employer', exact: true }).click();
+  let submitted = '';
+  await page.route('**/auth/google/start', async (route) => {
+    submitted = route.request().postData() ?? '';
+    await route.fulfill({ status: 204 });
+  });
+  await page.getByRole('button', { name: 'Continue with Google' }).click();
+  await expect.poll(() => submitted).not.toBe('');
+  const data = new URLSearchParams(submitted);
+  expect(data.get('mode')).toBe('signup');
+  expect(data.get('role')).toBe('EMPLOYER');
+  expect(data.has('password')).toBe(false);
+});
+
+test('Google callback rejects a mismatched state and consumes the flow cookie', async ({ page, context }) => {
+  const production = process.env.NODE_ENV === 'production';
+  const cookie = production ? '__Host-google-flow' : 'google-flow';
+  await context.addCookies([{
+    name: cookie,
+    value: encodeURIComponent(JSON.stringify({
+      state: 'a'.repeat(43), nonce: 'b'.repeat(43), verifier: 'c'.repeat(43),
+      intent: { mode: 'login' },
+    })),
+    url: 'http://127.0.0.1:3000', httpOnly: true, sameSite: 'Lax', secure: production,
+  }]);
+  await page.goto('/auth/google/callback?state=invalid&code=test');
+  await expect(page).toHaveURL(/\/login\?google=failed$/);
+  await expect(page.getByRole('alert')).toContainText('Google authentication could not be completed');
+  expect((await context.cookies()).some((item) => item.name === cookie)).toBe(false);
 });
 
 test('auth forms do not show the preview notice', async ({ page }) => {
@@ -74,11 +109,11 @@ test('verification requires a token', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Verify email' })).toBeDisabled();
 });
 
-test('alternative sign-in is separated from the form only where available', async ({ page }) => {
+test('Google sign-in is separated from the form only where available', async ({ page }) => {
   for (const path of ['/login', '/register']) {
     await page.goto(path);
     await expect(page.getByText('or', { exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: /continue with google/i })).toBeDisabled();
+    await expect(page.getByRole('button', { name: /continue with google/i })).toBeEnabled();
   }
   for (const path of ['/forgot-password', '/reset-password']) {
     await page.goto(path);
@@ -158,7 +193,7 @@ test('auth pages keep forms aligned in a responsive split layout', async ({ page
       await page.goto(path);
       const card = page.locator('main [data-slot="card"]');
       const heading = card.getByRole('heading', { level: 1 });
-      const form = card.locator('form');
+      const form = card.locator('form').first();
       const cardBox = await card.boundingBox();
       const headingBox = await heading.boundingBox();
       const formBox = await form.boundingBox();
@@ -193,11 +228,11 @@ test('auth pages keep forms aligned in a responsive split layout', async ({ page
   }
 });
 
-test('auth routes link together and Google sign-in is unavailable', async ({ page }) => {
+test('auth routes link together and Google sign-in is available', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: 'Sign in' }).click();
   await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible();
-  await expect(page.getByRole('button', { name: /continue with google/i })).toBeDisabled();
+  await expect(page.getByRole('button', { name: /continue with google/i })).toBeEnabled();
   await page.getByRole('link', { name: 'Forgot password?' }).click();
   await expect(page.getByRole('heading', { name: 'Forgot your password?' })).toBeVisible();
   await page.getByRole('button', { name: 'Send reset link' }).click();

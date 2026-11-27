@@ -35,13 +35,13 @@ export function AuthLayout({
   title,
   description,
   children,
-  showGoogle = false,
+  google,
   isLogin = false,
 }: {
   title: string;
   description: string;
   children: ReactNode;
-  showGoogle?: boolean;
+  google?: ReactNode;
   isLogin?: boolean;
 }) {
   const t = useTranslations('Auth');
@@ -98,21 +98,14 @@ export function AuthLayout({
           </CardHeader>
           <CardContent className="space-y-6 [--input:var(--auth-input)] [--ring:var(--auth-primary)] [&_[data-slot=input-group-control]]:h-full [&_[data-slot=input-group]]:h-12 [&_[data-slot=input-group]]:rounded-lg [&_[data-slot=input]]:h-12 [&_[data-slot=input]]:rounded-lg [&_[data-slot=input]]:px-4">
             {children}
-            {showGoogle && (
+            {google && (
               <div className="space-y-6">
                 <div className="flex items-center gap-4 text-sm text-auth-muted">
                   <span aria-hidden="true" className="h-px flex-1 bg-auth-border" />
                   <span>{t('or')}</span>
                   <span aria-hidden="true" className="h-px flex-1 bg-auth-border" />
                 </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-auto min-h-12 w-full rounded-full border-auth-border bg-auth-surface px-4 py-3 text-center whitespace-normal text-auth-foreground"
-                  disabled
-                >
-                  {t('googleComingSoon')}
-                </Button>
+                {google}
               </div>
             )}
             <p className="border-t border-auth-border pt-6 text-center text-sm leading-6 text-auth-muted">

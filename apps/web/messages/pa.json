@@ -155,6 +155,11 @@
     "apiNote": "ਇਹ ਸਥਿਤੀ ਸਿਰਫ਼ API ਪ੍ਰਕਿਰਿਆ ਦੀ ਜਾਂਚ ਕਰਦੀ ਹੈ, ਡਾਟਾਬੇਸ ਦੀ ਨਹੀਂ।"
   },
   "Auth": {
+    "continueGoogle": "Google ਨਾਲ ਜਾਰੀ ਰੱਖੋ", "linkGoogle": "Google ਖਾਤਾ ਜੋੜੋ",
+    "googleAccount": "Google ਸਾਈਨ ਇਨ",
+    "googleLinkDescription": "Google ਜੋੜਨ ਲਈ ਉਸੇ ਤਸਦੀਕਸ਼ੁਦਾ ਈਮੇਲ ਪਤੇ ਵਾਲੇ Google ਖਾਤੇ ਨਾਲ ਸਾਈਨ ਇਨ ਕਰੋ।",
+    "googleLinked": "ਤੁਹਾਡਾ Google ਖਾਤਾ ਜੋੜ ਦਿੱਤਾ ਗਿਆ ਹੈ।",
+    "googleFailed": "Google ਪ੍ਰਮਾਣੀਕਰਨ ਪੂਰਾ ਨਹੀਂ ਹੋਇਆ। ਖਾਤਾ ਜੋੜਨ ਲਈ ਆਪਣੇ ਮੌਜੂਦਾ ਤਰੀਕੇ ਨਾਲ ਸਾਈਨ ਇਨ ਕਰੋ ਜਾਂ ਫਿਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
     "accountRole": "ਖਾਤੇ ਦੀ ਕਿਸਮ",
     "selectRole": "ਖਾਤੇ ਦੀ ਕਿਸਮ ਚੁਣੋ",
     "noMatchingOptions": "ਕੋਈ ਮਿਲਦਾ-ਜੁਲਦਾ ਵਿਕਲਪ ਨਹੀਂ ਮਿਲਿਆ।",
@@ -195,7 +200,6 @@
     "resetInvalid": "ਇਹ ਰੀਸੈੱਟ ਲਿੰਕ ਅਵੈਧ ਹੈ ਜਾਂ ਇਸ ਦੀ ਮਿਆਦ ਪੁੱਗ ਗਈ ਹੈ।",
     "signOut": "ਸਾਈਨ ਆਉਟ ਕਰੋ",
     "resumeSession": "ਸੈਸ਼ਨ ਮੁੜ ਸ਼ੁਰੂ ਕਰੋ",
-    "googleComingSoon": "Google ਨਾਲ ਜਾਰੀ ਰੱਖੋ (ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ)",
     "noAccount": "RozgarLocal ਉੱਤੇ ਨਵੇਂ ਹੋ?",
     "haveAccount": "ਪਹਿਲਾਂ ਤੋਂ ਖਾਤਾ ਹੈ?",
     "nameRequired": "ਆਪਣਾ ਨਾਮ ਦਰਜ ਕਰੋ।",
