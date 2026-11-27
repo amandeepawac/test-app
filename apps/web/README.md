@@ -44,7 +44,9 @@ for their error messages; they describe form input, not API request payloads.
 
 Reusable React Hook Form controls are in `components/form/`: text inputs,
 textareas, OTP inputs, checkboxes and checkbox groups, switches, radio groups,
-selects, native selects, comboboxes, and single-value sliders. Pass `control`,
+selects, comboboxes, and single-value sliders. Use `FormSelect` from
+`@/components/form/form-select` for dropdowns in React Hook Form forms instead
+of native selects. Pass `control`,
 `name`, and `label`, and provide matching `defaultValues` to `useForm` (strings,
 booleans, string arrays, or numbers as appropriate). Choice controls use
 `{ value, label, disabled? }` options and store string values; an empty string

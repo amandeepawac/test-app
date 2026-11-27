@@ -6,7 +6,6 @@ import { FormCheckboxGroup } from '@/components/form/form-checkbox-group';
 import { FormCombobox } from '@/components/form/form-combobox';
 import { FormInput } from '@/components/form/form-input';
 import { FormInputOTP } from '@/components/form/form-input-otp';
-import { FormNativeSelect } from '@/components/form/form-native-select';
 import { FormRadioGroup } from '@/components/form/form-radio-group';
 import { FormSelect } from '@/components/form/form-select';
 import { FormSlider } from '@/components/form/form-slider';
@@ -31,7 +30,7 @@ test('form controls render with their labels and configured defaults', () => {
         choices: ['one'],
         radio: 'one',
         select: 'one',
-        native: 'two',
+        secondSelect: 'two',
         combo: 'two',
         amount: 25,
       },
@@ -57,10 +56,10 @@ test('form controls render with their labels and configured defaults', () => {
           options={options}
           placeholder="Choose"
         />
-        <FormNativeSelect
+        <FormSelect
           control={form.control}
-          name="native"
-          label="Native select"
+          name="secondSelect"
+          label="Second select"
           options={options}
           placeholder="Choose"
         />
@@ -83,7 +82,8 @@ test('form controls render with their labels and configured defaults', () => {
   expect(html).toContain('aria-describedby=');
   expect(html).toContain('role="radiogroup"');
   expect(html).toContain('role="group"');
-  expect(html).toContain('Native select');
+  expect(html).toContain('Second select');
+  expect(html).not.toContain('<select');
   expect(html).toContain('Combobox');
   expect(html).toContain('Amount');
 });
