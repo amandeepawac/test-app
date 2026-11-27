@@ -60,7 +60,7 @@ public workflow is available.
 | Engineering foundation        | Implemented in code; deployment readiness pending              | Turborepo workspace, Next.js web app, NestJS API, shared contracts, Prisma schema/migrations, environment validation, and API health route                                    | Production deployment, CI/deployment pipeline, operational monitoring, backups, and clean-environment validation                      |
 | Authentication                | Email/password and Google flows implemented in code            | Role-selecting registration, email verification, Google OAuth and authenticated linking, sessions, password reset, and rate limiting | Resend-verification endpoint and configuration/security/end-to-end validation |
 | Job-seeker profile            | Core profile journey implemented                               | Save and complete profile, state/city comboboxes, searchable paginated skill selection, private-by-default email/phone settings, workspace overview, and loading/error states | Education/image upload, public job discovery, saved jobs, applications, application history, and withdrawal                           |
-| Employer profile              | Core profile journey and initial job APIs implemented in code  | Save and complete business profile, contact visibility settings, workspace overview, verification feedback, and employer-owned draft, publish and pause APIs               | Evidence upload/resubmission, verification submission/review, remaining job lifecycle and management UI, and applicant management      |
+| Employer profile              | Core profile journey and initial job management implemented in code | Save and complete business profile, contact visibility settings, verification feedback, and employer-owned job list, draft editing, publish and pause APIs and UI        | Evidence upload/resubmission, verification submission/review, remaining job lifecycle, job category/skill selection, and applicant management |
 | Admin console                 | Review tools implemented; workflows depend on incoming records | Dashboard, employer verification review, job moderation, report review, and audit-log views have API and web implementations                                                  | Employer evidence intake and report submission; job moderation cannot be exercised through a public job workflow until job APIs exist |
 | Categories and skills         | Seed code implemented; database population pending             | Idempotent category and skill seeders; job-seeker skill lookup API and UI                                                                                                     | Run the seed successfully against the intended database; category/job APIs and management UI                                          |
 | Notifications                 | Partial                                                        | Authentication email delivery is implemented; some admin decisions create notification records                                                                                | User notification inbox/read state, application lifecycle notifications, and reliable queued/retried delivery                         |
@@ -1184,7 +1184,9 @@ implemented.
       paused-job editing, employer-owned listing/detail, direct publication and pause are
       implemented in code. Publication requires `VERIFIED` status; prior job
       approval is not required. Database integration, end-to-end validation,
-      the remaining lifecycle actions and employer UI remain pending.
+      the remaining lifecycle actions and category/skill selection remain pending.
+      Employer job list, draft editing, publish and pause UI is implemented in
+      code; end-to-end validation remains pending.
 - [ ] Implement employer applicant listing and permitted application
       status updates, including ownership checks and status history.
 - [ ] In public employer profile and job responses, expose email and phone
@@ -1278,7 +1280,7 @@ and publication rules cannot be bypassed through direct API calls.
 
 ### Phase 4 --- Job posting and discovery — draft APIs implemented in code
 
-**Build** 1. Validate job draft creation and editing and add their UI. 2. Implement
+**Build** 1. Validate job draft creation and editing and their UI. 2. Implement
 server-side job lifecycle transitions. 3. Implement
 publication/moderation rules. 4. Implement public active-job listing. 5.
 Implement job detail endpoint and page. 6. Implement keyword search,

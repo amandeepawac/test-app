@@ -6,6 +6,9 @@ import {
   employerProfileResponseSchema,
   employerProfileUpdateSchema,
   employerVerificationResponseSchema,
+  employerJobResponseSchema,
+  employerJobListResponseSchema,
+  employerJobsQuerySchema,
   jobSeekerProfileResponseSchema,
   jobSeekerProfileUpdateSchema,
   jobSeekerSkillsResponseSchema,
@@ -13,6 +16,9 @@ import {
   type EmployerProfileUpdate,
   type JobSeekerProfileUpdate,
   type JobSeekerSkillsQuery,
+  type EmployerJobCreate,
+  type EmployerJobUpdate,
+  type EmployerJobsQuery,
 } from '@repo/contracts';
 import { authApiFetch } from '@/lib/auth-api';
 import { accessCookie } from '@/features/auth/session-cookies';
@@ -27,7 +33,12 @@ export class PortalApiError extends Error {
   }
 }
 
-async function request<T extends z.ZodType>(path: string, schema: T, init: RequestInit = {}) {
+async function request<T extends z.ZodType>(
+  path: string,
+  schema: T,
+  init: RequestInit = {},
+  jobs = false,
+) {
   const token = (await cookies()).get(accessCookie)?.value;
   if (!token) throw new PortalApiError(401, 'Your session has expired. Sign in again.');
   const headers = new Headers(init.headers);
@@ -40,8 +51,19 @@ async function request<T extends z.ZodType>(path: string, schema: T, init: Reque
     throw new PortalApiError(0, 'The service is temporarily unavailable. Please try again.');
   }
   if (!response.ok) {
-    const message =
-      response.status === 401
+    const message = jobs
+      ? response.status === 401
+        ? 'Your session has expired. Sign in again.'
+        : response.status === 403
+          ? 'You are not allowed to perform this action.'
+          : response.status === 404
+            ? 'Job not found.'
+            : response.status === 409
+              ? 'The job has changed or cannot be updated in its current state.'
+              : response.status === 400
+                ? 'Check the job details and expiry date.'
+                : 'The service is temporarily unavailable. Please try again.'
+      : response.status === 401
         ? 'Your session has expired. Sign in again.'
         : response.status === 403
           ? 'This workspace is not available for your account.'
@@ -107,6 +129,35 @@ export const listJobSeekerSkills = (input: JobSeekerSkillsQuery) => {
   if (query.search) params.set('search', query.search);
   return request(`/job-seeker/skills?${params}`, jobSeekerSkillsResponseSchema);
 };
+
+export const listEmployerJobs = (input: EmployerJobsQuery) => {
+  const query = employerJobsQuerySchema.parse(input);
+  const params = new URLSearchParams({ page: String(query.page), pageSize: String(query.pageSize) });
+  return request(`/employers/me/jobs?${params}`, employerJobListResponseSchema, {}, true);
+};
+export const getEmployerJob = (id: string) =>
+  request(`/employers/me/jobs/${encodeURIComponent(id)}`, employerJobResponseSchema, {}, true);
+export const createEmployerJob = (body: EmployerJobCreate) =>
+  request(
+    '/jobs',
+    employerJobResponseSchema,
+    { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
+    true,
+  );
+export const updateEmployerJob = (id: string, body: EmployerJobUpdate) =>
+  request(
+    `/jobs/${encodeURIComponent(id)}`,
+    employerJobResponseSchema,
+    { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
+    true,
+  );
+export const transitionEmployerJob = (id: string, action: 'publish' | 'pause') =>
+  request(
+    `/jobs/${encodeURIComponent(id)}/${action}`,
+    employerJobResponseSchema,
+    { method: 'POST' },
+    true,
+  );
 
 export const portalUpdateSchemas = {
   employer: employerProfileUpdateSchema,

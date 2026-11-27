@@ -5,6 +5,9 @@ test('role workspaces redirect signed-out visitors to login', async ({ page }) =
     '/employer/profile',
     '/employer/settings',
     '/employer/verification',
+    '/employer/jobs',
+    '/employer/jobs/new',
+    '/employer/jobs/01900000-0000-7000-8000-000000000001',
     '/job-seeker/profile',
     '/job-seeker/settings',
   ]) {

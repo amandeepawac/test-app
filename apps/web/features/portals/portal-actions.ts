@@ -1,7 +1,13 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { jobSeekerSkillsQuerySchema } from '@repo/contracts';
+import {
+  employerJobCreateSchema,
+  employerJobsQuerySchema,
+  employerJobUpdateSchema,
+  jobSeekerSkillsQuerySchema,
+} from '@repo/contracts';
+import { z } from 'zod';
 import { getCurrentUser } from '@/features/auth/current-user';
 import {
   completeEmployerProfile,
@@ -11,6 +17,11 @@ import {
   portalUpdateSchemas,
   saveEmployerProfile,
   saveJobSeekerProfile,
+  listEmployerJobs,
+  getEmployerJob,
+  createEmployerJob,
+  updateEmployerJob,
+  transitionEmployerJob,
 } from './portal-api';
 
 export type PortalActionResult<T> =
@@ -75,6 +86,42 @@ export async function searchSkillsAction(input: unknown) {
   if (!query.success)
     return { ok: false as const, status: 400, message: 'Check the search and page parameters.' };
   return perform(() => listJobSeekerSkills(query.data));
+}
+
+const invalidJobRequest = { ok: false as const, status: 400, message: 'Check the job details.' };
+
+export async function listEmployerJobsAction(input: unknown) {
+  const query = employerJobsQuerySchema.safeParse(input);
+  return query.success ? perform(() => listEmployerJobs(query.data)) : invalidJobRequest;
+}
+
+export async function getEmployerJobAction(id: string) {
+  return z.uuid().safeParse(id).success ? perform(() => getEmployerJob(id)) : invalidJobRequest;
+}
+
+export async function createEmployerJobAction(input: unknown) {
+  const parsed = employerJobCreateSchema.safeParse(input);
+  if (!parsed.success) return invalidJobRequest;
+  const result = await perform(() => createEmployerJob(parsed.data));
+  if (result.ok) revalidatePath('/employer/jobs');
+  return result;
+}
+
+export async function updateEmployerJobAction(id: string, input: unknown) {
+  const parsed = employerJobUpdateSchema.safeParse(input);
+  if (!z.uuid().safeParse(id).success || !parsed.success) return invalidJobRequest;
+  const result = await perform(() => updateEmployerJob(id, parsed.data));
+  if (result.ok) revalidatePath('/employer/jobs');
+  return result;
+}
+
+export async function transitionEmployerJobAction(id: string, action: 'publish' | 'pause') {
+  if (!z.uuid().safeParse(id).success || (action !== 'publish' && action !== 'pause')) {
+    return invalidJobRequest;
+  }
+  const result = await perform(() => transitionEmployerJob(id, action));
+  if (result.ok) revalidatePath('/employer/jobs');
+  return result;
 }
 
 export async function getWorkspacePathAction(): Promise<

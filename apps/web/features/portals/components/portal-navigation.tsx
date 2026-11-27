@@ -13,7 +13,7 @@ export function PortalNavigation({ role }: { role: PortalRole }) {
     <nav aria-label={t('navigation')}>
       <SidebarMenu className="gap-1.5">
         {portalNavItems
-          .filter((item) => role === 'employer' || item.id !== 'verification')
+          .filter((item) => role === 'employer' || (item.id !== 'verification' && item.id !== 'jobs'))
           .map(({ id, label, icon: Icon }) => {
             const href = id === 'dashboard' ? `/${role}` : `/${role}/${id}`;
             const active = id === 'dashboard' ? pathname === href : pathname.startsWith(href);
