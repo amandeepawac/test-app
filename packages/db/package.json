@@ -21,6 +21,8 @@
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:test:seed": "tsx --test prisma/seeds/master-data.spec.ts",
     "db:test": "tsx scripts/test-database.ts"
   },
   "keywords": [],

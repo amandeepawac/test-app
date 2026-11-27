@@ -115,9 +115,25 @@ pnpm db:migrate
 ```
 
 `db:migrate` is the interactive development migration command. Review the
-migrations and use Prisma's `migrate deploy` for deployment. No seed data is
-provided until reference data and verification policies are agreed. The
-current `db:test` script writes a demo user and should only be used with a
+migrations and use Prisma's `migrate deploy` for deployment. Master-data
+seeders in [packages/db/prisma/seeds](packages/db/prisma/seeds) populate job
+categories and skills. Locations are not seeded; the frontend will use
+`country-state-city-nextjs` later. After dependencies are available,
+migrations are applied, and the Prisma client is generated, run from the
+repository root:
+
+```sh
+npm --prefix packages/db run db:seed
+```
+
+Prisma's `db seed` command also uses this seed entry point. Seeders run in
+one transaction and may be rerun: existing IDs, inactive flags, descriptions,
+and category parent relationships are preserved; seed names and category
+sort order are refreshed. No records are deleted and no user accounts,
+jobs, applications, or verification documents are created. Confirm
+`DATABASE_URL` targets the intended database before running the seed.
+
+The current `db:test` script writes a demo user and should only be used with a
 disposable development database.
 
 See the [PRD](docs/RozgarLocal-PRD.md) and

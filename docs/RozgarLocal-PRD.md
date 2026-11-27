@@ -565,7 +565,7 @@ results.
 
 ---
 
-For the Punjab launch, use state → city. Use `country-state-city` for
+For the Punjab launch, use state → city. Use `country-state-city-nextjs` for
 available state and city reference data. District is not required for
 MVP profiles or location selection. Avoid hardcoding Punjab-only
 assumptions so the model can expand to other Indian states.
@@ -896,7 +896,7 @@ API style REST
 API documentation Swagger / OpenAPI
 Client state Zustand
 Server state TanStack Query
-Location reference data country-state-city
+Location reference data country-state-city-nextjs
 Verification document storage Cloudinary with private authorized access
 Unit/integration testing Vitest
 End-to-end testing Playwright
@@ -1077,8 +1077,11 @@ implemented.
 
 **Job seeker**
 
-- [ ] Populate the active skills catalogue so the existing skills lookup
-      and profile skill selection can be used.
+- [ ] Run the master-data seed against the intended database so the
+      existing skills lookup and profile selection can be used. Category
+      and skill seed files are implemented; locations will use
+      `country-state-city-nextjs` rather than database seed data. Database
+      execution remains pending.
 - [ ] Implement applying to eligible jobs, application history and status
       retrieval, and withdrawal. Confirm permitted withdrawal states and
       reapplication rules before implementing those transitions.
@@ -1385,7 +1388,7 @@ or only flagged jobs needs and encode allowed
 confirmation. transitions.
 
 Location data Align state and city reference data from
-country-state-city with the Prisma schema and confirm coverage and
+country-state-city-nextjs with the Prisma schema and confirm coverage and
 updates before implementation.
 
 Notifications Exact email provider, queue, and push Keep notification

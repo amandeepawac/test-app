@@ -1,0 +1,67 @@
+import type { Prisma } from "../../src/generated/prisma/client.ts";
+
+export const skills = [
+  { slug: "light-vehicle-driving", name: "Light vehicle driving" },
+  { slug: "heavy-vehicle-driving", name: "Heavy vehicle driving" },
+  { slug: "two-wheeler-driving", name: "Two-wheeler driving" },
+  { slug: "route-navigation", name: "Route navigation" },
+  { slug: "last-mile-delivery", name: "Last-mile delivery" },
+  { slug: "customer-service", name: "Customer service" },
+  { slug: "retail-sales", name: "Retail sales" },
+  { slug: "cash-handling", name: "Cash handling" },
+  { slug: "point-of-sale", name: "Point-of-sale operation" },
+  { slug: "stock-management", name: "Stock management" },
+  { slug: "cooking", name: "Cooking" },
+  { slug: "food-preparation", name: "Food preparation" },
+  { slug: "food-safety", name: "Food safety" },
+  { slug: "table-service", name: "Table service" },
+  { slug: "baking", name: "Baking" },
+  { slug: "housekeeping", name: "Housekeeping" },
+  { slug: "cleaning", name: "Cleaning" },
+  { slug: "machine-operation", name: "Machine operation" },
+  { slug: "assembly-work", name: "Assembly work" },
+  { slug: "quality-inspection", name: "Quality inspection" },
+  { slug: "packing", name: "Packing" },
+  { slug: "warehouse-operations", name: "Warehouse operations" },
+  { slug: "order-picking", name: "Order picking" },
+  { slug: "loading-unloading", name: "Loading and unloading" },
+  { slug: "forklift-operation", name: "Forklift operation" },
+  { slug: "carpentry", name: "Carpentry" },
+  { slug: "plumbing", name: "Plumbing" },
+  { slug: "electrical-work", name: "Electrical work" },
+  { slug: "welding", name: "Welding" },
+  { slug: "masonry", name: "Masonry" },
+  { slug: "painting", name: "Painting" },
+  { slug: "vehicle-repair", name: "Vehicle repair" },
+  { slug: "appliance-repair", name: "Appliance repair" },
+  { slug: "tailoring", name: "Tailoring" },
+  { slug: "data-entry", name: "Data entry" },
+  { slug: "basic-computer-use", name: "Basic computer use" },
+  { slug: "spreadsheets", name: "Spreadsheets" },
+  { slug: "bookkeeping", name: "Bookkeeping" },
+  { slug: "reception", name: "Reception" },
+  { slug: "telephone-support", name: "Telephone support" },
+  { slug: "caregiving", name: "Caregiving" },
+  { slug: "first-aid", name: "First aid" },
+  { slug: "childcare", name: "Childcare" },
+  { slug: "tutoring", name: "Tutoring" },
+  { slug: "crop-cultivation", name: "Crop cultivation" },
+  { slug: "farm-equipment-operation", name: "Farm equipment operation" },
+  { slug: "security-patrolling", name: "Security patrolling" },
+  { slug: "access-control", name: "Access control" },
+  { slug: "hair-styling", name: "Hair styling" },
+  { slug: "beauty-services", name: "Beauty services" },
+  { slug: "digital-marketing", name: "Digital marketing" },
+  { slug: "basic-it-support", name: "Basic IT support" },
+] as const;
+
+export async function seedSkills(tx: Prisma.TransactionClient): Promise<number> {
+  for (const skill of skills) {
+    await tx.skill.upsert({
+      where: { slug: skill.slug },
+      create: skill,
+      update: { name: skill.name },
+    });
+  }
+  return skills.length;
+}
