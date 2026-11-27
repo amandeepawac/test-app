@@ -112,22 +112,43 @@ export class PrismaJobModerationRepository implements JobModerationRepository {
           id: true,
           title: true,
           status: true,
-          employer: { select: { userId: true } },
+          expiresAt: true,
+          employer: { select: { id: true, userId: true } },
         },
       });
       if (!current) throw new AdminRecordNotFoundError();
 
-      const allowedStatuses =
-        input.decision === 'REMOVE'
-          ? (['DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'PAUSED'] as const)
-          : (['PENDING_REVIEW'] as const);
-      if (!allowedStatuses.some((status) => status === current.status)) {
+      const allowedStatuses: Record<AdminJobModerationDecision['decision'], string[]> = {
+        APPROVE: ['PENDING_REVIEW'],
+        REJECT: ['PENDING_REVIEW'],
+        HIDE: ['PUBLISHED'],
+        RESTORE: ['HIDDEN'],
+        REMOVE: ['DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'PAUSED', 'HIDDEN'],
+      };
+      if (!allowedStatuses[input.decision].includes(current.status)) {
         throw new AdminStateConflictError();
+      }
+
+      if (input.decision === 'APPROVE' || input.decision === 'RESTORE') {
+        await tx.$queryRaw`SELECT "id" FROM "employer_profiles" WHERE "id" = ${current.employer.id}::uuid FOR UPDATE`;
+        const employer = await tx.employerProfile.findUnique({
+          where: { id: current.employer.id },
+          select: { verificationStatus: true, completedAt: true },
+        });
+        if (
+          !employer?.completedAt ||
+          employer.verificationStatus !== 'VERIFIED' ||
+          (current.expiresAt && current.expiresAt <= now)
+        ) {
+          throw new AdminStateConflictError();
+        }
       }
 
       const statusByDecision = {
         APPROVE: 'PUBLISHED',
         REJECT: 'REJECTED',
+        HIDE: 'HIDDEN',
+        RESTORE: 'PUBLISHED',
         REMOVE: 'REMOVED',
       } as const;
       const status = statusByDecision[input.decision];
@@ -165,6 +186,16 @@ export class PrismaJobModerationRepository implements JobModerationRepository {
           type: 'JOB_REJECTED',
           title: 'Job listing rejected',
           body: `Your job listing "${current.title}" was rejected. ${input.reason}`,
+        },
+        HIDE: {
+          type: 'JOB_PAUSED',
+          title: 'Job listing hidden',
+          body: `Your job listing "${current.title}" was hidden by an administrator. ${input.reason}`,
+        },
+        RESTORE: {
+          type: 'SYSTEM',
+          title: 'Job listing restored',
+          body: `Your job listing "${current.title}" was restored by an administrator.`,
         },
         REMOVE: {
           type: 'JOB_REMOVED',

@@ -160,7 +160,7 @@ export function JobModerationReview({ initialData }: { initialData: AdminJobDeta
             <Button
               type="button"
               className="w-full"
-              disabled={mutation.isPending || !reason.trim()}
+              disabled={data.status !== 'PENDING_REVIEW' || mutation.isPending || !reason.trim()}
               onClick={() => moderate('APPROVE')}
             >
               {t('approveJob')}
@@ -169,10 +169,28 @@ export function JobModerationReview({ initialData }: { initialData: AdminJobDeta
               type="button"
               variant="secondary"
               className="w-full"
-              disabled={mutation.isPending || !reason.trim()}
+              disabled={data.status !== 'PENDING_REVIEW' || mutation.isPending || !reason.trim()}
               onClick={() => moderate('REJECT')}
             >
               {t('rejectJob')}
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full"
+              disabled={data.status !== 'PUBLISHED' || mutation.isPending || !reason.trim()}
+              onClick={() => moderate('HIDE')}
+            >
+              {t('hideJob')}
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full"
+              disabled={data.status !== 'HIDDEN' || mutation.isPending || !reason.trim()}
+              onClick={() => moderate('RESTORE')}
+            >
+              {t('restoreJob')}
             </Button>
             <AlertDialog open={removeOpen} onOpenChange={setRemoveOpen}>
               <AlertDialogTrigger
@@ -181,7 +199,7 @@ export function JobModerationReview({ initialData }: { initialData: AdminJobDeta
                     type="button"
                     variant="destructive"
                     className="w-full"
-                    disabled={mutation.isPending || !reason.trim()}
+                    disabled={!['DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'PAUSED', 'HIDDEN'].includes(data.status) || mutation.isPending || !reason.trim()}
                   />
                 }
               >

@@ -27,9 +27,9 @@ Approval is blocked while any submitted documents remain pending review. Final d
 
 ## Job moderation
 
-- `GET /admin/jobs?status=PENDING_REVIEW` lists jobs awaiting review. This is the default filter.
+- `GET /admin/jobs` lists all jobs; an optional `status` filters the list.
 - `GET /admin/jobs/:id` returns listing details and employer contact details.
-- `PATCH /admin/jobs/:id/moderation` accepts `APPROVE`, `REJECT`, or `REMOVE`, with a required reason. Approve/reject only apply to jobs pending review; removal applies to draft, pending, published, or paused jobs.
+- `PATCH /admin/jobs/:id/moderation` accepts `HIDE`, `RESTORE`, or `REMOVE`, with a required reason. Hiding applies to published jobs; only an admin can restore a hidden job. Restoration requires a completed, verified employer and an unexpired job. Removal also applies to hidden jobs. Legacy `APPROVE` and `REJECT` decisions apply to jobs pending review; approval requires a verified employer and an unexpired job.
 
 Moderation state changes, audit records, and employer notifications are written together.
 

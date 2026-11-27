@@ -165,6 +165,7 @@ const jobStatusSchema = z.enum([
   "PENDING_REVIEW",
   "PUBLISHED",
   "PAUSED",
+  "HIDDEN",
   "REJECTED",
   "CLOSED",
   "FILLED",
@@ -236,7 +237,7 @@ export const adminJobDetailResponseSchema = adminJobSummarySchema.extend({
   publishedAt: z.iso.datetime().nullable(),
 });
 export const adminJobModerationDecisionSchema = z.strictObject({
-  decision: z.enum(["APPROVE", "REJECT", "REMOVE"]),
+  decision: z.enum(["APPROVE", "REJECT", "HIDE", "RESTORE", "REMOVE"]),
   reason: z.string().trim().min(1).max(2000),
 });
 export const adminJobModerationDecisionResponseSchema = z.strictObject({

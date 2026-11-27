@@ -368,6 +368,8 @@
     "moderationReasonPlaceholder": "Explain why this listing is being moderated",
     "approveJob": "Approve listing",
     "rejectJob": "Reject listing",
+    "hideJob": "Hide listing",
+    "restoreJob": "Restore listing",
     "removeJob": "Remove listing",
     "confirmRemoval": "Remove this listing?",
     "confirmRemovalDescription": "This action removes the job from the platform. Record a clear reason before confirming.",

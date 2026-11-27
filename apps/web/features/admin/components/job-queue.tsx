@@ -86,6 +86,7 @@ export function JobQueue({
           <NativeSelectOption value="DRAFT">DRAFT</NativeSelectOption>
           <NativeSelectOption value="PUBLISHED">PUBLISHED</NativeSelectOption>
           <NativeSelectOption value="PAUSED">PAUSED</NativeSelectOption>
+          <NativeSelectOption value="HIDDEN">HIDDEN</NativeSelectOption>
           <NativeSelectOption value="REJECTED">REJECTED</NativeSelectOption>
           <NativeSelectOption value="CLOSED">CLOSED</NativeSelectOption>
           <NativeSelectOption value="FILLED">FILLED</NativeSelectOption>

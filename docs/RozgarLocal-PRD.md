@@ -50,7 +50,7 @@ and English.
 
 The repository has working authentication, job-seeker and employer profile
 flows, an admin console, shared API contracts, and a Prisma database model.
-The MVP marketplace is not end-to-end: job creation and public discovery,
+The MVP marketplace is not end-to-end: publication and public discovery,
 applications, saved jobs, and candidate management are still pending. A model
 or admin review screen in the repository does not by itself mean the related
 public workflow is available.
@@ -60,7 +60,7 @@ public workflow is available.
 | Engineering foundation        | Implemented in code; deployment readiness pending              | Turborepo workspace, Next.js web app, NestJS API, shared contracts, Prisma schema/migrations, environment validation, and API health route                                    | Production deployment, CI/deployment pipeline, operational monitoring, backups, and clean-environment validation                      |
 | Authentication                | Email/password and Google flows implemented in code            | Role-selecting registration, email verification, Google OAuth and authenticated linking, sessions, password reset, and rate limiting | Resend-verification endpoint and configuration/security/end-to-end validation |
 | Job-seeker profile            | Core profile journey implemented                               | Save and complete profile, state/city comboboxes, searchable paginated skill selection, private-by-default email/phone settings, workspace overview, and loading/error states | Education/image upload, public job discovery, saved jobs, applications, application history, and withdrawal                           |
-| Employer profile              | Core profile journey implemented                               | Save and complete business profile, contact visibility settings, workspace overview, and read-only verification status/feedback                                               | Evidence upload/resubmission, fully connected verification submission/review, job drafts/publication, and applicant management        |
+| Employer profile              | Core profile journey and initial job APIs implemented in code  | Save and complete business profile, contact visibility settings, workspace overview, verification feedback, and employer-owned draft, publish and pause APIs               | Evidence upload/resubmission, verification submission/review, remaining job lifecycle and management UI, and applicant management      |
 | Admin console                 | Review tools implemented; workflows depend on incoming records | Dashboard, employer verification review, job moderation, report review, and audit-log views have API and web implementations                                                  | Employer evidence intake and report submission; job moderation cannot be exercised through a public job workflow until job APIs exist |
 | Categories and skills         | Seed code implemented; database population pending             | Idempotent category and skill seeders; job-seeker skill lookup API and UI                                                                                                     | Run the seed successfully against the intended database; category/job APIs and management UI                                          |
 | Notifications                 | Partial                                                        | Authentication email delivery is implemented; some admin decisions create notification records                                                                                | User notification inbox/read state, application lifecycle notifications, and reliable queued/retried delivery                         |
@@ -178,8 +178,9 @@ records.
 > [Prisma schema](../packages/db/prisma/schema.prisma) and
 > [table reference](./database/tables/README.md) describe the intended
 > database. Authentication, profile, and admin review slices are implemented
-> in code. Job marketplace, applications, and reporting intake workflows are
-> still pending; schema models alone do not make those features available.
+> in code, as are employer job draft APIs. The job marketplace, applications,
+> and reporting intake workflows remain incomplete; schema models alone do not
+> make those features available.
 
 ### 3.5 Profile onboarding
 
@@ -463,7 +464,8 @@ address are optional.
   replacement and resubmit for review after rejection.
 - Only employers with `VERIFIED` status may publish jobs. An employer
   who has completed their profile may create drafts before verification.
-  Separate job moderation requirements still apply.
+  Published jobs do not require prior admin approval; admins can temporarily
+  hide or remove problematic listings. Only admins can restore hidden jobs.
 - When employer profile editing is implemented (P1), changes to business
   name, employer type, or verification evidence trigger re-review and
   prevent new publication until approval. Existing published jobs remain
@@ -549,7 +551,7 @@ changes.
 ---
 
 **Schema job status values:** `DRAFT`, `PENDING_REVIEW`, `PUBLISHED`,
-`PAUSED`, `REJECTED`, `CLOSED`, `FILLED`, `EXPIRED`, `REMOVED`.
+`PAUSED`, `HIDDEN`, `REJECTED`, `CLOSED`, `FILLED`, `EXPIRED`, `REMOVED`.
 `FILLED` denotes a filled vacancy; `CLOSED` covers other closures.
 
 Implement allowed transitions explicitly. For example, a rejected job
@@ -786,7 +788,8 @@ and response expectations before launch.
 5.  Employer sees approval/rejection and feedback, and resubmits a
     replacement document if rejected.
 6.  Once verified, the employer submits a draft for publication.
-7.  The job goes through moderation if required.
+7.  The job is published without prior admin approval. Admins can hide or
+    remove problematic published jobs and can restore hidden jobs.
 8.  Job becomes active when approved and published.
 9.  Employer views applicants.
 10. Employer updates application statuses.
@@ -1177,9 +1180,11 @@ implemented.
       verification submission are blocked. Re-review must block new
       publication until approval while leaving existing published jobs
       visible during review.
-- [ ] Implement employer job draft, listing, and publication APIs;
-      completed profiles may create drafts, but publication requires
-      `VERIFIED` status and any applicable job moderation.
+- [ ] Complete employer job management APIs. Draft creation and editing,
+      paused-job editing, employer-owned listing/detail, direct publication and pause are
+      implemented in code. Publication requires `VERIFIED` status; prior job
+      approval is not required. Database integration, end-to-end validation,
+      the remaining lifecycle actions and employer UI remain pending.
 - [ ] Implement employer applicant listing and permitted application
       status updates, including ownership checks and status history.
 - [ ] In public employer profile and job responses, expose email and phone
@@ -1271,9 +1276,9 @@ employer can securely submit verification and resubmit after rejection;
 an admin can approve/reject it. Role, onboarding, contact visibility,
 and publication rules cannot be bypassed through direct API calls.
 
-### Phase 4 --- Job posting and discovery — pending
+### Phase 4 --- Job posting and discovery — draft APIs implemented in code
 
-**Build** 1. Implement job draft creation and editing. 2. Implement
+**Build** 1. Validate job draft creation and editing and add their UI. 2. Implement
 server-side job lifecycle transitions. 3. Implement
 publication/moderation rules. 4. Implement public active-job listing. 5.
 Implement job detail endpoint and page. 6. Implement keyword search,
@@ -1433,9 +1438,9 @@ credentials will be provided later. Secure upload, private storage,
 authorized reviewer delivery, and configuration remain to be designed
 and verified before evidence handling is implemented.
 
-Job moderation Whether every job requires approval Choose a launch policy
-or only flagged jobs needs and encode allowed
-confirmation. transitions.
+Job moderation Verified employers publish without prior job approval.
+Admins can hide and restore, or remove, problematic published jobs. Define
+and encode the remaining lifecycle transitions.
 
 Location data Align state and city reference data from
 country-state-city with the Prisma schema and confirm coverage and

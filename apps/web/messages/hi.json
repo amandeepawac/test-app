@@ -368,6 +368,8 @@
     "moderationReasonPlaceholder": "बताएँ कि इस सूची पर कार्रवाई क्यों हो रही है",
     "approveJob": "सूची मंज़ूर करें",
     "rejectJob": "सूची अस्वीकार करें",
+    "hideJob": "सूची छिपाएँ",
+    "restoreJob": "सूची फिर दिखाएँ",
     "removeJob": "सूची हटाएँ",
     "confirmRemoval": "यह सूची हटाएँ?",
     "confirmRemovalDescription": "इससे नौकरी प्लेटफ़ॉर्म से हट जाएगी। पुष्टि से पहले स्पष्ट कारण दर्ज करें।",
