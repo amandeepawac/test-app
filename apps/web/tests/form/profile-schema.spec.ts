@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { employerFormSchema, omitEmptyFields, seekerFormSchema } from '@/features/portals/profile-form-schema';
+import { employerFormSchema, needsCityForStateChange, omitEmptyFields, seekerFormSchema } from '@/features/portals/profile-form-schema';
 import { employerProfileUpdateSchema, jobSeekerProfileUpdateSchema } from '@repo/contracts';
 
 test('empty onboarding drafts omit mandatory fields rather than submitting invalid strings', () => {
@@ -24,4 +24,15 @@ test('profile forms reject invalid phone numbers and unsafe websites', () => {
   expect(employerFormSchema.safeParse(employer).success).toBe(true);
   expect(employerFormSchema.safeParse({ ...employer, businessPhone: 'not-a-phone' }).success).toBe(false);
   expect(employerFormSchema.safeParse({ ...employer, websiteUrl: 'javascript:alert(1)' }).success).toBe(false);
+});
+
+test('a state change cannot retain a saved city from another state', () => {
+  const saved = { stateName: 'Punjab', cityName: 'Ludhiana' };
+  expect(needsCityForStateChange({ stateName: 'Haryana', cityName: '' }, saved)).toBe(true);
+  expect(needsCityForStateChange({ stateName: 'Haryana', cityName: 'Ambala' }, saved)).toBe(false);
+  expect(needsCityForStateChange({ stateName: 'Punjab', cityName: 'Ludhiana' }, saved)).toBe(false);
+  expect(needsCityForStateChange({ stateName: 'Punjab', cityName: '' }, null)).toBe(false);
+  expect(needsCityForStateChange(
+    { stateName: 'Haryana', cityName: '' }, { stateName: 'Punjab', cityName: null },
+  )).toBe(false);
 });

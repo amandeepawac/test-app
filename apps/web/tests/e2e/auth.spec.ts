@@ -38,6 +38,20 @@ test('registration validates input before submitting account details', async ({ 
   expect(requests).toEqual([]);
 });
 
+test('registration lets users choose one role and preserves it after validation', async ({ page }) => {
+  await page.goto('/register');
+  const role = page.getByRole('combobox', { name: 'Account type' });
+  await expect(role).toContainText('Job seeker');
+  await role.click();
+  await page.getByRole('option', { name: 'Employer', exact: true }).click();
+  await expect(role).toContainText('Employer');
+  await page.getByRole('button', { name: 'Create account' }).click();
+  await expect(page.getByText('Enter your name.')).toBeVisible();
+  await expect(role).toContainText('Employer');
+  await expect(role).toHaveAttribute('aria-describedby');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test('auth forms do not show the preview notice', async ({ page }) => {
   for (const path of ['/login', '/register', '/forgot-password', '/reset-password']) {
     await page.goto(path);

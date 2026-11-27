@@ -8,10 +8,11 @@ import { FormInput } from '@/components/form/form-input';
 import { FormSelect } from '@/components/form/form-select';
 import { FormTextarea } from '@/components/form/form-textarea';
 import { completeEmployerProfileAction, saveEmployerProfileAction } from '../portal-actions';
-import { employerFormSchema, omitEmptyFields, type EmployerFormValues } from '../profile-form-schema';
+import { employerFormSchema, needsCityForStateChange, omitEmptyFields, type EmployerFormValues } from '../profile-form-schema';
 import { usePortalSubmit } from '../use-portal-submit';
 import { ProfileCard } from './profile-card';
 import { ProfileSubmit } from './profile-submit';
+import { ProfileLocationFields } from './profile-location-fields';
 
 export function EmployerProfileForm({ profile }: { profile: EmployerProfileResponse | null }) {
   const t = useTranslations('Portal');
@@ -29,6 +30,10 @@ export function EmployerProfileForm({ profile }: { profile: EmployerProfileRespo
   const locked = !!profile && profile.verification.verificationStatus !== 'NOT_SUBMITTED';
 
   async function save(values: EmployerFormValues, complete = false) {
+    if (needsCityForStateChange(values, profile)) {
+      form.setError('cityName', { message: t('selectCity') });
+      return;
+    }
     if (complete) {
       const required = ['businessName', 'employerType', 'contactPersonName', 'businessPhone', 'stateName', 'cityName'] as const;
       const missing = required.filter((name) => !values[name]);
@@ -60,8 +65,8 @@ export function EmployerProfileForm({ profile }: { profile: EmployerProfileRespo
           )}
           <FormInput control={form.control} name="contactPersonName" label={t('contactPersonName')} />
           <FormInput control={form.control} name="businessPhone" label={t('phone')} type="tel" />
-          <FormInput control={form.control} name="stateName" label={t('stateName')} />
-          <FormInput control={form.control} name="cityName" label={t('cityName')} />
+          <ProfileLocationFields control={form.control} stateName="stateName" cityName="cityName"
+            busy={state.busy} onStateChange={() => form.setValue('cityName', '', { shouldDirty: true })} />
           <FormInput control={form.control} name="websiteUrl" label={t('websiteUrl')} type="url" />
           <FormInput control={form.control} name="addressLine" label={t('addressLine')} />
           <div className="md:col-span-2"><FormTextarea control={form.control} name="businessDescription" label={t('businessDescription')} maxLength={2000} /></div>

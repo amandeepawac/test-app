@@ -565,7 +565,7 @@ results.
 
 ---
 
-For the Punjab launch, use state → city. Use `country-state-city-nextjs` for
+For the Punjab launch, use state → city. Use `country-state-city` for
 available state and city reference data. District is not required for
 MVP profiles or location selection. Avoid hardcoding Punjab-only
 assumptions so the model can expand to other Indian states.
@@ -896,7 +896,7 @@ API style REST
 API documentation Swagger / OpenAPI
 Client state Zustand
 Server state TanStack Query
-Location reference data country-state-city-nextjs
+Location reference data country-state-city
 Verification document storage Cloudinary with private authorized access
 Unit/integration testing Vitest
 End-to-end testing Playwright
@@ -1044,8 +1044,8 @@ search; populate the skill catalogue before relying on skill selection.
 Email registration accepts `JOB_SEEKER` or `EMPLOYER` as its public role;
 omitting it preserves the existing `JOB_SEEKER` default. Existing account
 roles are not changed by another registration attempt. `GET /auth/me`
-returns the current role. The existing web registration form does not yet
-provide a role selection.
+returns the current role. The web registration form provides a single-role
+selection, defaulting to job seeker, and sends the selected role to the API.
 
 The employer profile routes require an authenticated employer and return
 `Cache-Control: no-store`. `GET /employers/me` returns 404 until a draft
@@ -1067,6 +1067,18 @@ to onboarding before accessing overview, settings, or verification pages.
 Document uploads and job/application pages remain unavailable until their
 corresponding APIs and policies are implemented.
 
+Both profile forms now share Indian state/city dropdowns backed by
+server-side `country-state-city` and cached through React Query. This package
+replaces `country-state-city-nextjs` with user approval because the latter's
+default endpoint was unavailable and its reference data was incomplete.
+Changing state clears the city. If a saved profile already has a city, a
+replacement city is required before saving a state change to prevent partial
+updates from retaining the old city. New profiles still allow state-only drafts.
+Existing names absent from the catalogue are preserved with a notice.
+Dashboard overview, workspace labels, and employer verification status/level
+labels use English, Hindi, and Punjabi translations. Dependency installation,
+browser testing, and full type-checking remain pending.
+
 ### 10.1 Pending profile-related API work
 
 The basic profile draft, retrieval, and completion routes described above
@@ -1080,7 +1092,7 @@ implemented.
 - [ ] Run the master-data seed against the intended database so the
       existing skills lookup and profile selection can be used. Category
       and skill seed files are implemented; locations will use
-      `country-state-city-nextjs` rather than database seed data. Database
+      server-side `country-state-city` rather than database seed data. Database
       execution remains pending.
 - [ ] Implement applying to eligible jobs, application history and status
       retrieval, and withdrawal. Confirm permitted withdrawal states and
@@ -1388,7 +1400,7 @@ or only flagged jobs needs and encode allowed
 confirmation. transitions.
 
 Location data Align state and city reference data from
-country-state-city-nextjs with the Prisma schema and confirm coverage and
+country-state-city with the Prisma schema and confirm coverage and
 updates before implementation.
 
 Notifications Exact email provider, queue, and push Keep notification

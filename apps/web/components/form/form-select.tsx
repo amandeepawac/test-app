@@ -13,16 +13,27 @@ import {
 export function FormSelect<T extends FieldValues, N extends FieldPathByValue<T, string>>({
   options,
   placeholder,
+  onValueChange,
+  readOnly = false,
   ...props
-}: FormFieldProps<T, N> & { options: FormOption[]; placeholder: string }) {
+}: FormFieldProps<T, N> & {
+  options: FormOption[];
+  placeholder: string;
+  onValueChange?: (value: string) => void;
+  readOnly?: boolean;
+}) {
   return (
     <FormField<T, N> {...props}>
       {({ field, fieldState, id, describedBy }) => (
         <Select<string>
           name={field.name}
           value={field.value || null}
-          onValueChange={(value) => field.onChange(value ?? '')}
-          disabled={field.disabled}
+          onValueChange={(value) => {
+            const nextValue = value ?? '';
+            field.onChange(nextValue);
+            if (nextValue !== field.value) onValueChange?.(nextValue);
+          }}
+          disabled={field.disabled || readOnly}
           items={options}
         >
           <SelectTrigger

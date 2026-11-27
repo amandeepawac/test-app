@@ -117,8 +117,8 @@ pnpm db:migrate
 `db:migrate` is the interactive development migration command. Review the
 migrations and use Prisma's `migrate deploy` for deployment. Master-data
 seeders in [packages/db/prisma/seeds](packages/db/prisma/seeds) populate job
-categories and skills. Locations are not seeded; the frontend will use
-`country-state-city-nextjs` later. After dependencies are available,
+categories and skills. Locations are not seeded; profile selectors use
+server-side `country-state-city`. After dependencies are available,
 migrations are applied, and the Prisma client is generated, run from the
 repository root:
 

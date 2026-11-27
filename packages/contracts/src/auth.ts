@@ -16,6 +16,7 @@ export const registerFormSchema = z
     email: email.max(254, "emailInvalid"),
     password: newPassword,
     confirmPassword,
+    role: z.enum(["JOB_SEEKER", "EMPLOYER"], { error: "roleRequired" }),
   })
   .refine((values) => values.password === values.confirmPassword, {
     path: ["confirmPassword"],

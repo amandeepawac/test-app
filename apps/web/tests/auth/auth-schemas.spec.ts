@@ -21,6 +21,7 @@ test('registration validates name and matching passwords even when email is inva
     email: 'invalid',
     password: 'one',
     confirmPassword: 'two',
+    role: 'JOB_SEEKER',
   });
   expect(result.success).toBe(false);
   if (!result.success) {
@@ -32,10 +33,31 @@ test('registration validates name and matching passwords even when email is inva
     registerFormSchema.safeParse({
       name: 'Example User',
       email: 'user@example.com',
-      password: 'secret',
-      confirmPassword: 'secret',
+      password: 'secret123',
+      confirmPassword: 'secret123',
+      role: 'JOB_SEEKER',
     }).success,
   ).toBe(true);
+});
+
+test('registration accepts one public role and rejects missing or admin roles', () => {
+  const input = {
+    name: 'Example User', email: 'user@example.com',
+    password: 'secret123', confirmPassword: 'secret123',
+  };
+  for (const role of ['JOB_SEEKER', 'EMPLOYER']) {
+    const parsed = registerFormSchema.parse({ ...input, role });
+    expect(parsed.role).toBe(role);
+  }
+  for (const role of [undefined, 'ADMIN', '']) {
+    const result = registerFormSchema.safeParse({ ...input, role });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues).toEqual(expect.arrayContaining([
+        expect.objectContaining({ path: ['role'], message: 'roleRequired' }),
+      ]));
+    }
+  }
 });
 
 test('reset password requires both passwords and checks they match', () => {

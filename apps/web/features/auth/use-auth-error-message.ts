@@ -14,6 +14,7 @@ export function useAuthErrorMessage() {
     nameTooLong: t('nameTooLong'),
     confirmRequired: t('confirmRequired'),
     passwordsMismatch: t('passwordsMismatch'),
+    roleRequired: t('roleRequired'),
   };
   return (message: string) => messages[message] ?? message;
 }

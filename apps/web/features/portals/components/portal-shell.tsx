@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { BriefcaseBusiness } from 'lucide-react';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
 import { LanguageSelector } from '@/features/language/language-selector';
@@ -9,12 +10,13 @@ import { PortalNavigation } from './portal-navigation';
 import type { PortalRole } from '../portal-config';
 
 export async function PortalShell({ children, role }: { children: ReactNode; role: PortalRole }) {
+  const t = await getTranslations('Portal');
   const session = await getCurrentUser();
   const account =
     session.state === 'signed-in'
       ? session.user
-      : { name: null, email: role === 'employer' ? 'Employer' : 'Job seeker' };
-  const title = role === 'employer' ? 'Employer workspace' : 'Job seeker workspace';
+      : { name: null, email: t(role === 'employer' ? 'workspaceEmployer' : 'workspaceSeeker') };
+  const title = t(role === 'employer' ? 'workspaceEmployer' : 'workspaceSeeker');
   return (
     <div className="admin-theme min-h-dvh bg-auth-canvas text-auth-foreground">
       <header className="sticky top-0 z-20 border-b border-auth-border/80 bg-auth-surface/90 backdrop-blur-xl">

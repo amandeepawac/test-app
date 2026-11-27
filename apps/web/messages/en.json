@@ -1,5 +1,32 @@
 {
   "Portal": {
+    "workspaceEmployer": "Employer workspace", "workspaceSeeker": "Job seeker workspace",
+    "selectState": "Select a state", "selectCity": "Select a city in the chosen state",
+    "locationFailed": "Locations could not be loaded. Please retry.",
+    "legacyLocation": "Your saved location is not in the catalogue. It has been preserved; select a listed state and city to update it.",
+    "noCities": "No cities are available for this state.",
+    "verificationStatuses": {
+      "NOT_SUBMITTED": "Not submitted", "PENDING": "Pending", "UNDER_REVIEW": "Under review",
+      "VERIFIED": "Verified", "REJECTED": "Rejected", "NEEDS_MORE_INFO": "More information needed", "SUSPENDED": "Suspended"
+    },
+    "verificationLevels": { "NONE": "None", "BASIC": "Basic", "BUSINESS": "Business", "TRUSTED": "Trusted" },
+    "dashboard": {
+      "welcome": "Welcome, {name}", "buildProfile": "Build your employer profile", "nextMove": "Make your next move",
+      "employerIntro": "Manage your business details and verification status from one place.",
+      "seekerIntro": "Keep your experience and skills up to date so employers can find the right fit.",
+      "businessProfile": "Business profile", "businessHint": "Add your organization details and contact information.",
+      "complete": "Complete", "inProgress": "In progress",
+      "verificationHint": "Build trust by completing your business verification.",
+      "publicVisibility": "Public visibility", "contactVisibility": "Contact visibility", "on": "On", "private": "Private",
+      "employerContactHint": "Choose which contact details are visible to candidates.",
+      "seekerContactHint": "Enabled contact details are shared only with employers receiving your applications.",
+      "profileHint": "Give employers a clear picture of your experience.",
+      "skillsAdded": "{count} added", "skillsHint": "Add skills to make your profile easier to discover.",
+      "updateProfile": "Update profile", "openProfile": "Open profile", "nextStep": "Your next step",
+      "nextStepHint": "Complete the profile details needed for your workspace.",
+      "profileComplete": "Your profile is complete", "finishProfile": "Finish setting up your profile",
+      "editHint": "You can return any time to make changes.", "saveHint": "Your progress is saved when you save your profile."
+    },
     "required": "This field is required to complete your profile.",
     "overview": "Overview", "profile": "My profile", "settings": "Contact settings",
     "navigation": "Workspace navigation", "verification": "Employer verification",
@@ -67,6 +94,10 @@
     "apiNote": "This status checks the API process only, not the database."
   },
   "Auth": {
+    "accountRole": "Account type", "selectRole": "Select an account type",
+    "jobSeeker": "Job seeker", "employer": "Employer",
+    "roleHint": "Choose one role. You cannot switch roles after creating your account.",
+    "roleRequired": "Choose job seeker or employer.",
     "signIn": "Sign in",
     "createAccount": "Create account",
     "forgotTitle": "Forgot your password?",

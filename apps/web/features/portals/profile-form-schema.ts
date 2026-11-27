@@ -28,6 +28,13 @@ export const seekerFormSchema = z.object({
 export type EmployerFormValues = z.infer<typeof employerFormSchema>;
 export type SeekerFormValues = z.infer<typeof seekerFormSchema>;
 
+export function needsCityForStateChange(
+  values: { stateName: string; cityName: string },
+  saved: { stateName: string | null; cityName: string | null } | null,
+) {
+  return !!saved?.cityName && saved.stateName !== values.stateName && !values.cityName;
+}
+
 export function omitEmptyFields<T extends Record<string, unknown>>(values: T) {
   return Object.fromEntries(Object.entries(values).filter(([, value]) => value !== ''));
 }
