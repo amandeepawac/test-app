@@ -83,7 +83,7 @@ export function AdminLoginForm({
             </h2>
           </div>
           <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 p-4 text-sm text-white/85 backdrop-blur-sm">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-emerald-200">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/10 text-emerald-200">
               <ShieldCheck className="size-5" aria-hidden="true" />
             </span>
             <span>{t('adminLogin')}</span>
@@ -111,7 +111,7 @@ export function AdminLoginForm({
             method="post"
             noValidate
             onSubmit={form.handleSubmit(submit)}
-            className="space-y-6 [--input:var(--auth-input)] [--ring:var(--auth-primary)] [&_[data-slot=input]]:h-12 [&_[data-slot=input]]:rounded-xl [&_[data-slot=input]]:px-4"
+            className="space-y-6 [--input:var(--auth-input)] [--ring:var(--auth-primary)] [&_[data-slot=input]]:h-12 [&_[data-slot=input]]:rounded-lg [&_[data-slot=input]]:px-4"
           >
             <FieldGroup>
               <FormInput
@@ -135,7 +135,7 @@ export function AdminLoginForm({
             {message && (
               <p
                 role="alert"
-                className="rounded-xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive"
+                className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive"
               >
                 {message}
               </p>

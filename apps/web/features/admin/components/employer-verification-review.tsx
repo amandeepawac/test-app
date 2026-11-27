@@ -276,7 +276,7 @@ function DocumentReview({
   }
 
   return (
-    <div className="grid gap-4 rounded-xl border p-4 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,0.8fr)]">
+    <div className="grid gap-4 rounded-lg border p-4 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,0.8fr)]">
       <div className="grid content-start gap-2 sm:grid-cols-2">
         <Detail label={t('documentType')} value={formatAdminEnum(document.documentType)} />
         <Detail label={t('fileName')} value={document.originalName} />

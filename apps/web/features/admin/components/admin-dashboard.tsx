@@ -119,7 +119,7 @@ export function AdminDashboard({ initialData }: { initialData: AdminDashboardRes
           >
             <CardHeader className="flex grid-cols-[1fr_auto] items-center">
               <CardTitle className="text-sm font-semibold text-auth-muted">{title}</CardTitle>
-              <span className="flex size-10 items-center justify-center rounded-xl bg-auth-primary/10 text-auth-primary ring-1 ring-auth-primary/10">
+              <span className="flex size-10 items-center justify-center rounded-lg bg-auth-primary/10 text-auth-primary ring-1 ring-auth-primary/10">
                 <Icon className="size-[1.125rem]" aria-hidden="true" />
               </span>
             </CardHeader>
@@ -137,7 +137,7 @@ export function AdminDashboard({ initialData }: { initialData: AdminDashboardRes
         <Card className="py-0">
           <CardHeader className="border-b border-auth-border/70 py-5">
             <CardTitle className="flex items-center gap-2">
-              <span className="flex size-9 items-center justify-center rounded-xl bg-auth-primary/10 text-auth-primary">
+              <span className="flex size-9 items-center justify-center rounded-lg bg-auth-primary/10 text-auth-primary">
                 <Activity className="size-4" aria-hidden="true" />
               </span>
               <span>{t('recentActivity')}</span>
@@ -219,10 +219,10 @@ function QueueLink({
   return (
     <Link
       href={href}
-      className="group flex items-center justify-between gap-3 rounded-xl border border-auth-border/80 bg-auth-surface p-3 transition duration-200 hover:-translate-y-px hover:border-auth-primary/30 hover:bg-auth-canvas hover:shadow-sm"
+      className="group flex items-center justify-between gap-3 rounded-lg border border-auth-border/80 bg-auth-surface p-3 transition duration-200 hover:-translate-y-px hover:border-auth-primary/30 hover:bg-auth-canvas hover:shadow-sm"
     >
       <span className="flex min-w-0 items-center gap-3 text-sm font-medium">
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-auth-primary/8 text-auth-primary [&_svg]:size-4">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-auth-primary/8 text-auth-primary [&_svg]:size-4">
           {icon}
         </span>
         <span className="truncate">{title}</span>

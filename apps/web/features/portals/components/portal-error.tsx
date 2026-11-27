@@ -7,10 +7,14 @@ import { ProfileCard } from './profile-card';
 
 export function PortalError({ error, reset }: { error: Error; reset: () => void }) {
   const t = useTranslations('Portal');
-  useEffect(() => { console.error('Portal page failed', error.name); }, [error]);
+  useEffect(() => {
+    console.error('Portal page failed', error.name);
+  }, [error]);
   return (
     <ProfileCard title={t('requestFailed')}>
-      <Button type="button" onClick={reset}>{t('retry')}</Button>
+      <Button type="button" onClick={reset}>
+        {t('retry')}
+      </Button>
     </ProfileCard>
   );
 }

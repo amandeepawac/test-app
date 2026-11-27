@@ -2,8 +2,11 @@ import { expect, test } from '@playwright/test';
 
 test('role workspaces redirect signed-out visitors to login', async ({ page }) => {
   for (const path of [
-    '/employer/profile', '/employer/settings', '/employer/verification',
-    '/job-seeker/profile', '/job-seeker/settings',
+    '/employer/profile',
+    '/employer/settings',
+    '/employer/verification',
+    '/job-seeker/profile',
+    '/job-seeker/settings',
   ]) {
     await page.goto(path);
     await expect(page).toHaveURL(/\/login\?reason=expired$/);
@@ -38,7 +41,9 @@ test('registration validates input before submitting account details', async ({ 
   expect(requests).toEqual([]);
 });
 
-test('registration lets users choose one role and preserves it after validation', async ({ page }) => {
+test('registration lets users choose one role and preserves it after validation', async ({
+  page,
+}) => {
   await page.goto('/register');
   const role = page.getByRole('combobox', { name: 'Account type' });
   await expect(role).toContainText('Job seeker');
@@ -49,7 +54,9 @@ test('registration lets users choose one role and preserves it after validation'
   await expect(page.getByText('Enter your name.')).toBeVisible();
   await expect(role).toContainText('Employer');
   await expect(role).toHaveAttribute('aria-describedby');
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
+    true,
+  );
 });
 
 test('auth forms do not show the preview notice', async ({ page }) => {

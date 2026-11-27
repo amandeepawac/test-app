@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormInput } from '@/components/form/form-input';
-import { FormSelect } from '@/components/form/form-select';
+import { FormCombobox } from '@/components/form/form-combobox';
 import { useAuthErrorMessage } from '@/features/auth/use-auth-error-message';
 import { AuthLayout, PreviewSubmit } from '@/features/auth/auth-layout';
 import { FieldGroup } from '@/components/ui/field';
@@ -37,12 +37,13 @@ export function RegisterForm() {
           })}
         >
           <FieldGroup>
-            <FormSelect
+            <FormCombobox
               control={form.control}
               name="role"
               label={t('accountRole')}
               description={t('roleHint')}
               placeholder={t('selectRole')}
+              emptyMessage={t('noMatchingOptions')}
               formatError={formatError}
               options={[
                 { value: 'JOB_SEEKER', label: t('jobSeeker') },

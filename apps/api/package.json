@@ -35,6 +35,7 @@
     "@repo/contracts": "workspace:*",
     "@repo/db": "workspace:*",
     "argon2": "^0.45.2",
+    "google-auth-library": "^11.3.4",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "zod": "^4.6.7"

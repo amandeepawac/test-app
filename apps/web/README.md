@@ -46,7 +46,7 @@ Registration offers one account role: job seeker (the default) or employer.
 The selected role is sent to the registration API and cannot be changed by
 registering an existing email again.
 
-Employer and job seeker profiles share state/city `FormSelect` controls.
+Employer and job seeker profiles share searchable state/city `FormCombobox` controls.
 `country-state-city` runs only on the server; React Query caches Indian
 state options and cities by state without shipping the worldwide dataset
 to the browser or requesting third-party location services. Changing a
@@ -61,15 +61,15 @@ the intended distribution before launch.
 
 Reusable React Hook Form controls are in `components/form/`: text inputs,
 textareas, OTP inputs, checkboxes and checkbox groups, switches, radio groups,
-selects, comboboxes, and single-value sliders. Use `FormSelect` from
-`@/components/form/form-select` for dropdowns in React Hook Form forms instead
-of native selects. Pass `control`,
+selects, comboboxes, and single-value sliders. Use `FormCombobox` from
+`@/components/form/form-combobox` for choice fields in React Hook Form forms
+instead of native selects. Pass `control`,
 `name`, and `label`, and provide matching `defaultValues` to `useForm` (strings,
 booleans, string arrays, or numbers as appropriate). Choice controls use
 `{ value, label, disabled? }` options and store string values; an empty string
 represents no selection. `formatError` can translate validation messages.
-`FormSelect` accepts `onValueChange` for dependent fields. Its `readOnly`
-option blocks selection while retaining the value in React Hook Form;
+`FormCombobox` accepts `onValueChange` for dependent fields and `emptyMessage`
+for filtered lists. Its `readOnly` option blocks selection while retaining the value in React Hook Form;
 `disabled` follows React Hook Form's behavior of omitting disabled fields.
 For other controls, compose `FormField` with the shadcn primitive and forward
 the controller's value, change, blur, ref, and accessibility properties.

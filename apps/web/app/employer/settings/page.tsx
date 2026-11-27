@@ -5,5 +5,13 @@ import { ContactSettings } from '@/features/portals/components/contact-settings'
 export default async function EmployerSettingsPage() {
   const profile = await getEmployerProfile();
   if (!profile?.completedAt) redirect('/employer/profile');
-  return <div className="mx-auto max-w-6xl"><ContactSettings role="employer" showEmail={profile.showEmail} showPhone={profile.showPhone} /></div>;
+  return (
+    <div className="w-full">
+      <ContactSettings
+        role="employer"
+        showEmail={profile.showEmail}
+        showPhone={profile.showPhone}
+      />
+    </div>
+  );
 }

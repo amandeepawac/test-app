@@ -8,14 +8,15 @@ import type { EmployerProfileResponse, JobSeekerProfileResponse } from '@repo/co
 export async function PortalOverview({
   role,
   profile,
-}: { role: 'employer'; profile: EmployerProfileResponse } | {
-  role: 'job-seeker'; profile: JobSeekerProfileResponse;
-}) {
+}:
+  | { role: 'employer'; profile: EmployerProfileResponse }
+  | {
+      role: 'job-seeker';
+      profile: JobSeekerProfileResponse;
+    }) {
   const t = await getTranslations('Portal');
   const employer = role === 'employer';
-  const title = employer
-    ? profile.businessName
-    : profile.fullName;
+  const title = employer ? profile.businessName : profile.fullName;
   const complete = Boolean(profile.completedAt);
   const status = employer
     ? t(`verificationStatuses.${profile.verification.verificationStatus}`)
@@ -38,7 +39,8 @@ export async function PortalOverview({
         },
         {
           label: t('dashboard.publicVisibility'),
-          value: profile.showEmail || profile.showPhone ? t('dashboard.on') : t('dashboard.private'),
+          value:
+            profile.showEmail || profile.showPhone ? t('dashboard.on') : t('dashboard.private'),
           detail: t('dashboard.employerContactHint'),
           icon: UserRound,
         },
@@ -58,16 +60,17 @@ export async function PortalOverview({
         },
         {
           label: t('dashboard.contactVisibility'),
-          value: profile.showEmail || profile.showPhone ? t('dashboard.on') : t('dashboard.private'),
+          value:
+            profile.showEmail || profile.showPhone ? t('dashboard.on') : t('dashboard.private'),
           detail: t('dashboard.seekerContactHint'),
           icon: UserRound,
         },
       ];
   return (
     <div className="space-y-8">
-      <section className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#153d2c] via-[#145b3a] to-[#16764b] px-6 py-8 text-white shadow-lg sm:px-9 sm:py-10">
+      <section className="relative overflow-hidden rounded-[2rem] bg-linear-to-br from-[#153d2c] via-[#145b3a] to-[#16764b] px-6 py-8 text-white shadow-lg sm:px-9 sm:py-10">
         <div
-          className="absolute -top-20 -right-10 size-64 rounded-full border-[36px] border-white/5"
+          className="absolute -top-20 -right-10 size-64 rounded-full border-36 border-white/5"
           aria-hidden="true"
         />
         <div className="relative max-w-3xl">
@@ -83,14 +86,12 @@ export async function PortalOverview({
                 : t('dashboard.nextMove')}
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-emerald-50/85 sm:text-base">
-            {employer
-              ? t('dashboard.employerIntro')
-              : t('dashboard.seekerIntro')}
+            {employer ? t('dashboard.employerIntro') : t('dashboard.seekerIntro')}
           </p>
           <Link
             href={`/${role}/profile`}
             className={buttonVariants({
-              className: 'mt-6 h-10 rounded-xl bg-white px-4 text-[#145b3a] hover:bg-emerald-50',
+              className: 'mt-6 h-10 rounded-lg px-4 text-[#145b3a] hover:bg-emerald-50',
             })}
           >
             {t('dashboard.updateProfile')} <ArrowRight className="size-4" aria-hidden="true" />
@@ -124,7 +125,7 @@ export async function PortalOverview({
         </CardHeader>
         <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
-            <span className="mt-0.5 flex size-9 items-center justify-center rounded-xl bg-auth-primary/10 text-auth-primary">
+            <span className="mt-0.5 flex size-9 items-center justify-center rounded-lg bg-auth-primary/10 text-auth-primary">
               <CircleCheck className="size-4" aria-hidden="true" />
             </span>
             <div>
@@ -132,9 +133,7 @@ export async function PortalOverview({
                 {t(complete ? 'dashboard.profileComplete' : 'dashboard.finishProfile')}
               </p>
               <p className="mt-1 text-sm text-auth-muted">
-                {complete
-                  ? t('dashboard.editHint')
-                  : t('dashboard.saveHint')}
+                {complete ? t('dashboard.editHint') : t('dashboard.saveHint')}
               </p>
             </div>
           </div>
@@ -142,7 +141,7 @@ export async function PortalOverview({
             href={`/${role}/profile`}
             className={buttonVariants({
               variant: 'outline',
-              className: 'rounded-xl border-auth-border',
+              className: 'rounded-lg border-auth-border',
             })}
           >
             {t('dashboard.openProfile')} <ArrowRight className="size-4" aria-hidden="true" />

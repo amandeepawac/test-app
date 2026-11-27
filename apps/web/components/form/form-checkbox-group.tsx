@@ -1,14 +1,16 @@
 'use client';
 
 import type { FieldPathByValue, FieldValues } from 'react-hook-form';
+import { cn } from 'cn';
 import { FormField, type FormFieldProps, type FormOption } from '@/components/form/form-field';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldLabel } from '@/components/ui/field';
 
 export function FormCheckboxGroup<T extends FieldValues, N extends FieldPathByValue<T, string[]>>({
   options,
+  className,
   ...props
-}: FormFieldProps<T, N> & { options: FormOption[] }) {
+}: FormFieldProps<T, N> & { options: FormOption[]; className?: string }) {
   return (
     <FormField<T, N> {...props} group>
       {({ field, fieldState, id, describedBy }) => (
@@ -20,7 +22,7 @@ export function FormCheckboxGroup<T extends FieldValues, N extends FieldPathByVa
             if (!event.currentTarget.contains(event.relatedTarget)) field.onBlur();
           }}
         >
-          <div className="grid gap-3">
+          <div className={cn('grid gap-3', className)}>
             {options.map((option, index) => (
               <Field key={option.value} orientation="horizontal" data-invalid={fieldState.invalid}>
                 <Checkbox

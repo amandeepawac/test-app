@@ -14,8 +14,11 @@ test("rerunning master seeds keeps existing IDs, relationships, and inactive fla
   };
   const records = new Map<string, Record>();
   records.set("retail-sales", {
-    id: "existing-id", slug: "retail-sales", name: "Custom label",
-    isActive: false, parentId: "existing-parent",
+    id: "existing-id",
+    slug: "retail-sales",
+    name: "Custom label",
+    isActive: false,
+    parentId: "existing-parent",
   });
 
   const upsert = async (input: {
@@ -38,7 +41,10 @@ test("rerunning master seeds keeps existing IDs, relationships, and inactive fla
   await seedCategories(tx);
   const categoryIds = [...records.values()].map((record) => record.id);
   await seedCategories(tx);
-  assert.deepEqual([...records.values()].map((record) => record.id), categoryIds);
+  assert.deepEqual(
+    [...records.values()].map((record) => record.id),
+    categoryIds,
+  );
   assert.equal(records.get("retail-sales")?.isActive, false);
   assert.equal(records.get("retail-sales")?.parentId, "existing-parent");
   assert.equal(records.get("retail-sales")?.id, "existing-id");
@@ -46,5 +52,8 @@ test("rerunning master seeds keeps existing IDs, relationships, and inactive fla
   await seedSkills(tx);
   const skillIds = [...records.values()].map((record) => record.id);
   await seedSkills(tx);
-  assert.deepEqual([...records.values()].map((record) => record.id), skillIds);
+  assert.deepEqual(
+    [...records.values()].map((record) => record.id),
+    skillIds,
+  );
 });

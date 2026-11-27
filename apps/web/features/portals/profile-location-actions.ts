@@ -1,6 +1,10 @@
 'use server';
 
-import { getProfileCities, getProfileStates, type LocationOption } from './profile-location-service';
+import {
+  getProfileCities,
+  getProfileStates,
+  type LocationOption,
+} from './profile-location-service';
 
 type LocationResult = { ok: true; options: LocationOption[] } | { ok: false };
 

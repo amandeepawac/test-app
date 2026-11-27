@@ -22,6 +22,7 @@ export type FormFieldProps<T extends FieldValues, N extends FieldPath<T>> = {
   disabled?: boolean;
   formatError?: (message: string) => string;
   group?: boolean;
+  orientation?: 'vertical' | 'horizontal';
 };
 
 export type FormFieldRenderProps<T extends FieldValues, N extends FieldPath<T>> = {
@@ -40,6 +41,7 @@ export function FormField<T extends FieldValues, N extends FieldPath<T>>({
   disabled,
   formatError,
   group = false,
+  orientation = 'vertical',
   children,
 }: FormFieldProps<T, N> & {
   children: (props: FormFieldRenderProps<T, N>) => ReactNode;
@@ -57,8 +59,18 @@ export function FormField<T extends FieldValues, N extends FieldPath<T>>({
         const describedBy = [descriptionId, errorId].filter(Boolean).join(' ') || undefined;
 
         return (
-          <Field data-invalid={fieldState.invalid} data-disabled={field.disabled}>
-            <div className="flex items-center justify-between gap-3">
+          <Field
+            data-invalid={fieldState.invalid}
+            data-disabled={field.disabled}
+            orientation={orientation}
+          >
+            <div
+              className={
+                orientation === 'horizontal'
+                  ? 'flex items-center gap-3'
+                  : 'flex items-center justify-between gap-3'
+              }
+            >
               {group ? (
                 <FieldTitle id={`${id}-label`}>{label}</FieldTitle>
               ) : (

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { toast } from '@/components/ui/toast';
 import type { PortalActionResult } from './portal-actions';
 import { PortalRequestError, runPortalAction } from './portal-client';
 
@@ -13,13 +14,14 @@ export function usePortalSubmit() {
   const [message, setMessage] = useState('');
   const [failed, setFailed] = useState(false);
 
-  async function submit<T>(action: () => Promise<PortalActionResult<T>>) {
+  async function submit(action: () => Promise<PortalActionResult<unknown>>) {
     setBusy(true);
     setMessage('');
     setFailed(false);
     try {
       const data = await runPortalAction(action);
       setMessage(t('saved'));
+      toast.add({ title: t('saved'), type: 'success' });
       router.refresh();
       return data;
     } catch (error) {
@@ -28,7 +30,13 @@ export function usePortalSubmit() {
         router.replace(`/login?reason=${error.status === 401 ? 'expired' : 'wrong-role'}`);
       }
       console.error('Portal submission failed', error instanceof Error ? error.name : 'unknown');
-      setMessage(t(error instanceof PortalRequestError && error.status === 409 ? 'identityLocked' : 'requestFailed'));
+      setMessage(
+        t(
+          error instanceof PortalRequestError && error.status === 409
+            ? 'identityLocked'
+            : 'requestFailed',
+        ),
+      );
       return null;
     } finally {
       setBusy(false);

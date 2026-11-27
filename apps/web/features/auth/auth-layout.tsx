@@ -66,7 +66,7 @@ export function AuthLayout({
           </div>
           <div className="rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
             <div className="flex items-center gap-3">
-              <span className="flex size-10 items-center justify-center rounded-xl bg-white/10 text-emerald-100">
+              <span className="flex size-10 items-center justify-center rounded-lg bg-white/10 text-emerald-100">
                 <MapPin className="size-5" aria-hidden="true" />
               </span>
               <p className="text-sm font-semibold">{home('forJobSeekers')}</p>
@@ -96,7 +96,7 @@ export function AuthLayout({
               {description}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6 [--input:var(--auth-input)] [--ring:var(--auth-primary)] [&_[data-slot=input]]:h-12 [&_[data-slot=input]]:rounded-xl [&_[data-slot=input]]:px-4">
+          <CardContent className="space-y-6 [--input:var(--auth-input)] [--ring:var(--auth-primary)] [&_[data-slot=input-group-control]]:h-full [&_[data-slot=input-group]]:h-12 [&_[data-slot=input-group]]:rounded-lg [&_[data-slot=input]]:h-12 [&_[data-slot=input]]:rounded-lg [&_[data-slot=input]]:px-4">
             {children}
             {showGoogle && (
               <div className="space-y-6">

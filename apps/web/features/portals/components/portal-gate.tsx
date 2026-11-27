@@ -43,7 +43,9 @@ export function PortalGate({
     <main className="mx-auto flex min-h-[50vh] max-w-xl items-center justify-center text-center">
       <div className="space-y-4 rounded-2xl border border-auth-border bg-auth-surface px-6 py-5 text-sm text-auth-muted">
         <p role="alert">{status}</p>
-        <Button type="button" variant="outline" onClick={() => window.location.reload()}>{t('retry')}</Button>
+        <Button type="button" variant="outline" onClick={() => window.location.reload()}>
+          {t('retry')}
+        </Button>
       </div>
     </main>
   );

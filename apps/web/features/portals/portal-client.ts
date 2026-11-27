@@ -4,7 +4,10 @@ import { refreshSession } from '@/features/auth/session-actions';
 import type { PortalActionResult } from './portal-actions';
 
 export class PortalRequestError extends Error {
-  constructor(public readonly status: number, message: string) {
+  constructor(
+    public readonly status: number,
+    message: string,
+  ) {
     super(message);
     this.name = 'PortalRequestError';
   }

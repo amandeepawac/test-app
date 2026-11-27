@@ -140,7 +140,7 @@ export function SessionControls({ refreshNeeded, account }: SessionControlsProps
               variant="destructive"
               disabled={busy}
               onClick={() => void logout()}
-              className="mt-1 rounded-xl px-3 py-2"
+              className="mt-1 rounded-lg px-3 py-2"
             >
               <LogOut aria-hidden="true" />
               {t('signOut')}

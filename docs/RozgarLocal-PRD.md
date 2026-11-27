@@ -1,9 +1,10 @@
 # RozgarLocal --- Product Requirements Document (PRD)
 
-> **Document status:** Draft for MVP implementation\
+> **Document status:** MVP implementation in progress\
 > **Product:** RozgarLocal\
-> **Version:** 1.0\
+> **Version:** 1.1\
 > **Prepared:** 23 November 2026\
+> **Implementation status reviewed:** 27 November 2026\
 > **Primary market:** Punjab, India\
 > **Expansion:** India-wide after validating the Punjab launch
 
@@ -44,6 +45,33 @@ and English.
 5. **Accessible language:** Support Punjabi, Hindi, and English.
 6. **Maintainable engineering:** Use a modular monolith and shared
    validation/types rather than premature microservices.
+
+### 1.3 Implementation status (27 November 2026)
+
+The repository has working authentication, job-seeker and employer profile
+flows, an admin console, shared API contracts, and a Prisma database model.
+The MVP marketplace is not end-to-end: job creation and public discovery,
+applications, saved jobs, and candidate management are still pending. A model
+or admin review screen in the repository does not by itself mean the related
+public workflow is available.
+
+| Area                          | Status                                                         | Implemented now                                                                                                                                                               | Still pending                                                                                                                         |
+| ----------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Engineering foundation        | Implemented in code; deployment readiness pending              | Turborepo workspace, Next.js web app, NestJS API, shared contracts, Prisma schema/migrations, environment validation, and API health route                                    | Production deployment, CI/deployment pipeline, operational monitoring, backups, and clean-environment validation                      |
+| Authentication                | Core email/password flows implemented                          | Role-selecting registration, email verification, sign-in/out, access and rotating refresh sessions, password reset, authenticated session lookup, and rate limiting           | Google OAuth/linking, resend-verification endpoint, and production configuration/flow validation                                      |
+| Job-seeker profile            | Core profile journey implemented                               | Save and complete profile, state/city comboboxes, searchable paginated skill selection, private-by-default email/phone settings, workspace overview, and loading/error states | Education/image upload, public job discovery, saved jobs, applications, application history, and withdrawal                           |
+| Employer profile              | Core profile journey implemented                               | Save and complete business profile, contact visibility settings, workspace overview, and read-only verification status/feedback                                               | Evidence upload/resubmission, fully connected verification submission/review, job drafts/publication, and applicant management        |
+| Admin console                 | Review tools implemented; workflows depend on incoming records | Dashboard, employer verification review, job moderation, report review, and audit-log views have API and web implementations                                                  | Employer evidence intake and report submission; job moderation cannot be exercised through a public job workflow until job APIs exist |
+| Categories and skills         | Seed code implemented; database population pending             | Idempotent category and skill seeders; job-seeker skill lookup API and UI                                                                                                     | Run the seed successfully against the intended database; category/job APIs and management UI                                          |
+| Notifications                 | Partial                                                        | Authentication email delivery is implemented; some admin decisions create notification records                                                                                | User notification inbox/read state, application lifecycle notifications, and reliable queued/retried delivery                         |
+| Localization and workspace UX | Implemented for current screens                                | English, Hindi, and Punjabi UI; responsive workspaces, collapsible icon sidebar, form feedback, and success toasts                                                            | Full translation/accessibility review across future marketplace flows; account-synced language preference                             |
+| PWA and offline use           | Pending                                                        | —                                                                                                                                                                             | Manifest/installability, service worker, safe read-only caching, and explicit offline behavior                                        |
+| Launch readiness              | Pending validation                                             | Automated unit/API/E2E test suites are present in the repository                                                                                                              | Run and review checks against configured services, security and privacy review, production operations, and a Punjab pilot             |
+
+The Prisma schema contains models for marketplace, applications, saved jobs,
+notifications, and reports. Those models are not evidence that corresponding
+user-facing APIs or journeys are implemented. See Sections 10–11 and 16 for
+the current API boundary and remaining implementation order.
 
 ---
 
@@ -147,8 +175,9 @@ records.
 > **Schema alignment note:** The repository's
 > [Prisma schema](../packages/db/prisma/schema.prisma) and
 > [table reference](./database/tables/README.md) describe the intended
-> database. The web and API are currently starter applications; schema
-> models do not imply that these product features are implemented.
+> database. Authentication, profile, and admin review slices are implemented
+> in code. Job marketplace, applications, and reporting intake workflows are
+> still pending; schema models alone do not make those features available.
 
 ### 3.5 Profile onboarding
 
@@ -170,6 +199,9 @@ records.
 ## 4. Scope
 
 ### 4.1 In scope for MVP
+
+This list defines the launch target, not current completion. See Section
+1.3 for implementation status.
 
 - Responsive web application and PWA installation.
 - Email/password registration and login.
@@ -964,9 +996,27 @@ require one module per database table.
 
 ---
 
-## 10. API surface (initial proposal)
+## 10. API surface (implemented routes and target proposal)
 
-Use versioned REST routes, for example `/api/v1`.
+The current API routes do not use the proposed `/api/v1` prefix. The route
+table below is the target proposal for marketplace features; it must not be
+read as evidence that those endpoints exist.
+
+**Implemented endpoint groups:**
+
+- Authentication: `POST /auth/register`, `POST /auth/verify-email`,
+  `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`,
+  `GET /auth/me`, `POST /auth/forgot-password`, and
+  `POST /auth/reset-password`.
+- Job-seeker profile: `GET`/`PUT /job-seeker/profile`,
+  `POST /job-seeker/profile/complete`, and `GET /job-seeker/skills`.
+- Employer profile: `GET`/`PUT /employers/me`,
+  `POST /employers/me/complete`, and
+  `GET /employers/me/verification`.
+- Admin review: dashboard; employer verification and document review;
+  job moderation; report review; and audit-log listing under `/admin/*`.
+  These admin APIs do not provide employer document intake, job creation,
+  or report submission.
 
 ---
 
@@ -1024,8 +1074,7 @@ endpoints
 
 ---
 
-Except for the job seeker and employer profile routes described below,
-these are proposed route shapes, not confirmed existing endpoints.
+Routes in the proposal table that are not listed above remain pending.
 Finalize request/response contracts with Zod schemas and Swagger
 definitions before frontend integration.
 
@@ -1076,8 +1125,11 @@ replacement city is required before saving a state change to prevent partial
 updates from retaining the old city. New profiles still allow state-only drafts.
 Existing names absent from the catalogue are preserved with a notice.
 Dashboard overview, workspace labels, and employer verification status/level
-labels use English, Hindi, and Punjabi translations. Dependency installation,
-browser testing, and full type-checking remain pending.
+labels use English, Hindi, and Punjabi translations. The current UI also has
+responsive portal layouts, a collapsible sidebar, searchable state/city and
+choice fields, and toast feedback for successful saves. Automated tests are
+present in the repository; full browser journey and deployment validation
+remain pending.
 
 ### 10.1 Pending profile-related API work
 
@@ -1089,11 +1141,14 @@ implemented.
 
 **Job seeker**
 
-- [ ] Run the master-data seed against the intended database so the
+- [ ] Run the master-data seed successfully against the intended database so the
       existing skills lookup and profile selection can be used. Category
-      and skill seed files are implemented; locations will use
-      server-side `country-state-city` rather than database seed data. Database
-      execution remains pending.
+      and skill seed files are implemented and now include expanded
+      categories and skills. A previous run failed while deserializing the
+      advisory-lock result; the seed query has been changed to return text,
+      but a successful run against the intended database is still unconfirmed.
+      Locations use server-side `country-state-city` rather than database
+      seed data.
 - [ ] Implement applying to eligible jobs, application history and status
       retrieval, and withdrawal. Confirm permitted withdrawal states and
       reapplication rules before implementing those transitions.
@@ -1109,7 +1164,8 @@ implemented.
 **Employer**
 
 - [ ] Implement verification document upload, submission, replacement,
-      and resubmission after rejection. This depends on private Cloudinary
+      and resubmission after rejection. Admin review API/UI exists, but this
+      depends on private Cloudinary
       configuration and the legal/privacy review in Section 14.
 - [ ] Provide authorized admin access to verification documents and
       integrate the submission flow with the existing admin review APIs.
@@ -1129,9 +1185,10 @@ implemented.
 
 **Shared dependencies and validation**
 
-- [ ] Enforce profile completion on future protected dashboard and
-      job/application APIs, while allowing onboarding and the existing
-      authentication/session actions needed to resume it.
+- [ ] Enforce profile completion on future job/application APIs, while
+      allowing onboarding and the existing authentication/session actions
+      needed to resume it. The web workspace already redirects incomplete
+      profiles to onboarding.
 - [ ] Align and validate state/city data against the chosen reference
       source. Existing profile APIs currently store state and city names.
 - [ ] Implement the approved account-deletion behavior for both roles:
@@ -1140,14 +1197,14 @@ implemented.
       anonymization, and deletion exceptions remain open.
 - [ ] Implement Google authentication and role selection for new Google
       accounts, as required by the MVP.
-- [ ] Add remaining profile-related notifications and API integration/
-      end-to-end tests for onboarding, role and ownership checks, contact
+- [ ] Add remaining profile-related and marketplace notifications and API
+      integration/end-to-end tests for onboarding, role and ownership checks, contact
       privacy, verification, and deletion. Document the API contracts in
       Swagger.
-- [ ] When dependencies and a target database are available, generate the
-      Prisma client, check and apply the profile migrations, and run the
-      API type-check, tests, and build. These validation and deployment
-      steps have not yet been verified.
+- [ ] Confirm the target database migration state, generate the Prisma
+      client, apply outstanding migrations, and run the API type-check,
+      tests, and build. Successful validation against the deployment
+      database has not been confirmed.
 
 ---
 
@@ -1155,9 +1212,11 @@ implemented.
 
 Build vertical slices in dependency order. Do not build every screen
 first and postpone backend integration. Each phase should end with a
-working, tested increment.
+working, tested increment. Phase headings show current repository status;
+the build lists retain the target scope, with completed work summarized in
+Section 1.3 and outstanding tasks in Section 12.
 
-### Phase 0 --- Confirm the baseline
+### Phase 0 --- Confirm the baseline — mostly complete; database validation pending
 
 **Deliverables** - Review the repository Prisma schema and migrations,
 including field names, relations, constraints, and indexes. - Confirm
@@ -1170,7 +1229,7 @@ decision log.
 for the agreed PRD. - No guessed database fields or enum values remain
 in implementation tickets.
 
-### Phase 1 --- Monorepo and developer foundation
+### Phase 1 --- Monorepo and developer foundation — implemented; CI/clean setup pending
 
 **Build** 1. Create the Turborepo workspace. 2. Add `apps/web` using
 Next.js App Router. 3. Add `apps/api` using NestJS. 4. Configure
@@ -1183,39 +1242,34 @@ workflows. 8. Add CI checks for lint, typecheck, tests, and build.
 works. - Prisma connects to PostgreSQL. - A migration can be applied to
 a clean database. - CI runs successfully.
 
-### Phase 2 --- Database and authentication foundation
+### Phase 2 --- Database and authentication foundation — core flows implemented; Google and validation pending
 
-**Build** 1. Implement the confirmed Prisma schema and first migration. 2. Seed only essential reference data, such as approved categories and
-supported locales, if these are part of the agreed model. 3. Implement
-email/password registration and login. 4. Implement Argon2id password
-hashing. 5. Implement email verification and resend flow. 6. Implement
-forgot-password and reset-password flows. 7. Implement Google sign-in
-and safe account/provider linking. 8. Implement `UserAuthProvider` and
-retain `AuthProvider`. 9. Implement access tokens, hashed rotating
-refresh tokens, session records, logout, and revocation. 10. Add auth
-rate limits and security tests. 11. Add Swagger documentation.
+**Remaining work** 1. Confirm the existing schema and migrations against
+the target database and run the expanded master-data seed successfully. 2. Implement Google sign-in and safe account/provider linking. 3. Add a
+resend-verification endpoint. 4. Confirm the generated API documentation,
+security checks, and auth flows in the configured deployment environment.
 
-**Exit criteria** - Registration, verification, login, Google login,
-refresh, logout, and reset work end to end. - Refresh-token rotation and
-reuse/revocation behavior are tested. - Protected API routes reject
-unauthenticated and unauthorized requests.
+**Exit criteria** - Existing email/password registration, verification,
+login, refresh, logout, and password recovery work end to end. Remaining
+Google, resend-verification, security-validation, and deployment checks
+are complete. Protected API routes reject unauthenticated and unauthorized
+requests.
 
-### Phase 3 --- User profiles and employer verification
+### Phase 3 --- User profiles and employer verification — profile/admin slices implemented; evidence intake pending
 
-**Build** 1. Implement current-user profile retrieval and updates. 2.
-Implement job seeker profile creation and editing. 3. Implement employer
-profile creation and editing. 4. Implement employer verification
-submission. 5. Implement admin verification review and decision. 6. Add
-role/ownership guards and audit events. 7. Build the corresponding web
-forms and dashboards.
+**Implemented** Job-seeker and employer profile retrieval/editing and
+completion, contact settings, workspace forms, and admin verification
+review surfaces. **Remaining work** Complete private evidence intake,
+employer submission and resubmission, and connect those flows to the
+existing review tools. Confirm sensitive profile changes trigger the
+required re-review and publication rules.
 
-**Exit criteria** - A job seeker can complete the minimum profile. - An
-employer can submit verification. - An admin can approve/reject it and
-the employer can resubmit after rejection. - Role, onboarding, contact
-visibility, and publication rules cannot be bypassed through direct API
-calls. - Unverified employers can create drafts but cannot publish.
+**Exit criteria** - A job seeker can complete the minimum profile. An
+employer can securely submit verification and resubmit after rejection;
+an admin can approve/reject it. Role, onboarding, contact visibility,
+and publication rules cannot be bypassed through direct API calls.
 
-### Phase 4 --- Job posting and discovery
+### Phase 4 --- Job posting and discovery — pending
 
 **Build** 1. Implement job draft creation and editing. 2. Implement
 server-side job lifecycle transitions. 3. Implement
@@ -1229,7 +1283,7 @@ Public users see only eligible published jobs. - Search and filters work
 against PostgreSQL. - Job state transitions cannot be bypassed through
 direct API calls.
 
-### Phase 5 --- Applications and saved jobs
+### Phase 5 --- Applications and saved jobs — pending
 
 **Build** 1. Implement apply-to-job endpoint. 2. Enforce
 duplicate-application prevention. 3. Write application and initial
@@ -1243,7 +1297,7 @@ can review applicants and update statuses. - Duplicate applications and
 unauthorized access are prevented. - Every status change has a history
 record.
 
-### Phase 6 --- Notifications and moderation
+### Phase 6 --- Notifications and moderation — admin review tools implemented; intake and user notifications pending
 
 **Build** 1. Implement in-app notification records and listing. 2.
 Trigger notifications for new applications and status changes. 3.
@@ -1256,7 +1310,7 @@ notification delivery.
 events. - Reports can be submitted and resolved by an authorized
 admin. - Moderation actions are auditable.
 
-### Phase 7 --- PWA, localization, and UX completion
+### Phase 7 --- PWA, localization, and UX completion — current localization and portal UX implemented; PWA pending
 
 **Build** 1. Complete responsive layouts for job seeker and employer
 journeys. 2. Add Punjabi, Hindi, and English translations. 3. Add
@@ -1270,7 +1324,7 @@ switching works across the application. - PWA can be installed on
 supported devices. - Offline behavior is clear and does not lose or fake
 submissions.
 
-### Phase 8 --- Testing, hardening, and launch
+### Phase 8 --- Testing, hardening, and launch — pending validation
 
 **Build** 1. Unit tests for services and domain rules. 2. API
 integration tests against a test PostgreSQL database. 3. Playwright
@@ -1289,51 +1343,33 @@ processes are ready.
 
 ---
 
-## 12. Recommended first development sprint
+## 12. Recommended next implementation increments
 
-Start with the foundation, not the landing page or all dashboards.
+The foundation, core email/password authentication, profile workspaces,
+and admin review surfaces already exist in code. Prioritize the remaining
+dependencies in this order:
 
-### Sprint 1 --- Engineering foundation
+1. **Validate the data baseline:** confirm migrations on the intended
+   development database and run the category/skill seed successfully.
+   The seed code was adjusted after a Prisma `void` deserialization error,
+   but a successful database run is not yet confirmed.
+2. **Finish employer verification intake:** settle document retention and
+   access rules, then implement private upload, submission, replacement,
+   and resubmission into the existing admin review flow.
+3. **Build the job marketplace:** implement employer drafts and publishing,
+   verification/moderation gates, and public listing, detail, search,
+   filters, sorting, and pagination.
+4. **Build applications and saved jobs:** add apply/withdraw, application
+   history, employer applicant management, status history, and save/unsave.
+5. **Complete moderation and notifications:** add report submission,
+   user notification inbox and application events, plus reliable delivery.
+6. **Prepare for launch:** complete remaining authentication items, account
+   deletion, PWA/offline behavior, accessibility and security review,
+   automated journey validation, deployment operations, and a Punjab pilot.
 
-1.  Create the Turborepo repository and workspace scripts.
-2.  Scaffold Next.js and NestJS applications.
-3.  Configure shared TypeScript and linting.
-4.  Configure PostgreSQL and Prisma.
-5.  Add environment variable validation.
-6.  Add a health endpoint and a basic web shell.
-7.  Add CI for lint, typecheck, test, and build.
-8.  Verify a clean clone can be installed and run using the README.
-
-**Sprint demo:** A developer can clone the repo, start the database, run
-migrations, start the API and web app, and see the API health status
-from the web development environment.
-
-### Sprint 2 --- Authentication
-
-1.  Implement registration and password hashing.
-2.  Implement email verification.
-3.  Implement login and access-token issuance.
-4.  Implement refresh-token rotation and session persistence.
-5.  Implement logout and session revocation.
-6.  Add auth UI and validation.
-7.  Add integration tests.
-
-**Sprint demo:** A user can register, verify email, log in, refresh a
-session, and log out.
-
-### Sprint 3 --- Google auth and account recovery
-
-1.  Implement Google OAuth.
-2.  Implement safe provider linking.
-3.  Implement forgot-password and reset-password.
-4.  Add resend verification protections.
-5.  Add rate limiting and security tests.
-
-**Sprint demo:** Email/password and Google authentication work with
-account recovery and session revocation.
-
-Continue to profiles and employer verification only after the
-authentication foundation is stable.
+Keep implementation tickets tied to the acceptance criteria in Sections
+10, 14, and 15. Public job publishing must remain gated by employer
+verification and the agreed moderation rules.
 
 ---
 
@@ -1453,18 +1489,19 @@ The MVP is ready for a controlled launch when:
 
 ## 16. Immediate next actions
 
-1.  Verify migration status and drift against the target database before
-    deploying schema changes.
-2.  Resolve the open decisions in Section 14, especially evidence
-    handling, retention, and job moderation.
-3.  Create `docs/PRD.md` and `docs/ARCHITECTURE.md` in the monorepo.
-4.  Convert Phases 1--3 into small issues with acceptance criteria.
-5.  Start Sprint 1: Turborepo, Next.js, NestJS, PostgreSQL, Prisma,
-    shared packages, and CI.
-6.  Do not start the full UI before the API contracts and core domain
-    rules are agreed.
+1.  Confirm Prisma migration state and run the master-data seed against
+    the intended development database.
+2.  Resolve evidence handling, retention, and moderation decisions in
+    Section 14; implement employer document intake into the existing
+    verification review flow.
+3.  Define and implement job lifecycle APIs, employer job management, and
+    public job discovery.
+4.  Implement applications, saved jobs, applicant management, reporting
+    intake, and user-facing notification flows.
+5.  Complete Google authentication, account deletion, PWA behavior, and
+    launch readiness checks as those dependencies become actionable.
 
-**Recommended build order:** foundation → authentication → profiles and
-employer verification → job posting and discovery → applications →
-notifications and moderation → PWA/localization polish → hardening and
-Punjab pilot.
+**Recommended build order:** data validation → verification intake → job
+posting and discovery → applications and saved jobs → reporting and
+notifications → remaining authentication/PWA work → hardening and Punjab
+pilot.

@@ -6,7 +6,7 @@ import { getEmployerProfile } from '@/features/portals/portal-api';
 export default async function EmployerProfilePage() {
   const profile = await getEmployerProfile();
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-7">
+    <div className="w-full space-y-7">
       <header className="flex flex-col gap-4 border-b border-auth-border/80 pb-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="mb-2 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.16em] text-auth-primary uppercase">

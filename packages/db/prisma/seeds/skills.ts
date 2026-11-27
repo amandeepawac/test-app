@@ -53,9 +53,43 @@ export const skills = [
   { slug: "beauty-services", name: "Beauty services" },
   { slug: "digital-marketing", name: "Digital marketing" },
   { slug: "basic-it-support", name: "Basic IT support" },
+  { slug: "passenger-transport", name: "Passenger transport" },
+  { slug: "auto-rickshaw-driving", name: "Auto-rickshaw driving" },
+  { slug: "bus-driving", name: "Bus driving" },
+  { slug: "vehicle-inspection", name: "Vehicle inspection" },
+  { slug: "merchandising", name: "Merchandising" },
+  { slug: "product-demonstration", name: "Product demonstration" },
+  { slug: "telecalling", name: "Telecalling" },
+  { slug: "inventory-counting", name: "Inventory counting" },
+  { slug: "barcode-scanning", name: "Barcode scanning" },
+  { slug: "dispatch-coordination", name: "Dispatch coordination" },
+  { slug: "sewing-machine-operation", name: "Sewing machine operation" },
+  { slug: "fabric-cutting", name: "Fabric cutting" },
+  { slug: "embroidery", name: "Embroidery" },
+  { slug: "garment-finishing", name: "Garment finishing" },
+  { slug: "garment-pressing", name: "Garment pressing" },
+  {
+    slug: "hvac-maintenance",
+    name: "Heating and air conditioning maintenance",
+  },
+  { slug: "building-maintenance", name: "Building maintenance" },
+  { slug: "pest-control", name: "Pest control" },
+  { slug: "gardening", name: "Gardening" },
+  { slug: "laundry-services", name: "Laundry services" },
+  { slug: "waste-segregation", name: "Waste segregation" },
+  { slug: "recycling-sorting", name: "Recycling and material sorting" },
+  { slug: "invoice-processing", name: "Invoice processing" },
+  { slug: "payroll-processing", name: "Payroll processing" },
+  { slug: "tally-accounting-software", name: "Tally accounting software" },
+  { slug: "event-setup", name: "Event setup" },
+  { slug: "event-coordination", name: "Event coordination" },
+  { slug: "audio-visual-setup", name: "Audio and visual equipment setup" },
+  { slug: "ticketing", name: "Ticketing" },
 ] as const;
 
-export async function seedSkills(tx: Prisma.TransactionClient): Promise<number> {
+export async function seedSkills(
+  tx: Prisma.TransactionClient,
+): Promise<number> {
   for (const skill of skills) {
     await tx.skill.upsert({
       where: { slug: skill.slug },

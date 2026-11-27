@@ -6,5 +6,9 @@ export default async function VerificationPage() {
   const profile = await getEmployerProfile();
   if (!profile?.completedAt) redirect('/employer/profile');
   const verification = await getEmployerVerification();
-  return <div className="mx-auto max-w-6xl"><EmployerVerification verification={verification} /></div>;
+  return (
+    <div className="w-full">
+      <EmployerVerification verification={verification} />
+    </div>
+  );
 }

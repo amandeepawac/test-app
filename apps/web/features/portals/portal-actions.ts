@@ -14,8 +14,7 @@ import {
 } from './portal-api';
 
 export type PortalActionResult<T> =
-  | { ok: true; data: T }
-  | { ok: false; message: string; status: number };
+  { ok: true; data: T } | { ok: false; message: string; status: number };
 
 async function perform<T>(operation: () => Promise<T>): Promise<PortalActionResult<T>> {
   try {
@@ -25,7 +24,11 @@ async function perform<T>(operation: () => Promise<T>): Promise<PortalActionResu
       return { ok: false, message: error.message, status: error.status };
     }
     console.error('Portal action failed', error);
-    return { ok: false, message: 'The request could not be completed. Please try again.', status: 0 };
+    return {
+      ok: false,
+      message: 'The request could not be completed. Please try again.',
+      status: 0,
+    };
   }
 }
 

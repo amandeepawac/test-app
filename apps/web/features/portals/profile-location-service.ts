@@ -4,7 +4,8 @@ import { City, State } from 'country-state-city';
 export type LocationOption = { value: string; label: string };
 
 function options(names: string[]): LocationOption[] {
-  return [...new Set(names)].sort((a, b) => a.localeCompare(b, 'en'))
+  return [...new Set(names)]
+    .sort((a, b) => a.localeCompare(b, 'en'))
     .map((name) => ({ value: name, label: name }));
 }
 

@@ -100,7 +100,10 @@ export const completeJobSeekerProfile = () =>
   request('/job-seeker/profile/complete', jobSeekerProfileResponseSchema, { method: 'POST' });
 export const listJobSeekerSkills = (input: JobSeekerSkillsQuery) => {
   const query = jobSeekerSkillsQuerySchema.parse(input);
-  const params = new URLSearchParams({ page: String(query.page), pageSize: String(query.pageSize) });
+  const params = new URLSearchParams({
+    page: String(query.page),
+    pageSize: String(query.pageSize),
+  });
   if (query.search) params.set('search', query.search);
   return request(`/job-seeker/skills?${params}`, jobSeekerSkillsResponseSchema);
 };

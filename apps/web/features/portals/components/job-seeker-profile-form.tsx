@@ -3,29 +3,45 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
-import { jobSeekerProfileUpdateSchema, type JobSeekerProfileResponse, type JobSeekerSkillsResponse } from '@repo/contracts';
+import {
+  jobSeekerProfileUpdateSchema,
+  type JobSeekerProfileResponse,
+  type JobSeekerSkillsResponse,
+} from '@repo/contracts';
 import { FormInput } from '@/components/form/form-input';
-import { FormSelect } from '@/components/form/form-select';
+import { FormCombobox } from '@/components/form/form-combobox';
 import { FormTextarea } from '@/components/form/form-textarea';
 import { completeJobSeekerProfileAction, saveJobSeekerProfileAction } from '../portal-actions';
-import { needsCityForStateChange, omitEmptyFields, seekerFormSchema, type SeekerFormValues } from '../profile-form-schema';
+import {
+  needsCityForStateChange,
+  omitEmptyFields,
+  seekerFormSchema,
+  type SeekerFormValues,
+} from '../profile-form-schema';
 import { usePortalSubmit } from '../use-portal-submit';
 import { ProfileCard } from './profile-card';
 import { ProfileSubmit } from './profile-submit';
 import { ProfileSkills } from './profile-skills';
 import { ProfileLocationFields } from './profile-location-fields';
 
-export function JobSeekerProfileForm({ profile, skillCatalog }: {
-  profile: JobSeekerProfileResponse | null; skillCatalog: JobSeekerSkillsResponse;
+export function JobSeekerProfileForm({
+  profile,
+  skillCatalog,
+}: {
+  profile: JobSeekerProfileResponse | null;
+  skillCatalog: JobSeekerSkillsResponse;
 }) {
   const t = useTranslations('Portal');
   const state = usePortalSubmit();
   const form = useForm<SeekerFormValues>({
     resolver: zodResolver(seekerFormSchema),
     defaultValues: {
-      fullName: profile?.fullName ?? '', phone: profile?.phone ?? '',
-      stateName: profile?.stateName ?? '', cityName: profile?.cityName ?? '',
-      experienceLevel: profile?.experienceLevel ?? '', experienceSummary: profile?.experienceSummary ?? '',
+      fullName: profile?.fullName ?? '',
+      phone: profile?.phone ?? '',
+      stateName: profile?.stateName ?? '',
+      cityName: profile?.cityName ?? '',
+      experienceLevel: profile?.experienceLevel ?? '',
+      experienceSummary: profile?.experienceSummary ?? '',
       skillIds: profile?.skills.map((skill) => skill.id) ?? [],
     },
   });
@@ -44,7 +60,8 @@ export function JobSeekerProfileForm({ profile, skillCatalog }: {
     }
     await state.submit(async () => {
       const saved = await saveJobSeekerProfileAction({
-        ...omitEmptyFields(values), experienceSummary: values.experienceSummary || null,
+        ...omitEmptyFields(values),
+        experienceSummary: values.experienceSummary || null,
       });
       return saved.ok && complete ? completeJobSeekerProfileAction() : saved;
     });
@@ -53,18 +70,55 @@ export function JobSeekerProfileForm({ profile, skillCatalog }: {
     <form noValidate onSubmit={form.handleSubmit((values) => save(values))} className="space-y-6">
       <ProfileCard title={t('yourDetails')} description={t('draftHint')}>
         <fieldset disabled={state.busy} className="grid gap-5 md:grid-cols-2">
-          <FormInput control={form.control} name="fullName" label={t('fullName')} autoComplete="name" />
-          <FormInput control={form.control} name="phone" label={t('phone')} type="tel" autoComplete="tel" />
-          <ProfileLocationFields control={form.control} stateName="stateName" cityName="cityName"
-            busy={state.busy} onStateChange={() => form.setValue('cityName', '', { shouldDirty: true })} />
-          <FormSelect control={form.control} name="experienceLevel" label={t('experienceLevel')}
-            placeholder={t('select')} options={options.map((value) => ({ value, label: t(`experienceLevels.${value}`) }))} />
-          <div className="md:col-span-2"><FormTextarea control={form.control} name="experienceSummary" label={t('experienceSummary')} maxLength={2000} /></div>
+          <FormInput
+            control={form.control}
+            name="fullName"
+            label={t('fullName')}
+            autoComplete="name"
+          />
+          <FormInput
+            control={form.control}
+            name="phone"
+            label={t('phone')}
+            type="tel"
+            autoComplete="tel"
+          />
+          <ProfileLocationFields
+            control={form.control}
+            stateName="stateName"
+            cityName="cityName"
+            busy={state.busy}
+            onStateChange={() => form.setValue('cityName', '', { shouldDirty: true })}
+          />
+          <FormCombobox
+            control={form.control}
+            name="experienceLevel"
+            label={t('experienceLevel')}
+            placeholder={t('select')}
+            emptyMessage={t('noMatchingOptions')}
+            options={options.map((value) => ({ value, label: t(`experienceLevels.${value}`) }))}
+          />
+          <div className="md:col-span-2">
+            <FormTextarea
+              control={form.control}
+              name="experienceSummary"
+              label={t('experienceSummary')}
+              maxLength={2000}
+            />
+          </div>
         </fieldset>
       </ProfileCard>
-      <ProfileSkills control={form.control} initialData={skillCatalog} selected={profile?.skills ?? []} disabled={state.busy} />
-      <ProfileSubmit {...state} completed={!!profile?.completedAt}
-        onComplete={() => void form.handleSubmit((values) => save(values, true))()} />
+      <ProfileSkills
+        control={form.control}
+        initialData={skillCatalog}
+        selected={profile?.skills ?? []}
+        disabled={state.busy}
+      />
+      <ProfileSubmit
+        {...state}
+        completed={!!profile?.completedAt}
+        onComplete={() => void form.handleSubmit((values) => save(values, true))()}
+      />
     </form>
   );
 }
