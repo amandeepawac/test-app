@@ -4,6 +4,7 @@ import { z } from 'zod';
 import {
   adminAuditLogListResponseSchema,
   adminDashboardResponseSchema,
+  adminEmployerDocumentAccessResponseSchema,
   adminEmployerDocumentReviewResponseSchema,
   adminEmployerVerificationDecisionResponseSchema,
   adminEmployerVerificationDetailResponseSchema,
@@ -144,6 +145,28 @@ export function reviewEmployerDocument(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     },
+  );
+}
+
+export const documentAccessResponseSchema = adminEmployerDocumentAccessResponseSchema.refine(
+  ({ url }) => {
+    if (!URL.canParse(url)) return false;
+    const target = new URL(url);
+    return (
+      target.protocol === 'https:' &&
+      target.host === 'api.cloudinary.com' &&
+      !target.username &&
+      !target.password &&
+      /^\/v1_1\/[^/]+\/asset\/download$/.test(target.pathname)
+    );
+  },
+);
+
+export function accessEmployerDocument(id: string, documentId: string) {
+  return request(
+    `/admin/employer-verifications/${encodeURIComponent(id)}/documents/${encodeURIComponent(documentId)}/access`,
+    documentAccessResponseSchema,
+    { method: 'POST' },
   );
 }
 

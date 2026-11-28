@@ -12,6 +12,7 @@ import {
   adminReportUpdateSchema,
   type AdminAuditLogQuery,
   type AdminAuditLogListResponse,
+  type AdminEmployerDocumentAccessResponse,
   type AdminEmployerDocumentReview,
   type AdminEmployerDocumentReviewResponse,
   type AdminEmployerVerificationDecision,
@@ -33,6 +34,7 @@ import {
 } from '@repo/contracts';
 import {
   AdminApiError,
+  accessEmployerDocument,
   getAdminDashboard,
   getAdminJob,
   getAdminReport,
@@ -127,6 +129,17 @@ export async function reviewEmployerDocumentAction(
   return parsedId.success && parsedDocumentId.success && body.success
     ? execute(() => reviewEmployerDocument(parsedId.data, parsedDocumentId.data, body.data))
     : invalid<AdminEmployerDocumentReviewResponse>();
+}
+
+export async function accessEmployerDocumentAction(
+  id: string,
+  documentId: string,
+): Promise<AdminActionResult<AdminEmployerDocumentAccessResponse>> {
+  const parsedId = parseId(id);
+  const parsedDocumentId = parseId(documentId);
+  return parsedId.success && parsedDocumentId.success
+    ? execute(() => accessEmployerDocument(parsedId.data, parsedDocumentId.data))
+    : invalid<AdminEmployerDocumentAccessResponse>();
 }
 
 export async function listAdminJobsAction(

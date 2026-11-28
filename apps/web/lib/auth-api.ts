@@ -5,7 +5,7 @@ import { getAuthApiBaseUrl } from '@/lib/api-base-url';
 
 const uuidPathSegment = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
 const allowedApiPath = new RegExp(
-  `^/(?:auth/(?:google|me|login|register|forgot-password|reset-password|verify-email|refresh|logout)|admin/(?:dashboard|employer-verifications(?:/${uuidPathSegment}(?:/documents/${uuidPathSegment})?)?|jobs(?:/${uuidPathSegment}(?:/moderation)?)?|reports(?:/${uuidPathSegment})?|audit-logs)|employers/me(?:/(?:verification(?:/(?:documents(?:/${uuidPathSegment})?|submit))?|complete|jobs(?:/${uuidPathSegment}(?:/applications)?)?|applications/${uuidPathSegment}/status))?|job-seeker/(?:profile(?:/complete)?|skills|jobs/${uuidPathSegment}/applications|applications(?:/${uuidPathSegment}/withdraw)?)|jobs(?:/${uuidPathSegment}(?:/(?:publish|pause))?)?|public/(?:jobs(?:/${uuidPathSegment})?|job-categories))(?:\\?[^#]*)?$`,
+  `^/(?:auth/(?:google|me|login|register|forgot-password|reset-password|verify-email|refresh|logout)|admin/(?:dashboard|employer-verifications(?:/${uuidPathSegment}(?:/documents/${uuidPathSegment}(?:/access)?)?)?|jobs(?:/${uuidPathSegment}(?:/moderation)?)?|reports(?:/${uuidPathSegment})?|audit-logs)|employers/me(?:/(?:verification(?:/(?:documents(?:/${uuidPathSegment})?|submit))?|complete|jobs(?:/${uuidPathSegment}(?:/applications)?)?|applications/${uuidPathSegment}/status))?|job-seeker/(?:profile(?:/complete)?|skills|jobs/${uuidPathSegment}/applications|applications(?:/${uuidPathSegment}/withdraw)?)|jobs(?:/${uuidPathSegment}(?:/(?:publish|pause))?)?|public/(?:jobs(?:/${uuidPathSegment})?|job-categories))(?:\\?[^#]*)?$`,
   'i',
 );
 

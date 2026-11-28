@@ -169,13 +169,16 @@ Legacy records have no verified asset ID and cannot use the new reviewer access
 endpoint.
 
 The new storage code requests Cloudinary `authenticated` delivery and records
-the asset ID for admin-only, audited, 60-second download URLs. This is API code
-only; the admin interface does not yet invoke
-`POST /admin/employer-verifications/:id/documents/:documentId/access`. Apply
-the migration and regenerate Prisma Client. In a disposable environment, set
+the asset ID for admin-only, audited, 60-second download URLs. Admin reviewers
+can request a download from the verification screen; they must independently
+confirm they reviewed the document before making a document decision. Downloads
+may require pop-ups to be allowed and leave a local copy on the reviewer's device;
+use an approved secure process and remove local copies when no longer needed.
+Apply the migration and regenerate Prisma Client. In a disposable environment, set
 `CLOUDINARY_VERIFICATION_UPLOADS_ENABLED=true` and test with synthetic files:
-image and PDF uploads, unsigned access denial, expiry, authorization, deletion,
-and provider failure/retry behavior. Do not enable real uploads until these
+image and PDF uploads and reviewer downloads, unsigned access denial, expiry,
+authorization, blocked pop-ups, deletion, and provider failure/retry behavior.
+Do not enable real uploads until these
 checks and the end-to-end privacy review succeed. A signed URL is a bearer
 credential until it expires; do not log, share, or cache it. Verify Cloudinary's
 backup and CDN invalidation policies separately. When an upload outcome or

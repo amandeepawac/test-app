@@ -14,6 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
+  accessEmployerDocumentAction,
   getEmployerVerificationAction,
   reviewEmployerDocumentAction,
   reviewEmployerVerificationAction,
@@ -227,6 +228,7 @@ export function EmployerVerificationReview({
             data.documents.map((document) => (
               <DocumentReview
                 key={document.id}
+                employerId={data.id}
                 document={document}
                 locale={locale}
                 disabled={busy}
@@ -254,11 +256,13 @@ function Detail({ label, value }: { label: string; value: string | null | undefi
 }
 
 function DocumentReview({
+  employerId,
   document,
   locale,
   disabled,
   onReview,
 }: {
+  employerId: string;
   document: VerificationDocument;
   locale: string;
   disabled: boolean;
@@ -267,7 +271,32 @@ function DocumentReview({
   const t = useTranslations('Admin');
   const [note, setNote] = useState(document.reviewNote ?? '');
   const [error, setError] = useState('');
+  const [downloadError, setDownloadError] = useState('');
   const [reviewedExternally, setReviewedExternally] = useState(false);
+  const accessMutation = useAdminMutation<Window, null>(async (downloadWindow) => {
+    const result = await accessEmployerDocumentAction(employerId, document.id);
+    if (!result.ok) return result;
+    if (downloadWindow.closed) {
+      throw new Error('The document download window was closed.');
+    }
+    downloadWindow.location.replace(result.data.url);
+    return { ok: true, data: null };
+  });
+  const accessErrorMessage = useAdminErrorMessage(accessMutation.error);
+
+  function download() {
+    setDownloadError('');
+    accessMutation.reset();
+    const downloadWindow = window.open('about:blank', '_blank');
+    if (!downloadWindow) {
+      setDownloadError(t('documentPopupBlocked'));
+      return;
+    }
+    downloadWindow.opener = null;
+    accessMutation.mutate(downloadWindow, {
+      onError: () => downloadWindow.close(),
+    });
+  }
 
   function submit(decision: 'APPROVE' | 'REJECT') {
     if (decision === 'REJECT' && !note.trim()) {
@@ -292,6 +321,23 @@ function DocumentReview({
         <Detail label={t('expiresAt')} value={formatAdminDate(document.expiresAt, locale)} />
       </div>
       <div className="space-y-2">
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          disabled={accessMutation.isPending}
+          onClick={download}
+        >
+          {accessMutation.isPending ? t('documentDownloadPending') : t('downloadDocument')}
+        </Button>
+        {downloadError && (
+          <p role="alert" className="text-sm text-destructive">
+            {downloadError}
+          </p>
+        )}
+        {accessMutation.isError && (
+          <AdminNotice title={t('requestFailed')} message={accessErrorMessage} />
+        )}
         <label htmlFor={`document-note-${document.id}`} className="text-sm font-medium">
           {t('reviewNote')}
         </label>
