@@ -222,6 +222,7 @@ describe('PrismaEmployerProfileRepository', () => {
     const document = {
       id: 'document-id',
       storageKey: 'private/document-key',
+      storageAssetId: 'asset-id',
       mimeType: 'application/pdf',
     };
     tx.employerProfile.findUnique.mockResolvedValue({
@@ -247,7 +248,11 @@ describe('PrismaEmployerProfileRepository', () => {
 
     await expect(repository.deleteDocument('user-id', 'document-id')).resolves.toBeUndefined();
 
-    expect(storage.delete).toHaveBeenCalledWith(document.storageKey, document.mimeType);
+    expect(storage.delete).toHaveBeenCalledWith(
+      document.storageKey,
+      document.mimeType,
+      'authenticated',
+    );
     expect(tx.employerDocument.deleteMany).toHaveBeenCalledWith({
       where: { id: document.id, employerId: 'profile-id' },
     });

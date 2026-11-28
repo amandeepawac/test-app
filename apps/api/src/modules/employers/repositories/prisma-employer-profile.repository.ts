@@ -223,6 +223,7 @@ export class PrismaEmployerProfileRepository implements EmployerProfileRepositor
           employerId: profile.id,
           documentType: input.documentType,
           storageKey: uploaded.publicId,
+          storageAssetId: uploaded.assetId,
           originalName: input.originalName,
           mimeType: input.mimeType,
           fileSizeBytes: BigInt(uploaded.bytes),
@@ -245,7 +246,12 @@ export class PrismaEmployerProfileRepository implements EmployerProfileRepositor
         createdAt: document.createdAt.toISOString(),
       };
     } catch (error) {
-      await this.documentStorage.delete(uploaded.publicId, input.mimeType);
+      try {
+        await this.documentStorage.delete(uploaded.publicId, input.mimeType, 'authenticated');
+      } catch (cleanupError) {
+        console.error('Verification document cleanup failed', uploaded.publicId, cleanupError);
+        throw cleanupError;
+      }
       throw error;
     }
   }
@@ -313,11 +319,15 @@ export class PrismaEmployerProfileRepository implements EmployerProfileRepositor
     }
     const document = await this.prisma.client.employerDocument.findFirst({
       where: { id: documentId, employerId: profile.id },
-      select: { id: true, storageKey: true, mimeType: true },
+      select: { id: true, storageKey: true, storageAssetId: true, mimeType: true },
     });
     if (!document) throw new EmployerVerificationDocumentNotFoundError();
 
-    await this.documentStorage.delete(document.storageKey, document.mimeType ?? 'image/jpeg');
+    await this.documentStorage.delete(
+      document.storageKey,
+      document.mimeType ?? 'image/jpeg',
+      document.storageAssetId ? 'authenticated' : 'upload',
+    );
     await this.prisma.client.$transaction(async (tx) => {
       const deleted = await tx.employerDocument.deleteMany({
         where: { id: document.id, employerId: profile.id },

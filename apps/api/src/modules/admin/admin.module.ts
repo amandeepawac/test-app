@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from '@/infrastructure/database/database.module.js';
+import { PrivateDocumentStorage } from '@/infrastructure/storage/private-document-storage.js';
 import { AdminController } from '@/modules/admin/admin.controller.js';
 import { AuditLogAdminController } from '@/modules/admin/audit-log-admin.controller.js';
 import { EmployerVerificationAdminController } from '@/modules/admin/employer-verification-admin.controller.js';
@@ -34,6 +35,7 @@ import { AuthModule } from '@/modules/auth/auth.module.js';
   ],
   providers: [
     AdminAuthGuard,
+    PrivateDocumentStorage,
     AdminDashboardService,
     EmployerVerificationAdminService,
     JobModerationAdminService,

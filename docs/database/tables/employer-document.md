@@ -14,6 +14,7 @@ access and protection are handled outside this table.
 | `employerId`     | `String` (UUID)                            | Employer profile submitting the document.    |
 | `documentType`   | `EmployerDocumentType`                     | Classification of submitted evidence.        |
 | `storageKey`     | `String`                                   | Key/path used to locate the stored file.     |
+| `storageAssetId` | `String?`                                  | Cloudinary asset ID for authenticated uploads; null for legacy evidence requiring review. |
 | `originalName`   | `String?`                                  | User-provided filename for display.          |
 | `mimeType`       | `String?` (max 120 chars)                  | File media type.                             |
 | `fileSizeBytes`  | `BigInt?`                                  | Optional size of the stored file in bytes.   |

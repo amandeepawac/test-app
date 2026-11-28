@@ -12,6 +12,7 @@ const environmentSchema = z.object({
   CLOUDINARY_CLOUD_NAME: z.string().trim().min(1).optional(),
   CLOUDINARY_API_KEY: z.string().trim().min(1).optional(),
   CLOUDINARY_API_SECRET: z.string().trim().min(1).optional(),
+  CLOUDINARY_VERIFICATION_UPLOADS_ENABLED: z.enum(['true', 'false']).default('false'),
 });
 
 export function validateEnvironment(environment: Record<string, unknown>) {

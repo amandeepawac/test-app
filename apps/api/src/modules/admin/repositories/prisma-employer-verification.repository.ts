@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import type {
   AdminEmployerVerificationDecision,
   AdminEmployerVerificationDecisionResponse,
@@ -225,6 +225,41 @@ export class PrismaEmployerVerificationRepository implements EmployerVerificatio
         verificationNote: note,
         rejectionReason: input.decision === 'REJECT' ? note : null,
       };
+    });
+  }
+
+  async recordDocumentAccess(
+    employerId: string,
+    documentId: string,
+    context: AdminActionContext,
+  ): Promise<{ assetId: string }> {
+    return this.prisma.client.$transaction(async (tx) => {
+      const document = await tx.employerDocument.findFirst({
+        where: {
+          id: documentId,
+          employerId,
+          employer: { verificationSubmittedAt: { not: null } },
+        },
+        select: { storageAssetId: true },
+      });
+      if (!document) throw new AdminRecordNotFoundError();
+      if (!document.storageAssetId) {
+        throw new ServiceUnavailableException(
+          'This document requires a private storage review before it can be accessed.',
+        );
+      }
+      await tx.auditLog.create({
+        data: {
+          actorId: context.actorId,
+          action: 'EMPLOYER_DOCUMENT_ACCESS_REQUESTED',
+          entityType: 'EMPLOYER_DOCUMENT',
+          entityId: documentId,
+          metadata: { employerId },
+          ipAddress: context.ipAddress,
+          userAgent: context.userAgent,
+        },
+      });
+      return { assetId: document.storageAssetId };
     });
   }
 

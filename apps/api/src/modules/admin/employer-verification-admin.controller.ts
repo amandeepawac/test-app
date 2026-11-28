@@ -6,6 +6,8 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Post,
+  HttpCode,
   Query,
   Req,
   StandardSchemaValidationPipe,
@@ -64,5 +66,17 @@ export class EmployerVerificationAdminController {
     @Req() request: AdminRequest,
   ) {
     return this.verifications.reviewDocument(id, documentId, body, getAdminActionContext(request));
+  }
+
+  @Post(':id/documents/:documentId/access')
+  @HttpCode(200)
+  @Header('Cache-Control', 'no-store')
+  @Header('Referrer-Policy', 'no-referrer')
+  documentAccess(
+    @Param('id', new ParseUUIDPipe({ version: 'all' })) id: string,
+    @Param('documentId', new ParseUUIDPipe({ version: 'all' })) documentId: string,
+    @Req() request: AdminRequest,
+  ) {
+    return this.verifications.documentAccess(id, documentId, getAdminActionContext(request));
   }
 }

@@ -475,6 +475,7 @@ model EmployerDocument {
   employerId     String               @db.Uuid
   documentType   EmployerDocumentType
   storageKey     String
+  storageAssetId String?
   originalName   String?
   mimeType       String?              @db.VarChar(120)
   fileSizeBytes  BigInt?

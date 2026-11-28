@@ -14,6 +14,11 @@ export abstract class EmployerVerificationRepository {
     query: AdminEmployerVerificationQuery,
   ): Promise<AdminEmployerVerificationListResponse>;
   abstract findById(id: string): Promise<AdminEmployerVerificationDetailResponse | null>;
+  abstract recordDocumentAccess(
+    employerId: string,
+    documentId: string,
+    context: AdminActionContext,
+  ): Promise<{ assetId: string }>;
   abstract review(
     id: string,
     decision: AdminEmployerVerificationDecision,

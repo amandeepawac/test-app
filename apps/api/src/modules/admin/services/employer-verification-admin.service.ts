@@ -7,10 +7,14 @@ import type {
 import type { AdminActionContext } from '@/modules/admin/admin-context.js';
 import { mapAdminRepositoryErrors } from '@/modules/admin/admin-errors.js';
 import { EmployerVerificationRepository } from '@/modules/admin/repositories/employer-verification.repository.js';
+import { PrivateDocumentStorage } from '@/infrastructure/storage/private-document-storage.js';
 
 @Injectable()
 export class EmployerVerificationAdminService {
-  constructor(private readonly verifications: EmployerVerificationRepository) {}
+  constructor(
+    private readonly verifications: EmployerVerificationRepository,
+    private readonly storage: PrivateDocumentStorage,
+  ) {}
 
   list(query: AdminEmployerVerificationQuery) {
     return this.verifications.list(query);
@@ -35,5 +39,12 @@ export class EmployerVerificationAdminService {
     return mapAdminRepositoryErrors(() =>
       this.verifications.reviewDocument(employerId, documentId, input, context),
     );
+  }
+
+  async documentAccess(employerId: string, documentId: string, context: AdminActionContext) {
+    const document = await mapAdminRepositoryErrors(() =>
+      this.verifications.recordDocumentAccess(employerId, documentId, context),
+    );
+    return this.storage.privateDownloadUrl(document.assetId);
   }
 }
