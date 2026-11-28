@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormInput } from '@/components/form/form-input';
+import { FormPasswordInput } from '@/components/form/form-password-input';
 import { FieldGroup } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
 import { adminSignIn, type AdminSignInResult } from '@/features/admin/admin-auth-actions';
@@ -123,12 +124,11 @@ export function AdminLoginForm({
                 autoComplete="username"
                 placeholder="you@example.com"
               />
-              <FormInput
+              <FormPasswordInput
                 control={form.control}
                 formatError={formatError}
                 name="password"
                 label={t('password')}
-                type="password"
                 autoComplete="current-password"
               />
             </FieldGroup>

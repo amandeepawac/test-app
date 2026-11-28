@@ -16,6 +16,7 @@ export function FormInput<T extends FieldValues, N extends FieldPathByValue<T, s
   label,
   description,
   labelAction,
+  labelSuffix,
   disabled,
   formatError,
   group,
@@ -23,7 +24,17 @@ export function FormInput<T extends FieldValues, N extends FieldPathByValue<T, s
 }: FormFieldProps<T, N> & InputProps) {
   return (
     <FormField<T, N>
-      {...{ control, name, label, description, labelAction, disabled, formatError, group }}
+      {...{
+        control,
+        name,
+        label,
+        description,
+        labelAction,
+        labelSuffix,
+        disabled,
+        formatError,
+        group,
+      }}
     >
       {({ field, fieldState, id, describedBy }) => (
         <Input

@@ -31,6 +31,7 @@ export function JobQueue({
   initialStatus?: AdminJobModerationQuery['status'];
 }) {
   const t = useTranslations('Admin');
+  const portalT = useTranslations('Portal.jobsPage');
   const locale = useLocale();
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<AdminJobModerationQuery['status']>(initialStatus);
@@ -73,6 +74,7 @@ export function JobQueue({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">{t('jobQueueDescription')}</p>
         <NativeSelect
+          className="w-full sm:w-auto"
           aria-label={t('filterByStatus')}
           value={status ?? 'ALL'}
           onChange={(event) => {
@@ -82,16 +84,24 @@ export function JobQueue({
           }}
         >
           <NativeSelectOption value="ALL">{t('allStatuses')}</NativeSelectOption>
-          <NativeSelectOption value="PENDING_REVIEW">PENDING REVIEW</NativeSelectOption>
-          <NativeSelectOption value="DRAFT">DRAFT</NativeSelectOption>
-          <NativeSelectOption value="PUBLISHED">PUBLISHED</NativeSelectOption>
-          <NativeSelectOption value="PAUSED">PAUSED</NativeSelectOption>
-          <NativeSelectOption value="HIDDEN">HIDDEN</NativeSelectOption>
-          <NativeSelectOption value="REJECTED">REJECTED</NativeSelectOption>
-          <NativeSelectOption value="CLOSED">CLOSED</NativeSelectOption>
-          <NativeSelectOption value="FILLED">FILLED</NativeSelectOption>
-          <NativeSelectOption value="EXPIRED">EXPIRED</NativeSelectOption>
-          <NativeSelectOption value="REMOVED">REMOVED</NativeSelectOption>
+          {(
+            [
+              'PENDING_REVIEW',
+              'DRAFT',
+              'PUBLISHED',
+              'PAUSED',
+              'HIDDEN',
+              'REJECTED',
+              'CLOSED',
+              'FILLED',
+              'EXPIRED',
+              'REMOVED',
+            ] as const
+          ).map((value) => (
+            <NativeSelectOption key={value} value={value}>
+              {portalT(`statuses.${value}`)}
+            </NativeSelectOption>
+          ))}
         </NativeSelect>
       </div>
       <Card>
@@ -117,9 +127,17 @@ export function JobQueue({
               },
               {
                 header: t('employmentType'),
-                cell: (item) => item.employmentType.replaceAll('_', ' '),
+                cell: (item) => portalT(`employmentTypes.${item.employmentType}`),
               },
-              { header: t('status'), cell: (item) => <AdminStatusBadge status={item.status} /> },
+              {
+                header: t('status'),
+                cell: (item) => (
+                  <AdminStatusBadge
+                    status={item.status}
+                    label={portalT(`statuses.${item.status}`)}
+                  />
+                ),
+              },
               { header: t('created'), cell: (item) => formatAdminDate(item.createdAt, locale) },
               {
                 header: t('action'),

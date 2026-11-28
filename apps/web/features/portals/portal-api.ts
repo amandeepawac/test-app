@@ -132,7 +132,10 @@ export const listJobSeekerSkills = (input: JobSeekerSkillsQuery) => {
 
 export const listEmployerJobs = (input: EmployerJobsQuery) => {
   const query = employerJobsQuerySchema.parse(input);
-  const params = new URLSearchParams({ page: String(query.page), pageSize: String(query.pageSize) });
+  const params = new URLSearchParams({
+    page: String(query.page),
+    pageSize: String(query.pageSize),
+  });
   return request(`/employers/me/jobs?${params}`, employerJobListResponseSchema, {}, true);
 };
 export const getEmployerJob = (id: string) =>
@@ -148,7 +151,11 @@ export const updateEmployerJob = (id: string, body: EmployerJobUpdate) =>
   request(
     `/jobs/${encodeURIComponent(id)}`,
     employerJobResponseSchema,
-    { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
     true,
   );
 export const transitionEmployerJob = (id: string, action: 'publish' | 'pause') =>

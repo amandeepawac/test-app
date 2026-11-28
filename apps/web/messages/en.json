@@ -73,11 +73,47 @@
       "salaryRange": "Maximum salary must be at least the minimum salary.",
       "requiredField": "This field is required.",
       "textTooLong": "This value is too long.",
-      "statuses": { "DRAFT": "Draft", "PENDING_REVIEW": "Pending review", "PUBLISHED": "Published", "PAUSED": "Paused", "HIDDEN": "Hidden by admin", "REJECTED": "Rejected", "CLOSED": "Closed", "FILLED": "Filled", "EXPIRED": "Expired", "REMOVED": "Removed" },
-      "employmentTypes": { "FULL_TIME": "Full time", "PART_TIME": "Part time", "CONTRACT": "Contract", "TEMPORARY": "Temporary", "DAILY_WAGE": "Daily wage", "APPRENTICESHIP": "Apprenticeship", "INTERNSHIP": "Internship", "FREELANCE": "Freelance" },
+      "statuses": {
+        "DRAFT": "Draft",
+        "PENDING_REVIEW": "Pending review",
+        "PUBLISHED": "Published",
+        "PAUSED": "Paused",
+        "HIDDEN": "Hidden by admin",
+        "REJECTED": "Rejected",
+        "CLOSED": "Closed",
+        "FILLED": "Filled",
+        "EXPIRED": "Expired",
+        "REMOVED": "Removed"
+      },
+      "employmentTypes": {
+        "FULL_TIME": "Full time",
+        "PART_TIME": "Part time",
+        "CONTRACT": "Contract",
+        "TEMPORARY": "Temporary",
+        "DAILY_WAGE": "Daily wage",
+        "APPRENTICESHIP": "Apprenticeship",
+        "INTERNSHIP": "Internship",
+        "FREELANCE": "Freelance"
+      },
       "workModes": { "ON_SITE": "On-site", "REMOTE": "Remote", "HYBRID": "Hybrid" },
-      "experienceLevels": { "NO_EXPERIENCE": "No experience", "ENTRY_LEVEL": "Entry level", "LESS_THAN_1_YEAR": "Less than 1 year", "ONE_TO_THREE_YEARS": "1–3 years", "THREE_TO_FIVE_YEARS": "3–5 years", "FIVE_TO_TEN_YEARS": "5–10 years", "TEN_PLUS_YEARS": "10+ years" },
-      "salaryPeriods": { "HOUR": "Per hour", "DAY": "Per day", "WEEK": "Per week", "MONTH": "Per month", "YEAR": "Per year", "FIXED": "Fixed", "NEGOTIABLE": "Negotiable" }
+      "experienceLevels": {
+        "NO_EXPERIENCE": "No experience",
+        "ENTRY_LEVEL": "Entry level",
+        "LESS_THAN_1_YEAR": "Less than 1 year",
+        "ONE_TO_THREE_YEARS": "1–3 years",
+        "THREE_TO_FIVE_YEARS": "3–5 years",
+        "FIVE_TO_TEN_YEARS": "5–10 years",
+        "TEN_PLUS_YEARS": "10+ years"
+      },
+      "salaryPeriods": {
+        "HOUR": "Per hour",
+        "DAY": "Per day",
+        "WEEK": "Per week",
+        "MONTH": "Per month",
+        "YEAR": "Per year",
+        "FIXED": "Fixed",
+        "NEGOTIABLE": "Negotiable"
+      }
     },
     "verificationStatuses": {
       "NOT_SUBMITTED": "Not submitted",
@@ -147,6 +183,7 @@
     "select": "Select an option",
     "skills": "Skills",
     "skillsHint": "Select up to 50 skills. Selected skills remain available when changing pages.",
+    "skillsSelected": "{count} of 50 skills selected",
     "searchSkills": "Search skills",
     "noSkills": "No matching skills found.",
     "showEmail": "Show email address",
@@ -225,7 +262,8 @@
     "apiNote": "This status checks the API process only, not the database."
   },
   "Auth": {
-    "continueGoogle": "Continue with Google", "linkGoogle": "Link Google account",
+    "continueGoogle": "Continue with Google",
+    "linkGoogle": "Link Google account",
     "googleAccount": "Google sign-in",
     "googleLinkDescription": "To link Google, sign in with a Google account using the same verified email address.",
     "googleLinked": "Your Google account is linked.",
@@ -248,6 +286,11 @@
     "name": "Full name",
     "email": "Email address",
     "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "passwordRequirementsTitle": "Password requirements",
+    "passwordRequirements": "Use 8–128 characters, including at least one letter, one number, and one special character.",
+    "passwordRequirementsError": "Include at least one letter, one number, and one special character.",
     "newPassword": "New password",
     "confirmPassword": "Confirm password",
     "forgotLink": "Forgot password?",
@@ -357,6 +400,25 @@
     "reportQueueDescription": "Filter reports and open a record to review its details.",
     "filterByStatus": "Filter by status",
     "allStatuses": "All statuses",
+    "reportStatuses": {
+      "OPEN": "Open",
+      "UNDER_REVIEW": "Under review",
+      "ACTION_TAKEN": "Action taken",
+      "DISMISSED": "Dismissed",
+      "CLOSED": "Closed"
+    },
+    "reportReasons": {
+      "FAKE_JOB": "Fake job",
+      "FRAUD_OR_SCAM": "Fraud or scam",
+      "REQUESTS_MONEY": "Requests money",
+      "MISLEADING_INFORMATION": "Misleading information",
+      "DISCRIMINATION": "Discrimination",
+      "HARASSMENT_OR_ABUSE": "Harassment or abuse",
+      "IMPERSONATION": "Impersonation",
+      "UNSAFE_WORK": "Unsafe work",
+      "SPAM": "Spam",
+      "OTHER": "Other"
+    },
     "business": "Business",
     "type": "Type",
     "status": "Status",

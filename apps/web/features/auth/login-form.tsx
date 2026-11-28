@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormInput } from '@/components/form/form-input';
+import { FormPasswordInput } from '@/components/form/form-password-input';
 import { useAuthErrorMessage } from '@/features/auth/use-auth-error-message';
 import { AuthLayout, PreviewSubmit } from '@/features/auth/auth-layout';
 import { FieldGroup } from '@/components/ui/field';
@@ -26,7 +27,12 @@ export function LoginForm({ googleError }: { googleError?: string }) {
   });
 
   return (
-    <AuthLayout title={t('signIn')} description={t('loginDescription')} google={<GoogleButton mode="login" />} isLogin>
+    <AuthLayout
+      title={t('signIn')}
+      description={t('loginDescription')}
+      google={<GoogleButton mode="login" />}
+      isLogin
+    >
       <form
         method="post"
         noValidate
@@ -59,12 +65,11 @@ export function LoginForm({ googleError }: { googleError?: string }) {
             autoComplete="email"
             placeholder="you@example.com"
           />
-          <FormInput
+          <FormPasswordInput
             control={form.control}
             formatError={formatError}
             name="password"
             label={t('password')}
-            type="password"
             autoComplete="current-password"
             labelAction={
               <Link

@@ -91,14 +91,14 @@ export function AdminLoading({ label }: { label: string }) {
   );
 }
 
-export function AdminStatusBadge({ status }: { status: string }) {
+export function AdminStatusBadge({ status, label }: { status: string; label?: string }) {
   const variant =
     status === 'APPROVED' || status === 'VERIFIED' || status === 'PUBLISHED'
       ? 'default'
       : status === 'REJECTED' || status === 'REMOVED' || status === 'DISMISSED'
         ? 'destructive'
         : 'secondary';
-  return <Badge variant={variant}>{status.replaceAll('_', ' ')}</Badge>;
+  return <Badge variant={variant}>{label ?? formatAdminEnum(status)}</Badge>;
 }
 
 export type AdminColumn<T> = {
@@ -119,48 +119,86 @@ export function AdminDataTable<T>({
   emptyTitle: string;
   emptyDescription: string;
 }) {
+  const emptyState = (
+    <Empty>
+      <EmptyHeader>
+        <EmptyTitle>{emptyTitle}</EmptyTitle>
+        <EmptyDescription>{emptyDescription}</EmptyDescription>
+      </EmptyHeader>
+    </Empty>
+  );
+
   return (
-    <Table className="min-w-[760px]">
-      <TableHeader className="bg-auth-primary/10">
-        <TableRow className="border-auth-border hover:bg-auth-primary/10">
-          {columns.map((column) => (
-            <TableHead
-              key={column.header}
-              className="h-12 bg-auth-primary/10 px-4 text-xs font-semibold tracking-[0.08em] text-auth-muted uppercase"
-            >
-              {column.header}
-            </TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+    <>
+      <div className="grid gap-3 p-3 lg:hidden">
         {rows.length ? (
           rows.map((row) => (
-            <TableRow
+            <article
               key={getRowKey(row)}
-              className="border-auth-border/70 odd:bg-auth-canvas/25 hover:bg-auth-primary/5"
+              className="rounded-xl border border-auth-border bg-auth-surface p-4 shadow-sm"
             >
-              {columns.map((column) => (
-                <TableCell key={column.header} className="px-4 py-3.5 text-auth-foreground">
-                  {column.cell(row)}
-                </TableCell>
-              ))}
-            </TableRow>
+              <dl className="grid gap-3">
+                {columns.map((column) => (
+                  <div
+                    key={column.header}
+                    className="grid grid-cols-[minmax(6.5rem,0.7fr)_minmax(0,1.3fr)] items-start gap-3"
+                  >
+                    <dt className="text-xs font-medium text-auth-muted">{column.header}</dt>
+                    <dd className="min-w-0 text-right text-sm text-auth-foreground">
+                      {column.cell(row)}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </article>
           ))
         ) : (
-          <TableRow className="border-auth-border/70 hover:bg-transparent">
-            <TableCell colSpan={columns.length} className="h-48 px-4 text-center whitespace-normal">
-              <Empty>
-                <EmptyHeader>
-                  <EmptyTitle>{emptyTitle}</EmptyTitle>
-                  <EmptyDescription>{emptyDescription}</EmptyDescription>
-                </EmptyHeader>
-              </Empty>
-            </TableCell>
-          </TableRow>
+          <div className="py-8 text-center">{emptyState}</div>
         )}
-      </TableBody>
-    </Table>
+      </div>
+
+      <div className="hidden overflow-x-auto lg:block">
+        <Table className="min-w-[760px]">
+          <TableHeader className="bg-auth-primary/10">
+            <TableRow className="border-auth-border hover:bg-auth-primary/10">
+              {columns.map((column) => (
+                <TableHead
+                  key={column.header}
+                  className="h-12 bg-auth-primary/10 px-4 text-xs font-semibold tracking-[0.08em] text-auth-muted uppercase"
+                >
+                  {column.header}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows.length ? (
+              rows.map((row) => (
+                <TableRow
+                  key={getRowKey(row)}
+                  className="border-auth-border/70 odd:bg-auth-canvas/25 hover:bg-auth-primary/5"
+                >
+                  {columns.map((column) => (
+                    <TableCell key={column.header} className="px-4 py-3.5 text-auth-foreground">
+                      {column.cell(row)}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow className="border-auth-border/70 hover:bg-transparent">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-48 px-4 text-center whitespace-normal"
+                >
+                  {emptyState}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }
 

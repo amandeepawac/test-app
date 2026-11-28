@@ -17,7 +17,9 @@ export async function GoogleLinkSettings({ result }: { result?: string }) {
             {t(result === 'unavailable' ? 'sessionUnavailable' : 'googleFailed')}
           </p>
         )}
-        <GoogleButton mode="link" />
+        <div className="inline-block">
+          <GoogleButton mode="link" />
+        </div>
       </CardContent>
     </Card>
   );

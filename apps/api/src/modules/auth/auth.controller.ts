@@ -62,8 +62,10 @@ export class AuthController {
   @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @HttpCode(200)
   @Header('Cache-Control', 'no-store')
-  google(@Body({ schema: googleAuthRequestSchema }) body: GoogleAuthRequest,
-    @Headers('authorization') authorization?: string) {
+  google(
+    @Body({ schema: googleAuthRequestSchema }) body: GoogleAuthRequest,
+    @Headers('authorization') authorization?: string,
+  ) {
     return this.auth.google(body, authorization);
   }
 

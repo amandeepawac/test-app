@@ -73,6 +73,7 @@ export function ReportQueue({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">{t('reportQueueDescription')}</p>
         <NativeSelect
+          className="w-full sm:w-auto"
           aria-label={t('filterByStatus')}
           value={status ?? 'ALL'}
           onChange={(event) => {
@@ -82,11 +83,13 @@ export function ReportQueue({
           }}
         >
           <NativeSelectOption value="ALL">{t('allStatuses')}</NativeSelectOption>
-          <NativeSelectOption value="OPEN">OPEN</NativeSelectOption>
-          <NativeSelectOption value="UNDER_REVIEW">UNDER REVIEW</NativeSelectOption>
-          <NativeSelectOption value="ACTION_TAKEN">ACTION TAKEN</NativeSelectOption>
-          <NativeSelectOption value="DISMISSED">DISMISSED</NativeSelectOption>
-          <NativeSelectOption value="CLOSED">CLOSED</NativeSelectOption>
+          {(['OPEN', 'UNDER_REVIEW', 'ACTION_TAKEN', 'DISMISSED', 'CLOSED'] as const).map(
+            (value) => (
+              <NativeSelectOption key={value} value={value}>
+                {t(`reportStatuses.${value}`)}
+              </NativeSelectOption>
+            ),
+          )}
         </NativeSelect>
       </div>
       <Card>
@@ -101,7 +104,7 @@ export function ReportQueue({
                       href={`/admin/reports/${item.id}`}
                       className="font-medium hover:underline"
                     >
-                      {item.reason.replaceAll('_', ' ')}
+                      {t(`reportReasons.${item.reason}`)}
                     </Link>
                     <p className="text-xs text-muted-foreground">
                       {item.target.job?.title ??
@@ -116,7 +119,15 @@ export function ReportQueue({
                 header: t('reportedBy'),
                 cell: (item) => item.reporter.name || item.reporter.email,
               },
-              { header: t('status'), cell: (item) => <AdminStatusBadge status={item.status} /> },
+              {
+                header: t('status'),
+                cell: (item) => (
+                  <AdminStatusBadge
+                    status={item.status}
+                    label={t(`reportStatuses.${item.status}`)}
+                  />
+                ),
+              },
               { header: t('created'), cell: (item) => formatAdminDate(item.createdAt, locale) },
               {
                 header: t('action'),

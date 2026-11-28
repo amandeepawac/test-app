@@ -1,10 +1,26 @@
 import {
-  Body, Controller, Get, Header, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query, Req,
-  StandardSchemaValidationPipe, UseGuards, UsePipes,
+  Body,
+  Controller,
+  Get,
+  Header,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  Req,
+  StandardSchemaValidationPipe,
+  UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import {
-  employerJobCreateSchema, employerJobsQuerySchema, employerJobUpdateSchema,
-  type EmployerJobCreate, type EmployerJobsQuery, type EmployerJobUpdate,
+  employerJobCreateSchema,
+  employerJobsQuerySchema,
+  employerJobUpdateSchema,
+  type EmployerJobCreate,
+  type EmployerJobsQuery,
+  type EmployerJobUpdate,
 } from '@repo/contracts';
 import type { EmployerRequest } from '@/modules/employers/employer-context.js';
 import { EmployerAuthGuard } from '@/modules/employers/guards/employer-auth.guard.js';
@@ -18,19 +34,28 @@ export class EmployerJobsController {
 
   @Post('jobs')
   @Header('Cache-Control', 'no-store')
-  create(@Req() request: EmployerRequest, @Body({ schema: employerJobCreateSchema }) input: EmployerJobCreate) {
+  create(
+    @Req() request: EmployerRequest,
+    @Body({ schema: employerJobCreateSchema }) input: EmployerJobCreate,
+  ) {
     return this.jobs.create(request.user.id, input);
   }
 
   @Get('employers/me/jobs')
   @Header('Cache-Control', 'no-store')
-  list(@Req() request: EmployerRequest, @Query({ schema: employerJobsQuerySchema }) query: EmployerJobsQuery) {
+  list(
+    @Req() request: EmployerRequest,
+    @Query({ schema: employerJobsQuerySchema }) query: EmployerJobsQuery,
+  ) {
     return this.jobs.list(request.user.id, query);
   }
 
   @Get('employers/me/jobs/:id')
   @Header('Cache-Control', 'no-store')
-  findById(@Req() request: EmployerRequest, @Param('id', new ParseUUIDPipe({ version: 'all' })) id: string) {
+  findById(
+    @Req() request: EmployerRequest,
+    @Param('id', new ParseUUIDPipe({ version: 'all' })) id: string,
+  ) {
     return this.jobs.findById(request.user.id, id);
   }
 
@@ -47,14 +72,20 @@ export class EmployerJobsController {
   @Post('jobs/:id/publish')
   @HttpCode(200)
   @Header('Cache-Control', 'no-store')
-  publish(@Req() request: EmployerRequest, @Param('id', new ParseUUIDPipe({ version: 'all' })) id: string) {
+  publish(
+    @Req() request: EmployerRequest,
+    @Param('id', new ParseUUIDPipe({ version: 'all' })) id: string,
+  ) {
     return this.jobs.transition(request.user.id, id, 'publish');
   }
 
   @Post('jobs/:id/pause')
   @HttpCode(200)
   @Header('Cache-Control', 'no-store')
-  pause(@Req() request: EmployerRequest, @Param('id', new ParseUUIDPipe({ version: 'all' })) id: string) {
+  pause(
+    @Req() request: EmployerRequest,
+    @Param('id', new ParseUUIDPipe({ version: 'all' })) id: string,
+  ) {
     return this.jobs.transition(request.user.id, id, 'pause');
   }
 }

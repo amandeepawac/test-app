@@ -40,6 +40,7 @@ export function EmployerVerificationReview({
   initialData: AdminEmployerVerificationDetailResponse;
 }) {
   const t = useTranslations('Admin');
+  const portalT = useTranslations('Portal');
   const locale = useLocale();
   const [note, setNote] = useState(initialData.verificationNote ?? '');
   const [formError, setFormError] = useState('');
@@ -103,9 +104,12 @@ export function EmployerVerificationReview({
     <div className="space-y-6">
       <AdminPageHeader
         title={data.businessName ?? data.user.email}
-        description={`${data.user.name ?? data.user.email} · ${data.employerType ? formatAdminEnum(data.employerType) : '—'}`}
+        description={`${data.user.name ?? data.user.email} · ${data.employerType ? portalT(`employerTypes.${data.employerType}`) : '—'}`}
       >
-        <AdminStatusBadge status={data.verificationStatus} />
+        <AdminStatusBadge
+          status={data.verificationStatus}
+          label={portalT(`verificationStatuses.${data.verificationStatus}`)}
+        />
       </AdminPageHeader>
       {(verification.isError || decisionMutation.isError || documentMutation.isError) && (
         <AdminNotice
@@ -133,11 +137,11 @@ export function EmployerVerificationReview({
             <Detail label={t('website')} value={data.websiteUrl} />
             <Detail
               label={t('businessType')}
-              value={data.employerType ? formatAdminEnum(data.employerType) : null}
+              value={data.employerType ? portalT(`employerTypes.${data.employerType}`) : null}
             />
             <Detail
               label={t('verificationLevel')}
-              value={formatAdminEnum(data.verificationLevel)}
+              value={portalT(`verificationLevels.${data.verificationLevel}`)}
             />
             <Detail label={t('address')} value={data.addressLine} />
             <Detail

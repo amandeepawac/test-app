@@ -3,7 +3,9 @@ import { getEmployerProfile } from '@/features/portals/portal-api';
 import { ContactSettings } from '@/features/portals/components/contact-settings';
 import { GoogleLinkSettings } from '@/features/auth/google-link-settings';
 
-export default async function EmployerSettingsPage({ searchParams }: {
+export default async function EmployerSettingsPage({
+  searchParams,
+}: {
   searchParams: Promise<{ google?: string }>;
 }) {
   const profile = await getEmployerProfile();

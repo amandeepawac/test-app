@@ -19,6 +19,7 @@ export type FormFieldProps<T extends FieldValues, N extends FieldPath<T>> = {
   label: string;
   description?: string;
   labelAction?: ReactNode;
+  labelSuffix?: ReactNode;
   disabled?: boolean;
   formatError?: (message: string) => string;
   group?: boolean;
@@ -38,6 +39,7 @@ export function FormField<T extends FieldValues, N extends FieldPath<T>>({
   label,
   description,
   labelAction,
+  labelSuffix,
   disabled,
   formatError,
   group = false,
@@ -71,13 +73,16 @@ export function FormField<T extends FieldValues, N extends FieldPath<T>>({
                   : 'flex items-center justify-between gap-3'
               }
             >
-              {group ? (
-                <FieldTitle id={`${id}-label`}>{label}</FieldTitle>
-              ) : (
-                <FieldLabel htmlFor={id} id={`${id}-label`}>
-                  {label}
-                </FieldLabel>
-              )}
+              <div className="flex items-center gap-2">
+                {group ? (
+                  <FieldTitle id={`${id}-label`}>{label}</FieldTitle>
+                ) : (
+                  <FieldLabel htmlFor={id} id={`${id}-label`}>
+                    {label}
+                  </FieldLabel>
+                )}
+                {labelSuffix}
+              </div>
               {labelAction}
             </div>
             {children({ field, fieldState, id, describedBy })}

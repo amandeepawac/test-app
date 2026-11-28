@@ -73,11 +73,47 @@
       "salaryRange": "अधिकतम वेतन न्यूनतम वेतन से कम नहीं होना चाहिए।",
       "requiredField": "यह फ़ील्ड आवश्यक है।",
       "textTooLong": "यह मान बहुत लंबा है।",
-      "statuses": { "DRAFT": "मसौदा", "PENDING_REVIEW": "समीक्षा लंबित", "PUBLISHED": "प्रकाशित", "PAUSED": "रोकी गई", "HIDDEN": "व्यवस्थापक ने छिपाई", "REJECTED": "अस्वीकृत", "CLOSED": "बंद", "FILLED": "भरी गई", "EXPIRED": "समाप्त", "REMOVED": "हटाई गई" },
-      "employmentTypes": { "FULL_TIME": "पूर्णकालिक", "PART_TIME": "अंशकालिक", "CONTRACT": "अनुबंध", "TEMPORARY": "अस्थायी", "DAILY_WAGE": "दैनिक मज़दूरी", "APPRENTICESHIP": "प्रशिक्षुता", "INTERNSHIP": "इंटर्नशिप", "FREELANCE": "स्वतंत्र कार्य" },
+      "statuses": {
+        "DRAFT": "मसौदा",
+        "PENDING_REVIEW": "समीक्षा लंबित",
+        "PUBLISHED": "प्रकाशित",
+        "PAUSED": "रोकी गई",
+        "HIDDEN": "व्यवस्थापक ने छिपाई",
+        "REJECTED": "अस्वीकृत",
+        "CLOSED": "बंद",
+        "FILLED": "भरी गई",
+        "EXPIRED": "समाप्त",
+        "REMOVED": "हटाई गई"
+      },
+      "employmentTypes": {
+        "FULL_TIME": "पूर्णकालिक",
+        "PART_TIME": "अंशकालिक",
+        "CONTRACT": "अनुबंध",
+        "TEMPORARY": "अस्थायी",
+        "DAILY_WAGE": "दैनिक मज़दूरी",
+        "APPRENTICESHIP": "प्रशिक्षुता",
+        "INTERNSHIP": "इंटर्नशिप",
+        "FREELANCE": "स्वतंत्र कार्य"
+      },
       "workModes": { "ON_SITE": "कार्यस्थल पर", "REMOTE": "दूरस्थ", "HYBRID": "मिश्रित" },
-      "experienceLevels": { "NO_EXPERIENCE": "अनुभव नहीं", "ENTRY_LEVEL": "प्रारंभिक स्तर", "LESS_THAN_1_YEAR": "1 वर्ष से कम", "ONE_TO_THREE_YEARS": "1–3 वर्ष", "THREE_TO_FIVE_YEARS": "3–5 वर्ष", "FIVE_TO_TEN_YEARS": "5–10 वर्ष", "TEN_PLUS_YEARS": "10+ वर्ष" },
-      "salaryPeriods": { "HOUR": "प्रति घंटा", "DAY": "प्रति दिन", "WEEK": "प्रति सप्ताह", "MONTH": "प्रति माह", "YEAR": "प्रति वर्ष", "FIXED": "निश्चित", "NEGOTIABLE": "बातचीत योग्य" }
+      "experienceLevels": {
+        "NO_EXPERIENCE": "अनुभव नहीं",
+        "ENTRY_LEVEL": "प्रारंभिक स्तर",
+        "LESS_THAN_1_YEAR": "1 वर्ष से कम",
+        "ONE_TO_THREE_YEARS": "1–3 वर्ष",
+        "THREE_TO_FIVE_YEARS": "3–5 वर्ष",
+        "FIVE_TO_TEN_YEARS": "5–10 वर्ष",
+        "TEN_PLUS_YEARS": "10+ वर्ष"
+      },
+      "salaryPeriods": {
+        "HOUR": "प्रति घंटा",
+        "DAY": "प्रति दिन",
+        "WEEK": "प्रति सप्ताह",
+        "MONTH": "प्रति माह",
+        "YEAR": "प्रति वर्ष",
+        "FIXED": "निश्चित",
+        "NEGOTIABLE": "बातचीत योग्य"
+      }
     },
     "verificationStatuses": {
       "NOT_SUBMITTED": "जमा नहीं किया",
@@ -147,6 +183,7 @@
     "select": "विकल्प चुनें",
     "skills": "कौशल",
     "skillsHint": "अधिकतम 50 कौशल चुनें। पृष्ठ बदलने पर चुने गए कौशल उपलब्ध रहते हैं।",
+    "skillsSelected": "50 में से {count} कौशल चुने गए",
     "searchSkills": "कौशल खोजें",
     "noSkills": "कोई मेल खाता कौशल नहीं मिला।",
     "showEmail": "ईमेल दिखाएँ",
@@ -225,7 +262,8 @@
     "apiNote": "यह स्थिति केवल API प्रक्रिया की जाँच करती है, डेटाबेस की नहीं।"
   },
   "Auth": {
-    "continueGoogle": "Google से जारी रखें", "linkGoogle": "Google खाता जोड़ें",
+    "continueGoogle": "Google से जारी रखें",
+    "linkGoogle": "Google खाता जोड़ें",
     "googleAccount": "Google साइन इन",
     "googleLinkDescription": "Google जोड़ने के लिए उसी सत्यापित ईमेल पते वाले Google खाते से साइन इन करें।",
     "googleLinked": "आपका Google खाता जोड़ दिया गया है।",
@@ -248,6 +286,11 @@
     "name": "पूरा नाम",
     "email": "ईमेल पता",
     "password": "पासवर्ड",
+    "showPassword": "पासवर्ड दिखाएँ",
+    "hidePassword": "पासवर्ड छिपाएँ",
+    "passwordRequirementsTitle": "पासवर्ड की आवश्यकताएँ",
+    "passwordRequirements": "8–128 अक्षरों का पासवर्ड रखें, जिसमें कम से कम एक अक्षर, एक संख्या और एक विशेष चिह्न हो।",
+    "passwordRequirementsError": "कम से कम एक अक्षर, एक संख्या और एक विशेष चिह्न शामिल करें।",
     "newPassword": "नया पासवर्ड",
     "confirmPassword": "पासवर्ड की पुष्टि करें",
     "forgotLink": "पासवर्ड भूल गए?",
@@ -357,6 +400,25 @@
     "reportQueueDescription": "रिपोर्ट फ़िल्टर करें और समीक्षा के लिए रिकॉर्ड खोलें।",
     "filterByStatus": "स्थिति से फ़िल्टर करें",
     "allStatuses": "सभी स्थितियाँ",
+    "reportStatuses": {
+      "OPEN": "खुली",
+      "UNDER_REVIEW": "समीक्षाधीन",
+      "ACTION_TAKEN": "कार्रवाई की गई",
+      "DISMISSED": "खारिज",
+      "CLOSED": "बंद"
+    },
+    "reportReasons": {
+      "FAKE_JOB": "नकली नौकरी",
+      "FRAUD_OR_SCAM": "धोखाधड़ी या घोटाला",
+      "REQUESTS_MONEY": "पैसे माँगना",
+      "MISLEADING_INFORMATION": "भ्रामक जानकारी",
+      "DISCRIMINATION": "भेदभाव",
+      "HARASSMENT_OR_ABUSE": "उत्पीड़न या दुर्व्यवहार",
+      "IMPERSONATION": "किसी और की पहचान अपनाना",
+      "UNSAFE_WORK": "असुरक्षित काम",
+      "SPAM": "स्पैम",
+      "OTHER": "अन्य"
+    },
     "business": "व्यवसाय",
     "type": "प्रकार",
     "status": "स्थिति",

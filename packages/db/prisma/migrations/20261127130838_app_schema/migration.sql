@@ -41,7 +41,7 @@ CREATE TYPE "SalaryPeriod" AS ENUM ('HOUR', 'DAY', 'WEEK', 'MONTH', 'YEAR', 'FIX
 CREATE TYPE "ExperienceLevel" AS ENUM ('NO_EXPERIENCE', 'ENTRY_LEVEL', 'LESS_THAN_1_YEAR', 'ONE_TO_THREE_YEARS', 'THREE_TO_FIVE_YEARS', 'FIVE_TO_TEN_YEARS', 'TEN_PLUS_YEARS');
 
 -- CreateEnum
-CREATE TYPE "JobStatus" AS ENUM ('DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'PAUSED', 'REJECTED', 'CLOSED', 'FILLED', 'EXPIRED', 'REMOVED');
+CREATE TYPE "JobStatus" AS ENUM ('DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'PAUSED', 'HIDDEN', 'REJECTED', 'CLOSED', 'FILLED', 'EXPIRED', 'REMOVED');
 
 -- CreateEnum
 CREATE TYPE "ApplicationStatus" AS ENUM ('APPLIED', 'REVIEWING', 'SHORTLISTED', 'CONTACTED', 'REJECTED', 'HIRED', 'WITHDRAWN');
@@ -54,6 +54,15 @@ CREATE TYPE "ReportReason" AS ENUM ('FAKE_JOB', 'FRAUD_OR_SCAM', 'REQUESTS_MONEY
 
 -- CreateEnum
 CREATE TYPE "ReportStatus" AS ENUM ('OPEN', 'UNDER_REVIEW', 'ACTION_TAKEN', 'DISMISSED', 'CLOSED');
+
+-- CreateTable
+CREATE TABLE "auth_rate_limits" (
+    "key" TEXT NOT NULL,
+    "attempts" INTEGER NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "auth_rate_limits_pkey" PRIMARY KEY ("key")
+);
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -117,6 +126,7 @@ CREATE TABLE "email_verification_tokens" (
     "id" UUID NOT NULL,
     "userId" UUID NOT NULL,
     "tokenHash" TEXT NOT NULL,
+    "pendingPasswordHash" TEXT,
     "expiresAt" TIMESTAMP(3) NOT NULL,
     "consumedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -172,10 +182,12 @@ CREATE TABLE "seeker_profiles" (
     "bio" TEXT,
     "profilePhotoUrl" TEXT,
     "locationId" UUID,
+    "stateName" TEXT,
+    "cityName" TEXT,
     "addressText" TEXT,
     "latitude" DECIMAL(10,7),
     "longitude" DECIMAL(10,7),
-    "experienceLevel" "ExperienceLevel" NOT NULL DEFAULT 'NO_EXPERIENCE',
+    "experienceLevel" "ExperienceLevel",
     "experienceSummary" TEXT,
     "educationSummary" TEXT,
     "expectedSalaryMin" DECIMAL(12,2),
@@ -184,6 +196,9 @@ CREATE TABLE "seeker_profiles" (
     "preferredEmploymentTypes" "EmploymentType"[] DEFAULT ARRAY[]::"EmploymentType"[],
     "isAvailable" BOOLEAN NOT NULL DEFAULT true,
     "availabilityNote" TEXT,
+    "showEmail" BOOLEAN NOT NULL DEFAULT false,
+    "showPhone" BOOLEAN NOT NULL DEFAULT false,
+    "completedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -194,8 +209,8 @@ CREATE TABLE "seeker_profiles" (
 CREATE TABLE "employer_profiles" (
     "id" UUID NOT NULL,
     "userId" UUID NOT NULL,
-    "employerType" "EmployerType" NOT NULL DEFAULT 'OTHER',
-    "businessName" TEXT NOT NULL,
+    "employerType" "EmployerType",
+    "businessName" TEXT,
     "contactPersonName" TEXT,
     "businessDescription" TEXT,
     "businessPhone" VARCHAR(20),
@@ -216,6 +231,9 @@ CREATE TABLE "employer_profiles" (
     "rejectionReason" TEXT,
     "verificationNote" TEXT,
     "nextReviewAt" TIMESTAMP(3),
+    "showEmail" BOOLEAN NOT NULL DEFAULT false,
+    "showPhone" BOOLEAN NOT NULL DEFAULT false,
+    "completedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -442,6 +460,9 @@ CREATE TABLE "audit_logs" (
 
     CONSTRAINT "audit_logs_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE INDEX "auth_rate_limits_expiresAt_idx" ON "auth_rate_limits"("expiresAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");

@@ -23,6 +23,7 @@ employer profile; role-based access should be enforced in application logic.
 | `createdAt`         | `DateTime` (default now)              | Account creation time.                                      |
 | `updatedAt`         | `DateTime` (auto-updated)             | Last account record update.                                 |
 | `deletedAt`         | `DateTime?`                           | Soft-deletion timestamp, if deleted.                        |
+| `anonymizedAt`      | `DateTime?`                           | When direct account identifiers were anonymized.            |
 
 ## Relations
 
@@ -31,12 +32,17 @@ employer profile; role-based access should be enforced in application logic.
 - Many sessions, email-verification tokens, password-reset tokens, and notifications.
 - Actor/target relations to reports, audit logs, reviews, job moderation, and
   application status history.
+- Many `AccountDeletionRequest` records track requested, confirmed, processing,
+  and terminal deletion outcomes.
 
 ## Constraints and indexes
 
 - `email` and `phone` are unique; nullable unique fields allow
   accounts without those optional values.
 - Indexes support role/status queries and account-creation-time queries.
+- `DELETION_PENDING` blocks access while a confirmed deletion is processed;
+  `DELETED` marks the anonymized account tombstone. Keep the user row so
+  retained application and audit history does not cascade away.
 
 See the [database table index](./README.md) and
 [Prisma schema](../../../packages/db/prisma/schema.prisma).

@@ -35,6 +35,24 @@ export function ProfileSkills({
   ];
   return (
     <ProfileCard title={t('skills')} description={t('skillsHint')}>
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-auth-border bg-auth-canvas/60 px-4 py-3">
+        <p className="text-sm font-medium text-auth-foreground">
+          {t('skillsSelected', { count: ids.length })}
+        </p>
+        <div
+          role="progressbar"
+          aria-label={t('skillsSelected', { count: ids.length })}
+          aria-valuemin={0}
+          aria-valuemax={50}
+          aria-valuenow={Math.min(ids.length, 50)}
+          className="h-2 w-full overflow-hidden rounded-full bg-auth-border sm:max-w-44"
+        >
+          <div
+            className="h-full rounded-full bg-auth-primary transition-[width]"
+            style={{ width: `${Math.min(ids.length, 50) * 2}%` }}
+          />
+        </div>
+      </div>
       <Input
         value={state.search}
         maxLength={100}

@@ -20,7 +20,17 @@ enum AccountStatus {
   PENDING
   SUSPENDED
   DISABLED
+  DELETION_PENDING
   DELETED
+}
+
+enum AccountDeletionRequestStatus {
+  REQUESTED
+  CONFIRMED
+  PROCESSING
+  COMPLETED
+  CANCELLED
+  FAILED
 }
 
 enum AuthProvider {
@@ -215,6 +225,7 @@ model User {
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
   deletedAt         DateTime?
+  anonymizedAt      DateTime?
 
   passwordCredential        PasswordCredential?
   authProviders             UserAuthProvider[]
@@ -232,10 +243,32 @@ model User {
   applicationStatusChanges  ApplicationStatusHistory[] @relation("ApplicationStatusActor")
   reportsReviewed           Report[]                   @relation("ReportReviewer")
   jobsModerated             Job[]                      @relation("JobModerator")
+  deletionRequests          AccountDeletionRequest[]
 
   @@index([primaryRole, status])
   @@index([createdAt])
   @@map("users")
+}
+
+model AccountDeletionRequest {
+  id                  String                       @id @default(uuid(7)) @db.Uuid
+  userId              String?                      @db.Uuid
+  status              AccountDeletionRequestStatus @default(REQUESTED)
+  requestedAt         DateTime                     @default(now())
+  confirmedAt         DateTime?
+  processingStartedAt DateTime?
+  completedAt         DateTime?
+  cancelledAt         DateTime?
+  attemptCount        Int                          @default(0)
+  failureCode         String?                      @db.VarChar(100)
+  createdAt           DateTime                     @default(now())
+  updatedAt           DateTime                     @updatedAt
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, requestedAt])
+  @@index([status, requestedAt])
+  @@map("account_deletion_requests")
 }
 
 model UserAuthProvider {

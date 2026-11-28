@@ -9,13 +9,18 @@ describe('admin job approval publication gate', () => {
       $queryRaw: vi.fn(),
       job: {
         findUnique: vi.fn().mockResolvedValue({
-          id: 'job-id', title: 'Cook', status: 'PENDING_REVIEW', expiresAt: null,
+          id: 'job-id',
+          title: 'Cook',
+          status: 'PENDING_REVIEW',
+          expiresAt: null,
           employer: { id: 'employer-id', userId: 'user-id' },
         }),
         updateMany: vi.fn(),
       },
       employerProfile: {
-        findUnique: vi.fn().mockResolvedValue({ completedAt: new Date(), verificationStatus: 'REJECTED' }),
+        findUnique: vi
+          .fn()
+          .mockResolvedValue({ completedAt: new Date(), verificationStatus: 'REJECTED' }),
       },
     };
     const prisma = { client: { $transaction: vi.fn((operation) => operation(tx)) } };
@@ -23,10 +28,13 @@ describe('admin job approval publication gate', () => {
       providers: [PrismaJobModerationRepository, { provide: PrismaService, useValue: prisma }],
     }).compile();
     const repository = module.get(PrismaJobModerationRepository);
-    await expect(repository.moderate(
-      'job-id', { decision: 'APPROVE', reason: 'Reviewed' },
-      { actorId: 'admin-id', ipAddress: null, userAgent: null },
-    )).rejects.toBeInstanceOf(AdminStateConflictError);
+    await expect(
+      repository.moderate(
+        'job-id',
+        { decision: 'APPROVE', reason: 'Reviewed' },
+        { actorId: 'admin-id', ipAddress: null, userAgent: null },
+      ),
+    ).rejects.toBeInstanceOf(AdminStateConflictError);
     expect(tx.job.updateMany).not.toHaveBeenCalled();
   });
 
@@ -35,13 +43,18 @@ describe('admin job approval publication gate', () => {
       $queryRaw: vi.fn(),
       job: {
         findUnique: vi.fn().mockResolvedValue({
-          id: 'job-id', title: 'Cook', status: 'PUBLISHED', expiresAt: null,
+          id: 'job-id',
+          title: 'Cook',
+          status: 'PUBLISHED',
+          expiresAt: null,
           employer: { id: 'employer-id', userId: 'user-id' },
         }),
         updateMany: vi.fn().mockResolvedValue({ count: 1 }),
       },
       employerProfile: {
-        findUnique: vi.fn().mockResolvedValue({ completedAt: new Date(), verificationStatus: 'VERIFIED' }),
+        findUnique: vi
+          .fn()
+          .mockResolvedValue({ completedAt: new Date(), verificationStatus: 'VERIFIED' }),
       },
       auditLog: { create: vi.fn() },
       notification: { create: vi.fn() },
@@ -52,21 +65,35 @@ describe('admin job approval publication gate', () => {
     }).compile();
     const repository = module.get(PrismaJobModerationRepository);
     const context = { actorId: 'admin-id', ipAddress: null, userAgent: null };
-    await expect(repository.moderate('job-id', { decision: 'HIDE', reason: 'Review' }, context))
-      .resolves.toMatchObject({ status: 'HIDDEN' });
+    await expect(
+      repository.moderate('job-id', { decision: 'HIDE', reason: 'Review' }, context),
+    ).resolves.toMatchObject({ status: 'HIDDEN' });
     expect(tx.auditLog.create.mock.calls[0][0].data.action).toBe('JOB_HIDE');
     tx.job.findUnique.mockResolvedValue({
-      id: 'job-id', title: 'Cook', status: 'HIDDEN', expiresAt: null,
+      id: 'job-id',
+      title: 'Cook',
+      status: 'HIDDEN',
+      expiresAt: null,
       employer: { id: 'employer-id', userId: 'user-id' },
     });
-    tx.employerProfile.findUnique.mockResolvedValue({ completedAt: new Date(), verificationStatus: 'SUSPENDED' });
-    await expect(repository.moderate('job-id', { decision: 'RESTORE', reason: 'Resolved' }, context))
-      .rejects.toBeInstanceOf(AdminStateConflictError);
-    tx.employerProfile.findUnique.mockResolvedValue({ completedAt: new Date(), verificationStatus: 'VERIFIED' });
-    await expect(repository.moderate('job-id', { decision: 'RESTORE', reason: 'Resolved' }, context))
-      .resolves.toMatchObject({ status: 'PUBLISHED' });
-    expect(tx.job.updateMany).toHaveBeenLastCalledWith(expect.objectContaining({
-      where: { id: 'job-id', status: 'HIDDEN' },
-    }));
+    tx.employerProfile.findUnique.mockResolvedValue({
+      completedAt: new Date(),
+      verificationStatus: 'SUSPENDED',
+    });
+    await expect(
+      repository.moderate('job-id', { decision: 'RESTORE', reason: 'Resolved' }, context),
+    ).rejects.toBeInstanceOf(AdminStateConflictError);
+    tx.employerProfile.findUnique.mockResolvedValue({
+      completedAt: new Date(),
+      verificationStatus: 'VERIFIED',
+    });
+    await expect(
+      repository.moderate('job-id', { decision: 'RESTORE', reason: 'Resolved' }, context),
+    ).resolves.toMatchObject({ status: 'PUBLISHED' });
+    expect(tx.job.updateMany).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        where: { id: 'job-id', status: 'HIDDEN' },
+      }),
+    );
   });
 });

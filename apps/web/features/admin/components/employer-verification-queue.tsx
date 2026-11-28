@@ -31,6 +31,7 @@ export function EmployerVerificationQueue({
   initialStatus?: AdminEmployerVerificationQuery['status'];
 }) {
   const t = useTranslations('Admin');
+  const portalT = useTranslations('Portal');
   const locale = useLocale();
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<AdminEmployerVerificationQuery['status']>(initialStatus);
@@ -73,6 +74,7 @@ export function EmployerVerificationQueue({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">{t('verificationQueueDescription')}</p>
         <NativeSelect
+          className="w-full sm:w-auto"
           aria-label={t('filterByStatus')}
           value={status ?? 'ALL'}
           onChange={(event) => {
@@ -84,13 +86,21 @@ export function EmployerVerificationQueue({
           }}
         >
           <NativeSelectOption value="ALL">{t('allStatuses')}</NativeSelectOption>
-          <NativeSelectOption value="NOT_SUBMITTED">NOT SUBMITTED</NativeSelectOption>
-          <NativeSelectOption value="PENDING">PENDING</NativeSelectOption>
-          <NativeSelectOption value="UNDER_REVIEW">UNDER REVIEW</NativeSelectOption>
-          <NativeSelectOption value="NEEDS_MORE_INFO">NEEDS MORE INFO</NativeSelectOption>
-          <NativeSelectOption value="VERIFIED">VERIFIED</NativeSelectOption>
-          <NativeSelectOption value="REJECTED">REJECTED</NativeSelectOption>
-          <NativeSelectOption value="SUSPENDED">SUSPENDED</NativeSelectOption>
+          {(
+            [
+              'NOT_SUBMITTED',
+              'PENDING',
+              'UNDER_REVIEW',
+              'NEEDS_MORE_INFO',
+              'VERIFIED',
+              'REJECTED',
+              'SUSPENDED',
+            ] as const
+          ).map((value) => (
+            <NativeSelectOption key={value} value={value}>
+              {portalT(`verificationStatuses.${value}`)}
+            </NativeSelectOption>
+          ))}
         </NativeSelect>
       </div>
       <Card>
@@ -113,11 +123,17 @@ export function EmployerVerificationQueue({
               },
               {
                 header: t('type'),
-                cell: (item) => item.employerType?.replaceAll('_', ' ') ?? '—',
+                cell: (item) =>
+                  item.employerType ? portalT(`employerTypes.${item.employerType}`) : '—',
               },
               {
                 header: t('status'),
-                cell: (item) => <AdminStatusBadge status={item.verificationStatus} />,
+                cell: (item) => (
+                  <AdminStatusBadge
+                    status={item.verificationStatus}
+                    label={portalT(`verificationStatuses.${item.verificationStatus}`)}
+                  />
+                ),
               },
               { header: t('pendingDocuments'), cell: (item) => item.pendingDocuments },
               {

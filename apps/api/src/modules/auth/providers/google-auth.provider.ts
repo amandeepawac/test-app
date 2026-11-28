@@ -15,9 +15,12 @@ export class GoogleAuthProvider {
 
   async authenticate(input: GoogleAuthRequest, authorization?: string) {
     this.tokens.assertConfigured();
-    const linkSession = input.mode === 'link'
-      ? this.tokens.verifyAccess(authorization?.startsWith('Bearer ') ? authorization.slice(7) : '')
-      : undefined;
+    const linkSession =
+      input.mode === 'link'
+        ? this.tokens.verifyAccess(
+            authorization?.startsWith('Bearer ') ? authorization.slice(7) : '',
+          )
+        : undefined;
     const identity = await this.google.verify(input);
     const refreshToken = this.tokens.createOpaqueToken();
     const now = new Date();
@@ -32,7 +35,9 @@ export class GoogleAuthProvider {
     if (!account) throw new UnauthorizedException('Google authentication failed');
     if (input.mode === 'link') return { linked: true } as const;
     return createSessionResponse(
-      this.tokens.signAccess(account.userId, account.sessionId), refreshToken, SESSION_TTL_SECONDS,
+      this.tokens.signAccess(account.userId, account.sessionId),
+      refreshToken,
+      SESSION_TTL_SECONDS,
     );
   }
 }

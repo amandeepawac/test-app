@@ -70,8 +70,8 @@ export function ReportReview({ initialData }: { initialData: AdminReportDetailRe
 
   return (
     <div className="space-y-6">
-      <AdminPageHeader title={data.reason.replaceAll('_', ' ')} description={target}>
-        <AdminStatusBadge status={data.status} />
+      <AdminPageHeader title={t(`reportReasons.${data.reason}`)} description={target}>
+        <AdminStatusBadge status={data.status} label={t(`reportStatuses.${data.status}`)} />
       </AdminPageHeader>
       {(report.isError || mutation.isError) && (
         <AdminNotice
@@ -133,11 +133,13 @@ export function ReportReview({ initialData }: { initialData: AdminReportDetailRe
                   }
                 }}
               >
-                <NativeSelectOption value="OPEN">OPEN</NativeSelectOption>
-                <NativeSelectOption value="UNDER_REVIEW">UNDER REVIEW</NativeSelectOption>
-                <NativeSelectOption value="ACTION_TAKEN">ACTION TAKEN</NativeSelectOption>
-                <NativeSelectOption value="DISMISSED">DISMISSED</NativeSelectOption>
-                <NativeSelectOption value="CLOSED">CLOSED</NativeSelectOption>
+                {(['OPEN', 'UNDER_REVIEW', 'ACTION_TAKEN', 'DISMISSED', 'CLOSED'] as const).map(
+                  (value) => (
+                    <NativeSelectOption key={value} value={value}>
+                      {t(`reportStatuses.${value}`)}
+                    </NativeSelectOption>
+                  ),
+                )}
               </NativeSelect>
               <label htmlFor="report-review-note" className="block text-sm font-medium">
                 {t('reviewNote')}

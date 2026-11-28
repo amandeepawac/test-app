@@ -13,30 +13,49 @@ vi.mock('google-auth-library', () => ({
 
 describe('GoogleIdentityProvider', () => {
   const config: Record<string, string> = {
-    GOOGLE_CLIENT_ID: 'client', GOOGLE_CLIENT_SECRET: 'secret',
+    GOOGLE_CLIENT_ID: 'client',
+    GOOGLE_CLIENT_SECRET: 'secret',
     GOOGLE_CALLBACK_URL: 'https://example.com/auth/google/callback',
   };
-  const request = { mode: 'login' as const, code: 'code', codeVerifier: 'a'.repeat(43), nonce: 'b'.repeat(43) };
+  const request = {
+    mode: 'login' as const,
+    code: 'code',
+    codeVerifier: 'a'.repeat(43),
+    nonce: 'b'.repeat(43),
+  };
   let provider: GoogleIdentityProvider;
 
   beforeEach(async () => {
     vi.resetAllMocks();
     google.getToken.mockResolvedValue({ tokens: { id_token: 'id-token' } });
-    google.verifyIdToken.mockResolvedValue({ getPayload: () => ({
-      sub: 'subject', email: 'USER@example.com', email_verified: true, nonce: request.nonce, name: 'User',
-    }) });
+    google.verifyIdToken.mockResolvedValue({
+      getPayload: () => ({
+        sub: 'subject',
+        email: 'USER@example.com',
+        email_verified: true,
+        nonce: request.nonce,
+        name: 'User',
+      }),
+    });
     const module = await Test.createTestingModule({
-      providers: [GoogleIdentityProvider, { provide: ConfigService, useValue: { get: (key: string) => config[key] } }],
+      providers: [
+        GoogleIdentityProvider,
+        { provide: ConfigService, useValue: { get: (key: string) => config[key] } },
+      ],
     }).compile();
     provider = module.get(GoogleIdentityProvider);
   });
 
   it('exchanges with PKCE and checks the Google token audience and verified email', async () => {
     await expect(provider.verify(request)).resolves.toEqual({
-      subject: 'subject', email: 'user@example.com', name: 'User',
+      subject: 'subject',
+      email: 'user@example.com',
+      name: 'User',
     });
     expect(google.getToken).toHaveBeenCalledWith({
-      code: 'code', codeVerifier: request.codeVerifier, redirect_uri: config.GOOGLE_CALLBACK_URL,
+      code: 'code',
+      codeVerifier: request.codeVerifier,
+      redirect_uri: config.GOOGLE_CALLBACK_URL,
     });
     expect(google.verifyIdToken).toHaveBeenCalledWith({ idToken: 'id-token', audience: 'client' });
   });
@@ -65,7 +84,9 @@ describe('GoogleIdentityProvider', () => {
     await expect(provider.verify(request)).rejects.toBeInstanceOf(ServiceUnavailableException);
     google.getToken.mockRejectedValueOnce({ response: { status: 400 } });
     await expect(provider.verify(request)).rejects.toBeInstanceOf(UnauthorizedException);
-    google.getToken.mockRejectedValueOnce({ response: { status: 400, data: { error: 'invalid_client' } } });
+    google.getToken.mockRejectedValueOnce({
+      response: { status: 400, data: { error: 'invalid_client' } },
+    });
     await expect(provider.verify(request)).rejects.toBeInstanceOf(ServiceUnavailableException);
   });
 });

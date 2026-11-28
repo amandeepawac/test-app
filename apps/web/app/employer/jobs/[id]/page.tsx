@@ -6,5 +6,11 @@ export default async function EmployerJobPage({ params }: { params: Promise<{ id
   const profile = await getEmployerProfile();
   if (!profile?.completedAt) redirect('/employer/profile');
   const { id } = await params;
-  return <EmployerJobDetail id={id} ownerId={profile.id} verified={profile.verification.verificationStatus === 'VERIFIED'} />;
+  return (
+    <EmployerJobDetail
+      id={id}
+      ownerId={profile.id}
+      verified={profile.verification.verificationStatus === 'VERIFIED'}
+    />
+  );
 }

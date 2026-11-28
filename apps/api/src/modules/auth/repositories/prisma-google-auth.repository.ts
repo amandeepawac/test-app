@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@repo/db/generated';
 import { PrismaService } from '@/infrastructure/database/prisma.service.js';
-import { GoogleAuthRepository, type GoogleIdentity, type GoogleAuthMode } from './google-auth.repository.js';
+import {
+  GoogleAuthRepository,
+  type GoogleIdentity,
+  type GoogleAuthMode,
+} from './google-auth.repository.js';
 
 type AuthInput = {
   identity: GoogleIdentity;
@@ -31,7 +35,9 @@ export class PrismaGoogleAuthRepository implements GoogleAuthRepository {
     return this.prisma.client.$transaction(async (tx) => {
       const { identity, intent, now } = input;
       const provider = await tx.userAuthProvider.findUnique({
-        where: { provider_providerUserId: { provider: 'GOOGLE', providerUserId: identity.subject } },
+        where: {
+          provider_providerUserId: { provider: 'GOOGLE', providerUserId: identity.subject },
+        },
         select: { userId: true },
       });
       let userId = provider?.userId;
@@ -42,9 +48,17 @@ export class PrismaGoogleAuthRepository implements GoogleAuthRepository {
         await tx.$queryRaw`SELECT "id" FROM "users" WHERE "id" = ${owner.userId}::uuid FOR UPDATE`;
         const session = await tx.authSession.findFirst({
           where: {
-            id: owner.sessionId, userId: owner.userId, revokedAt: null, expiresAt: { gt: now },
-            user: { status: 'ACTIVE', deletedAt: null, emailVerifiedAt: { not: null },
-              email: identity.email, primaryRole: { in: ['JOB_SEEKER', 'EMPLOYER'] } },
+            id: owner.sessionId,
+            userId: owner.userId,
+            revokedAt: null,
+            expiresAt: { gt: now },
+            user: {
+              status: 'ACTIVE',
+              deletedAt: null,
+              emailVerifiedAt: { not: null },
+              email: identity.email,
+              primaryRole: { in: ['JOB_SEEKER', 'EMPLOYER'] },
+            },
           },
           select: { id: true },
         });
@@ -64,12 +78,18 @@ export class PrismaGoogleAuthRepository implements GoogleAuthRepository {
 
       if (!userId) {
         if (intent.mode !== 'signup' || !intent.role) return null;
-        const existing = await tx.user.findUnique({ where: { email: identity.email }, select: { id: true } });
+        const existing = await tx.user.findUnique({
+          where: { email: identity.email },
+          select: { id: true },
+        });
         if (existing) return null;
         const user = await tx.user.create({
           data: {
-            email: identity.email, name: identity.name, primaryRole: intent.role,
-            emailVerifiedAt: now, status: 'ACTIVE',
+            email: identity.email,
+            name: identity.name,
+            primaryRole: intent.role,
+            emailVerifiedAt: now,
+            status: 'ACTIVE',
             authProviders: { create: { provider: 'GOOGLE', providerUserId: identity.subject } },
           },
           select: { id: true },
@@ -78,16 +98,26 @@ export class PrismaGoogleAuthRepository implements GoogleAuthRepository {
       }
       await tx.$queryRaw`SELECT "id" FROM "users" WHERE "id" = ${userId}::uuid FOR UPDATE`;
       const account = await tx.user.findFirst({
-        where: { id: userId, status: 'ACTIVE', deletedAt: null, emailVerifiedAt: { not: null },
+        where: {
+          id: userId,
+          status: 'ACTIVE',
+          deletedAt: null,
+          emailVerifiedAt: { not: null },
           primaryRole: { in: ['JOB_SEEKER', 'EMPLOYER'] },
-          authProviders: { some: { provider: 'GOOGLE', providerUserId: identity.subject } } },
+          authProviders: { some: { provider: 'GOOGLE', providerUserId: identity.subject } },
+        },
         select: { id: true },
       });
       if (!account) return null;
       await tx.user.update({ where: { id: userId }, data: { lastLoginAt: now } });
       const session = await tx.authSession.create({
-        data: { userId, expiresAt: input.expiresAt,
-          refreshTokens: { create: { tokenHash: input.refreshTokenHash, expiresAt: input.expiresAt } } },
+        data: {
+          userId,
+          expiresAt: input.expiresAt,
+          refreshTokens: {
+            create: { tokenHash: input.refreshTokenHash, expiresAt: input.expiresAt },
+          },
+        },
         select: { id: true },
       });
       return { userId, sessionId: session.id };

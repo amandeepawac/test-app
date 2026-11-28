@@ -272,6 +272,7 @@ const accountStatusSchema = z.enum([
   "PENDING",
   "SUSPENDED",
   "DISABLED",
+  "DELETION_PENDING",
   "DELETED",
 ]);
 const reportReasonSchema = z.enum([

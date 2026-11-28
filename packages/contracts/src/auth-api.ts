@@ -1,18 +1,17 @@
 import { z } from "zod";
+import { strongPasswordSchema } from "./password.js";
 
 const email = z
-  .string()
-  .trim()
   .email()
+  .trim()
   .max(254)
   .transform((value) => value.normalize("NFC").toLowerCase());
 const token = z.string().regex(/^[A-Za-z0-9_-]{43}$/);
-const newPassword = z.string().min(8).max(128);
 
 export const registrationRequestSchema = z.strictObject({
   name: z.string().trim().min(1).max(200),
   email,
-  password: newPassword,
+  password: strongPasswordSchema,
   role: z.enum(["JOB_SEEKER", "EMPLOYER"]).optional(),
 });
 
@@ -41,7 +40,7 @@ export type GoogleAuthRequest = z.infer<typeof googleAuthRequestSchema>;
 export const forgotPasswordRequestSchema = z.strictObject({ email });
 export const resetPasswordRequestSchema = z.strictObject({
   token,
-  password: newPassword,
+  password: strongPasswordSchema,
 });
 export const refreshRequestSchema = z.strictObject({ refreshToken: token });
 export const sessionResponseSchema = z.strictObject({

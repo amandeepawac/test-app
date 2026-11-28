@@ -1,15 +1,34 @@
 import { z } from "zod";
 
 const employmentType = z.enum([
-  "FULL_TIME", "PART_TIME", "CONTRACT", "TEMPORARY", "DAILY_WAGE",
-  "APPRENTICESHIP", "INTERNSHIP", "FREELANCE",
+  "FULL_TIME",
+  "PART_TIME",
+  "CONTRACT",
+  "TEMPORARY",
+  "DAILY_WAGE",
+  "APPRENTICESHIP",
+  "INTERNSHIP",
+  "FREELANCE",
 ]);
 const workMode = z.enum(["ON_SITE", "REMOTE", "HYBRID"]);
 const experienceLevel = z.enum([
-  "NO_EXPERIENCE", "ENTRY_LEVEL", "LESS_THAN_1_YEAR", "ONE_TO_THREE_YEARS",
-  "THREE_TO_FIVE_YEARS", "FIVE_TO_TEN_YEARS", "TEN_PLUS_YEARS",
+  "NO_EXPERIENCE",
+  "ENTRY_LEVEL",
+  "LESS_THAN_1_YEAR",
+  "ONE_TO_THREE_YEARS",
+  "THREE_TO_FIVE_YEARS",
+  "FIVE_TO_TEN_YEARS",
+  "TEN_PLUS_YEARS",
 ]);
-const salaryPeriod = z.enum(["HOUR", "DAY", "WEEK", "MONTH", "YEAR", "FIXED", "NEGOTIABLE"]);
+const salaryPeriod = z.enum([
+  "HOUR",
+  "DAY",
+  "WEEK",
+  "MONTH",
+  "YEAR",
+  "FIXED",
+  "NEGOTIABLE",
+]);
 const text = (max: number) => z.string().trim().min(1).max(max);
 const salary = z.number().finite().min(0).max(9999999999.99).multipleOf(0.01);
 
@@ -18,10 +37,14 @@ const fields = {
   description: text(10000),
   employmentType,
   categoryId: z.uuid().nullable().optional(),
-  skillIds: z.array(z.uuid()).max(50).refine(
-    (ids) => new Set(ids).size === ids.length,
-    "Skills must not contain duplicates",
-  ).optional(),
+  skillIds: z
+    .array(z.uuid())
+    .max(50)
+    .refine(
+      (ids) => new Set(ids).size === ids.length,
+      "Skills must not contain duplicates",
+    )
+    .optional(),
   responsibilities: text(10000).nullable().optional(),
   workMode: workMode.optional(),
   experienceLevel: experienceLevel.optional(),
@@ -43,10 +66,13 @@ const fields = {
 };
 
 export const employerJobCreateSchema = z.strictObject(fields);
-export const employerJobUpdateSchema = z.strictObject(fields).partial().refine(
-  (value) => Object.keys(value).length > 0,
-  "At least one field is required",
-);
+export const employerJobUpdateSchema = z
+  .strictObject(fields)
+  .partial()
+  .refine(
+    (value) => Object.keys(value).length > 0,
+    "At least one field is required",
+  );
 export const employerJobsQuerySchema = z.strictObject({
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(25),
@@ -77,7 +103,18 @@ export const employerJobResponseSchema = z.strictObject({
   shiftDetails: z.string().nullable(),
   isUrgent: z.boolean(),
   expiresAt: z.iso.datetime().nullable(),
-  status: z.enum(["DRAFT", "PENDING_REVIEW", "PUBLISHED", "PAUSED", "HIDDEN", "REJECTED", "CLOSED", "FILLED", "EXPIRED", "REMOVED"]),
+  status: z.enum([
+    "DRAFT",
+    "PENDING_REVIEW",
+    "PUBLISHED",
+    "PAUSED",
+    "HIDDEN",
+    "REJECTED",
+    "CLOSED",
+    "FILLED",
+    "EXPIRED",
+    "REMOVED",
+  ]),
   moderationNote: z.string().nullable(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
@@ -96,4 +133,6 @@ export type EmployerJobCreate = z.infer<typeof employerJobCreateSchema>;
 export type EmployerJobUpdate = z.infer<typeof employerJobUpdateSchema>;
 export type EmployerJobsQuery = z.infer<typeof employerJobsQuerySchema>;
 export type EmployerJobResponse = z.infer<typeof employerJobResponseSchema>;
-export type EmployerJobListResponse = z.infer<typeof employerJobListResponseSchema>;
+export type EmployerJobListResponse = z.infer<
+  typeof employerJobListResponseSchema
+>;

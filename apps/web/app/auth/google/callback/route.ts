@@ -5,7 +5,12 @@ import { z } from 'zod';
 import { authApiFetch } from '@/lib/auth-api';
 import { getCurrentUser } from '@/features/auth/current-user';
 import { accessCookie, setSessionCookies } from '@/features/auth/session-cookies';
-import { googleConfig, googleFlowCookie, googleFlowSchema, validGoogleState } from '@/features/auth/google-flow';
+import {
+  googleConfig,
+  googleFlowCookie,
+  googleFlowSchema,
+  validGoogleState,
+} from '@/features/auth/google-flow';
 
 function redirect(url: URL) {
   const response = NextResponse.redirect(url, 303);
@@ -18,8 +23,11 @@ export async function GET(request: NextRequest) {
   const store = await cookies();
   const raw = store.get(googleFlowCookie)?.value;
   store.set(googleFlowCookie, '', {
-    httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax',
-    path: '/', maxAge: 0,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 0,
   });
   let flow: z.infer<typeof googleFlowSchema> | undefined;
   try {
@@ -27,13 +35,19 @@ export async function GET(request: NextRequest) {
   } catch {
     return redirect(new URL('/login?google=failed', request.url));
   }
-  const destination = flow.intent.mode === 'link' ? `/${flow.intent.workspace}/settings`
-    : flow.intent.mode === 'signup' ? '/register' : '/login';
+  const destination =
+    flow.intent.mode === 'link'
+      ? `/${flow.intent.workspace}/settings`
+      : flow.intent.mode === 'signup'
+        ? '/register'
+        : '/login';
   const fail = (reason: 'failed' | 'unavailable') =>
     redirect(new URL(`${destination}?google=${reason}`, request.url));
-  if (!validGoogleState(flow.state, request.nextUrl.searchParams.get('state'))) return fail('failed');
+  if (!validGoogleState(flow.state, request.nextUrl.searchParams.get('state')))
+    return fail('failed');
   const code = request.nextUrl.searchParams.get('code');
-  if (!code || code.length > 4096 || request.nextUrl.searchParams.has('error')) return fail('failed');
+  if (!code || code.length > 4096 || request.nextUrl.searchParams.has('error'))
+    return fail('failed');
 
   try {
     const config = googleConfig();
@@ -48,12 +62,18 @@ export async function GET(request: NextRequest) {
       authorization = `Bearer ${token}`;
     }
     const body = {
-      code, codeVerifier: flow.verifier, nonce: flow.nonce, mode: flow.intent.mode,
+      code,
+      codeVerifier: flow.verifier,
+      nonce: flow.nonce,
+      mode: flow.intent.mode,
       ...(flow.intent.mode === 'signup' ? { role: flow.intent.role } : {}),
     };
     const response = await authApiFetch('/auth/google', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...(authorization ? { Authorization: authorization } : {}) },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(authorization ? { Authorization: authorization } : {}),
+      },
       body: JSON.stringify(body),
     });
     if (response.status === 401 || response.status === 400) return fail('failed');
@@ -66,8 +86,11 @@ export async function GET(request: NextRequest) {
       return redirect(new URL(`${destination}?google=linked`, config.origin));
     }
     const session = sessionResponseSchema.parse(await response.json());
-    const userResponse = await authApiFetch('/auth/me', { headers: { Authorization: `Bearer ${session.accessToken}` } });
-    if (!userResponse.ok) throw new Error(`Google session lookup failed with HTTP ${userResponse.status}`);
+    const userResponse = await authApiFetch('/auth/me', {
+      headers: { Authorization: `Bearer ${session.accessToken}` },
+    });
+    if (!userResponse.ok)
+      throw new Error(`Google session lookup failed with HTTP ${userResponse.status}`);
     const user = currentUserResponseSchema.parse(await userResponse.json());
     if (user.role === 'ADMIN') return fail('failed');
     await setSessionCookies(session);

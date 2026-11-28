@@ -4,8 +4,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { registerFormSchema, type RegisterFormValues } from '@repo/contracts';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { FormInput } from '@/components/form/form-input';
+import { FormPasswordInput } from '@/components/form/form-password-input';
 import { FormCombobox } from '@/components/form/form-combobox';
 import { useAuthErrorMessage } from '@/features/auth/use-auth-error-message';
 import { AuthLayout, PreviewSubmit } from '@/features/auth/auth-layout';
@@ -19,12 +20,16 @@ export function RegisterForm({ googleError }: { googleError?: string }) {
   const [result, setResult] = useState<'accepted' | 'invalid' | 'unavailable' | null>(null);
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
-    defaultValues: { name: '', email: '', password: '', confirmPassword: '', role: 'JOB_SEEKER' },
+    defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
   });
+  const role = useWatch({ control: form.control, name: 'role' });
 
   return (
-    <AuthLayout title={t('createAccount')} description={t('registerDescription')}
-      google={<GoogleButton mode="signup" role={form.watch('role')} />}>
+    <AuthLayout
+      title={t('createAccount')}
+      description={t('registerDescription')}
+      google={<GoogleButton mode="signup" role={role} />}
+    >
       {result === 'accepted' ? (
         <p role="status" className="text-sm leading-6">
           {t('registerAccepted')}
@@ -69,20 +74,19 @@ export function RegisterForm({ googleError }: { googleError?: string }) {
               autoComplete="email"
               placeholder="you@example.com"
             />
-            <FormInput
+            <FormPasswordInput
               control={form.control}
               formatError={formatError}
               name="password"
               label={t('password')}
-              type="password"
+              showRequirements
               autoComplete="new-password"
             />
-            <FormInput
+            <FormPasswordInput
               control={form.control}
               formatError={formatError}
               name="confirmPassword"
               label={t('confirmPassword')}
-              type="password"
               autoComplete="new-password"
             />
           </FieldGroup>

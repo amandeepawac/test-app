@@ -5,7 +5,7 @@ import { resetPasswordFormSchema, type ResetPasswordFormValues } from '@repo/con
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FormInput } from '@/components/form/form-input';
+import { FormPasswordInput } from '@/components/form/form-password-input';
 import { useAuthErrorMessage } from '@/features/auth/use-auth-error-message';
 import { AuthLayout, PreviewSubmit } from '@/features/auth/auth-layout';
 import { FieldGroup } from '@/components/ui/field';
@@ -41,20 +41,19 @@ export function ResetPasswordForm({ token }: { token: string | null }) {
           })}
         >
           <FieldGroup>
-            <FormInput
+            <FormPasswordInput
               control={form.control}
               formatError={formatError}
               name="password"
               label={t('newPassword')}
-              type="password"
+              showRequirements
               autoComplete="new-password"
             />
-            <FormInput
+            <FormPasswordInput
               control={form.control}
               formatError={formatError}
               name="confirmPassword"
               label={t('confirmPassword')}
-              type="password"
               autoComplete="new-password"
             />
           </FieldGroup>

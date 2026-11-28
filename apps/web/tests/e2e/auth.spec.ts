@@ -53,7 +53,9 @@ test('registration lets users choose one role and preserves it after validation'
   await role.click();
   await page.getByRole('option', { name: 'Employer', exact: true }).click();
   await expect(role).toContainText('Employer');
-  await expect(page.locator('form[action="/auth/google/start"] input[name="role"]')).toHaveValue('EMPLOYER');
+  await expect(page.locator('form[action="/auth/google/start"] input[name="role"]')).toHaveValue(
+    'EMPLOYER',
+  );
   await page.getByRole('button', { name: 'Create account' }).click();
   await expect(page.getByText('Enter your name.')).toBeVisible();
   await expect(role).toContainText('Employer');
@@ -63,7 +65,9 @@ test('registration lets users choose one role and preserves it after validation'
   );
 });
 
-test('Google signup submits the selected role without submitting password fields', async ({ page }) => {
+test('Google signup submits the selected role without submitting password fields', async ({
+  page,
+}) => {
   await page.goto('/register');
   await page.getByRole('combobox', { name: 'Account type' }).click();
   await page.getByRole('option', { name: 'Employer', exact: true }).click();
@@ -80,20 +84,34 @@ test('Google signup submits the selected role without submitting password fields
   expect(data.has('password')).toBe(false);
 });
 
-test('Google callback rejects a mismatched state and consumes the flow cookie', async ({ page, context }) => {
+test('Google callback rejects a mismatched state and consumes the flow cookie', async ({
+  page,
+  context,
+}) => {
   const production = process.env.NODE_ENV === 'production';
   const cookie = production ? '__Host-google-flow' : 'google-flow';
-  await context.addCookies([{
-    name: cookie,
-    value: encodeURIComponent(JSON.stringify({
-      state: 'a'.repeat(43), nonce: 'b'.repeat(43), verifier: 'c'.repeat(43),
-      intent: { mode: 'login' },
-    })),
-    url: 'http://127.0.0.1:3000', httpOnly: true, sameSite: 'Lax', secure: production,
-  }]);
+  await context.addCookies([
+    {
+      name: cookie,
+      value: encodeURIComponent(
+        JSON.stringify({
+          state: 'a'.repeat(43),
+          nonce: 'b'.repeat(43),
+          verifier: 'c'.repeat(43),
+          intent: { mode: 'login' },
+        }),
+      ),
+      url: 'http://127.0.0.1:3000',
+      httpOnly: true,
+      sameSite: 'Lax',
+      secure: production,
+    },
+  ]);
   await page.goto('/auth/google/callback?state=invalid&code=test');
   await expect(page).toHaveURL(/\/login\?google=failed$/);
-  await expect(page.getByRole('alert')).toContainText('Google authentication could not be completed');
+  await expect(page.getByRole('alert')).toContainText(
+    'Google authentication could not be completed',
+  );
   expect((await context.cookies()).some((item) => item.name === cookie)).toBe(false);
 });
 

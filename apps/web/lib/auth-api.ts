@@ -3,7 +3,22 @@ import { isIP } from 'node:net';
 import { headers } from 'next/headers';
 import { getAuthApiBaseUrl } from '@/lib/api-base-url';
 
+const uuidPathSegment = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
+const allowedApiPath = new RegExp(
+  `^/(?:auth/(?:google|me|login|register|forgot-password|reset-password|verify-email|refresh|logout)|admin/(?:dashboard|employer-verifications(?:/${uuidPathSegment}(?:/documents/${uuidPathSegment})?)?|jobs(?:/${uuidPathSegment}(?:/moderation)?)?|reports(?:/${uuidPathSegment})?|audit-logs)|employers/me(?:/(?:verification|complete|jobs(?:/${uuidPathSegment})?))?|job-seeker/(?:profile(?:/complete)?|skills)|jobs(?:/${uuidPathSegment}(?:/(?:publish|pause))?)?)(?:\\?[^#]*)?$`,
+  'i',
+);
+
 export async function authApiFetch(path: string, init: RequestInit = {}) {
+  if (!allowedApiPath.test(path)) {
+    throw new Error('Authentication API path is not an allowed endpoint');
+  }
+
+  const [pathname = '', search = ''] = path.split('?', 2);
+  const url = new URL(getAuthApiBaseUrl());
+  url.pathname = pathname.split('/').map(encodeURIComponent).join('/');
+  url.search = new URLSearchParams(search).toString();
+
   const secret = process.env.AUTH_PROXY_SECRET;
   if (!secret || Buffer.byteLength(secret, 'utf8') < 32) {
     throw new Error('AUTH_PROXY_SECRET must contain at least 32 bytes');
@@ -20,7 +35,7 @@ export async function authApiFetch(path: string, init: RequestInit = {}) {
   outgoingHeaders.set('x-auth-client-ip', ip);
   outgoingHeaders.set('x-auth-client-time', timestamp);
   outgoingHeaders.set('x-auth-client-signature', signature);
-  return fetch(new URL(path, getAuthApiBaseUrl()), {
+  return fetch(url, {
     ...init,
     headers: outgoingHeaders,
     cache: 'no-store',

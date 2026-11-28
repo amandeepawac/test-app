@@ -11,6 +11,7 @@ export function useAuthErrorMessage() {
     passwordRequired: t('passwordRequired'),
     passwordTooShort: t('passwordTooShort'),
     passwordTooLong: t('passwordTooLong'),
+    passwordRequirements: t('passwordRequirementsError'),
     nameTooLong: t('nameTooLong'),
     confirmRequired: t('confirmRequired'),
     passwordsMismatch: t('passwordsMismatch'),
