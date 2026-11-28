@@ -90,7 +90,6 @@ export class PrismaEmployerVerificationRepository implements EmployerVerificatio
           select: {
             id: true,
             documentType: true,
-            storageKey: true,
             originalName: true,
             mimeType: true,
             fileSizeBytes: true,

@@ -6,6 +6,9 @@ import {
   employerProfileResponseSchema,
   employerProfileUpdateSchema,
   employerVerificationResponseSchema,
+  employerVerificationDocumentUploadSchema,
+  employerVerificationDocumentListResponseSchema,
+  employerVerificationDocumentResponseSchema,
   employerJobResponseSchema,
   employerJobListResponseSchema,
   employerJobsQuerySchema,
@@ -73,11 +76,14 @@ async function request<T extends z.ZodType>(
     throw new PortalApiError(response.status, message);
   }
   let payload: unknown;
+  if (response.status === 204) payload = {};
+  else {
   try {
     payload = await response.json();
   } catch (error) {
     console.error('Portal API returned invalid JSON', error);
     throw new PortalApiError(502, 'The service returned an invalid response.');
+  }
   }
   const parsed = schema.safeParse(payload);
   if (!parsed.success) {
@@ -101,6 +107,33 @@ export const getEmployerProfile = cache(() =>
 );
 export const getEmployerVerification = () =>
   request('/employers/me/verification', employerVerificationResponseSchema);
+export const listEmployerVerificationDocuments = () =>
+  request(
+    '/employers/me/verification/documents',
+    employerVerificationDocumentListResponseSchema,
+  );
+export const uploadEmployerVerificationDocument = (
+  body: z.infer<typeof employerVerificationDocumentUploadSchema>,
+) =>
+  request(
+    '/employers/me/verification/documents',
+    employerVerificationDocumentResponseSchema,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+  );
+export const submitEmployerVerification = () =>
+  request('/employers/me/verification/submit', employerProfileResponseSchema, {
+    method: 'POST',
+  });
+export const deleteEmployerVerificationDocument = (documentId: string) =>
+  request(
+    `/employers/me/verification/documents/${encodeURIComponent(documentId)}`,
+    z.strictObject({}),
+    { method: 'DELETE' },
+  );
 export const saveEmployerProfile = (body: EmployerProfileUpdate) =>
   request('/employers/me', employerProfileResponseSchema, {
     method: 'PUT',

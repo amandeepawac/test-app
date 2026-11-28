@@ -86,7 +86,6 @@ export const adminEmployerVerificationDetailResponseSchema =
       z.strictObject({
         id: z.uuid(),
         documentType: employerDocumentTypeSchema,
-        storageKey: z.string(),
         originalName: z.string().nullable(),
         mimeType: z.string().nullable(),
         fileSizeBytes: z.string().nullable(),

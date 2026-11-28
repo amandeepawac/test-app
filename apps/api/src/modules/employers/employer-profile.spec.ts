@@ -1,7 +1,11 @@
 import { BadRequestException, ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import type { ExecutionContext } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { employerProfileUpdateSchema, registrationRequestSchema } from '@repo/contracts';
+import {
+  employerProfileUpdateSchema,
+  employerVerificationDocumentUploadSchema,
+  registrationRequestSchema,
+} from '@repo/contracts';
 import { PrismaService } from '@/infrastructure/database/prisma.service.js';
 import { AuthService } from '@/modules/auth/services/auth.service.js';
 import {
@@ -12,6 +16,7 @@ import { EmployerAuthGuard } from '@/modules/employers/guards/employer-auth.guar
 import { EmployerProfileRepository } from '@/modules/employers/repositories/employer-profile.repository.js';
 import { PrismaEmployerProfileRepository } from '@/modules/employers/repositories/prisma-employer-profile.repository.js';
 import { EmployerProfileService } from '@/modules/employers/services/employer-profile.service.js';
+import { PrivateDocumentStorage } from '@/infrastructure/storage/private-document-storage.js';
 
 describe('employer request validation', () => {
   it('accepts employer registration but rejects public admin registration', () => {
@@ -34,6 +39,25 @@ describe('employer request validation', () => {
       employerProfileUpdateSchema.safeParse({ websiteUrl: 'javascript:alert(1)' }).success,
     ).toBe(false);
     expect(employerProfileUpdateSchema.safeParse({ websiteUrl: 'not a url' }).success).toBe(false);
+  });
+
+  it('requires a supported private evidence document type and file type', () => {
+    expect(
+      employerVerificationDocumentUploadSchema.safeParse({
+        documentType: 'GST_CERTIFICATE',
+        originalName: 'gst.pdf',
+        mimeType: 'application/pdf',
+        base64Data: 'AAAA',
+      }).success,
+    ).toBe(true);
+    expect(
+      employerVerificationDocumentUploadSchema.safeParse({
+        documentType: 'GST_CERTIFICATE',
+        originalName: 'malware.exe',
+        mimeType: 'application/x-msdownload',
+        base64Data: 'AAAA',
+      }).success,
+    ).toBe(false);
   });
 });
 
@@ -110,7 +134,14 @@ describe('PrismaEmployerProfileRepository', () => {
     vi.resetAllMocks();
     prisma.client.$transaction.mockImplementation((operation) => operation(tx));
     const module = await Test.createTestingModule({
-      providers: [PrismaEmployerProfileRepository, { provide: PrismaService, useValue: prisma }],
+      providers: [
+        PrismaEmployerProfileRepository,
+        { provide: PrismaService, useValue: prisma },
+        {
+          provide: PrivateDocumentStorage,
+          useValue: { upload: vi.fn(), delete: vi.fn() },
+        },
+      ],
     }).compile();
     repository = module.get(PrismaEmployerProfileRepository);
   });

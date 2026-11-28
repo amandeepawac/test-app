@@ -6,6 +6,7 @@ import {
   employerJobsQuerySchema,
   employerJobUpdateSchema,
   jobSeekerSkillsQuerySchema,
+  employerVerificationDocumentUploadSchema,
 } from '@repo/contracts';
 import { z } from 'zod';
 import { getCurrentUser } from '@/features/auth/current-user';
@@ -22,6 +23,10 @@ import {
   createEmployerJob,
   updateEmployerJob,
   transitionEmployerJob,
+  listEmployerVerificationDocuments,
+  uploadEmployerVerificationDocument,
+  submitEmployerVerification,
+  deleteEmployerVerificationDocument,
 } from './portal-api';
 
 export type PortalActionResult<T> =
@@ -59,6 +64,43 @@ export async function saveEmployerProfileAction(input: unknown) {
 export async function completeEmployerProfileAction() {
   const result = await perform(completeEmployerProfile);
   if (result.ok) revalidatePath('/employer');
+  return result;
+}
+
+export async function listEmployerVerificationDocumentsAction() {
+  return perform(listEmployerVerificationDocuments);
+}
+
+export async function uploadEmployerVerificationDocumentAction(input: unknown) {
+  const parsed = employerVerificationDocumentUploadSchema.safeParse(input);
+  if (!parsed.success) {
+    return {
+      ok: false as const,
+      status: 400,
+      message: parsed.error.issues[0]?.message ?? 'Check the document and try again.',
+    };
+  }
+  const result = await perform(() => uploadEmployerVerificationDocument(parsed.data));
+  if (result.ok) revalidatePath('/employer/verification');
+  return result;
+}
+
+export async function submitEmployerVerificationAction() {
+  const result = await perform(submitEmployerVerification);
+  if (result.ok) revalidatePath('/employer/verification');
+  return result;
+}
+
+export async function deleteEmployerVerificationDocumentAction(documentId: string) {
+  if (!z.uuid().safeParse(documentId).success) {
+    return {
+      ok: false as const,
+      status: 400,
+      message: 'Invalid document.',
+    };
+  }
+  const result = await perform(() => deleteEmployerVerificationDocument(documentId));
+  if (result.ok) revalidatePath('/employer/verification');
   return result;
 }
 

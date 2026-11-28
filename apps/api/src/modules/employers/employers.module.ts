@@ -10,12 +10,14 @@ import { EmployerProfileService } from '@/modules/employers/services/employer-pr
 import { EmployerJobsService } from '@/modules/employers/services/employer-jobs.service.js';
 import { EmployerJobsRepository } from '@/modules/employers/repositories/employer-jobs.repository.js';
 import { PrismaEmployerJobsRepository } from '@/modules/employers/repositories/prisma-employer-jobs.repository.js';
+import { PrivateDocumentStorage } from '@/infrastructure/storage/private-document-storage.js';
 
 @Module({
   imports: [DatabaseModule, AuthModule],
   controllers: [EmployerProfileController, EmployerJobsController],
   providers: [
     EmployerAuthGuard,
+    PrivateDocumentStorage,
     EmployerProfileService,
     EmployerJobsService,
     { provide: EmployerProfileRepository, useClass: PrismaEmployerProfileRepository },

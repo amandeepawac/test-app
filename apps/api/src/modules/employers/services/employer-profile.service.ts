@@ -1,5 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { EmployerProfileUpdate } from '@repo/contracts';
+import type {
+  EmployerProfileUpdate,
+  EmployerVerificationDocumentUpload,
+} from '@repo/contracts';
 import { mapEmployerRepositoryErrors } from '@/modules/employers/employer-errors.js';
 import { EmployerProfileRepository } from '@/modules/employers/repositories/employer-profile.repository.js';
 
@@ -24,5 +27,21 @@ export class EmployerProfileService {
 
   complete(userId: string) {
     return mapEmployerRepositoryErrors(() => this.profiles.complete(userId));
+  }
+
+  listDocuments(userId: string) {
+    return mapEmployerRepositoryErrors(() => this.profiles.listDocuments(userId));
+  }
+
+  uploadDocument(userId: string, input: EmployerVerificationDocumentUpload) {
+    return mapEmployerRepositoryErrors(() => this.profiles.uploadDocument(userId, input));
+  }
+
+  submitVerification(userId: string) {
+    return mapEmployerRepositoryErrors(() => this.profiles.submit(userId));
+  }
+
+  deleteDocument(userId: string, documentId: string) {
+    return mapEmployerRepositoryErrors(() => this.profiles.deleteDocument(userId, documentId));
   }
 }

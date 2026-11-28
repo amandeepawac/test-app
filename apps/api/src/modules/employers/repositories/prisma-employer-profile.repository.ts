@@ -1,12 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import type { EmployerProfileResponse, EmployerProfileUpdate } from '@repo/contracts';
+import type {
+  EmployerProfileResponse,
+  EmployerProfileUpdate,
+  EmployerVerificationDocumentResponse,
+  EmployerVerificationDocumentUpload,
+} from '@repo/contracts';
 import type { Prisma } from '@repo/db/generated';
 import { PrismaService } from '@/infrastructure/database/prisma.service.js';
 import {
   EmployerIdentityChangeConflictError,
   EmployerProfileIncompleteError,
   EmployerProfileNotFoundError,
+  EmployerVerificationDocumentConflictError,
+  EmployerVerificationDocumentNotFoundError,
+  EmployerVerificationSubmissionError,
 } from '@/modules/employers/employer-errors.js';
+import { PrivateDocumentStorage } from '@/infrastructure/storage/private-document-storage.js';
 import { EmployerProfileRepository } from './employer-profile.repository.js';
 
 const profileSelect = {
@@ -63,7 +72,10 @@ function toResponse(profile: ProfileRecord): EmployerProfileResponse {
 
 @Injectable()
 export class PrismaEmployerProfileRepository implements EmployerProfileRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly documentStorage: PrivateDocumentStorage,
+  ) {}
 
   async findByUserId(userId: string): Promise<EmployerProfileResponse | null> {
     const profile = await this.prisma.client.employerProfile.findUnique({
@@ -128,5 +140,180 @@ export class PrismaEmployerProfileRepository implements EmployerProfileRepositor
       });
       return toResponse(completed);
     });
+  }
+
+  async listDocuments(
+    userId: string,
+  ): Promise<EmployerVerificationDocumentResponse[]> {
+    const profile = await this.prisma.client.employerProfile.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+    if (!profile) throw new EmployerProfileNotFoundError();
+    const documents = await this.prisma.client.employerDocument.findMany({
+      where: { employerId: profile.id },
+      orderBy: { createdAt: 'asc' },
+      select: {
+        id: true,
+        documentType: true,
+        originalName: true,
+        mimeType: true,
+        fileSizeBytes: true,
+        reviewStatus: true,
+        reviewNote: true,
+        createdAt: true,
+      },
+    });
+    return documents.map((document) => ({
+      ...document,
+      fileSizeBytes: document.fileSizeBytes?.toString() ?? null,
+      createdAt: document.createdAt.toISOString(),
+    }));
+  }
+
+  async uploadDocument(
+    userId: string,
+    input: EmployerVerificationDocumentUpload,
+  ): Promise<EmployerVerificationDocumentResponse> {
+    if (!/^([A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(input.base64Data)) {
+      throw new EmployerVerificationSubmissionError('A valid Base64 document payload is required');
+    }
+    const bytes = Buffer.from(input.base64Data, 'base64');
+    if (bytes.length === 0 || bytes.length > 5 * 1024 * 1024) {
+      throw new EmployerVerificationSubmissionError('The document must be non-empty and no larger than 5 MB');
+    }
+
+    const profile = await this.prisma.client.employerProfile.findUnique({
+      where: { userId },
+      select: { id: true, completedAt: true, verificationStatus: true },
+    });
+    if (!profile) throw new EmployerProfileNotFoundError();
+    if (!profile.completedAt) throw new EmployerProfileIncompleteError();
+    if (!['NOT_SUBMITTED', 'REJECTED', 'NEEDS_MORE_INFO', 'PENDING'].includes(profile.verificationStatus)) {
+      throw new EmployerVerificationDocumentConflictError(
+        'Documents cannot be changed while verification is in this state',
+      );
+    }
+    const documentCount = await this.prisma.client.employerDocument.count({
+      where: { employerId: profile.id },
+    });
+    if (documentCount >= 10) {
+      throw new EmployerVerificationDocumentConflictError(
+        'No more than 10 verification documents can be submitted',
+      );
+    }
+
+    const uploaded = await this.documentStorage.upload({
+      employerId: profile.id,
+      originalName: input.originalName,
+      mimeType: input.mimeType,
+      base64Data: input.base64Data,
+    });
+    try {
+      const document = await this.prisma.client.employerDocument.create({
+        data: {
+          employerId: profile.id,
+          documentType: input.documentType,
+          storageKey: uploaded.publicId,
+          originalName: input.originalName,
+          mimeType: input.mimeType,
+          fileSizeBytes: BigInt(uploaded.bytes),
+          reviewStatus: 'PENDING',
+        },
+        select: {
+          id: true,
+          documentType: true,
+          originalName: true,
+          mimeType: true,
+          fileSizeBytes: true,
+          reviewStatus: true,
+          reviewNote: true,
+          createdAt: true,
+        },
+      });
+      return {
+        ...document,
+        fileSizeBytes: document.fileSizeBytes?.toString() ?? null,
+        createdAt: document.createdAt.toISOString(),
+      };
+    } catch (error) {
+      await this.documentStorage.delete(uploaded.publicId, input.mimeType);
+      throw error;
+    }
+  }
+
+  async submit(userId: string): Promise<EmployerProfileResponse> {
+    return this.prisma.client.$transaction(async (tx) => {
+      const profile = await tx.employerProfile.findUnique({
+        where: { userId },
+        select: {
+          ...profileSelect,
+          id: true,
+        },
+      });
+      if (!profile) throw new EmployerProfileNotFoundError();
+      if (!profile.completedAt) throw new EmployerProfileIncompleteError();
+      if (!['NOT_SUBMITTED', 'REJECTED', 'NEEDS_MORE_INFO'].includes(profile.verificationStatus)) {
+        throw new EmployerVerificationSubmissionError(
+          'Verification can only be submitted or resubmitted in an eligible state',
+        );
+      }
+      const documentCount = await tx.employerDocument.count({
+        where: { employerId: profile.id, reviewStatus: 'PENDING' },
+      });
+      if (documentCount === 0) {
+        throw new EmployerVerificationSubmissionError(
+          'Upload at least one document before submitting verification',
+        );
+      }
+      const now = new Date();
+      const updated = await tx.employerProfile.update({
+        where: { userId },
+        data: {
+          verificationStatus: 'PENDING',
+          verificationSubmittedAt: now,
+          rejectionReason: null,
+          verificationNote: null,
+          verifiedAt: null,
+          verifiedById: null,
+        },
+        select: profileSelect,
+      });
+      await tx.auditLog.create({
+        data: {
+          actorId: userId,
+          entityType: 'EMPLOYER_VERIFICATION',
+          entityId: profile.id,
+          action: 'EMPLOYER_VERIFICATION_SUBMITTED',
+          metadata: { documentCount },
+        },
+      });
+      return toResponse(updated);
+    });
+  }
+
+  async deleteDocument(userId: string, documentId: string): Promise<void> {
+    const profile = await this.prisma.client.employerProfile.findUnique({
+      where: { userId },
+      select: { id: true, verificationStatus: true },
+    });
+    if (!profile) throw new EmployerProfileNotFoundError();
+    if (!['REJECTED', 'NEEDS_MORE_INFO'].includes(profile.verificationStatus)) {
+      throw new EmployerVerificationDocumentConflictError(
+        'Rejected documents can only be replaced after a review decision',
+      );
+    }
+    const document = await this.prisma.client.employerDocument.findFirst({
+      where: { id: documentId, employerId: profile.id },
+      select: { id: true, storageKey: true, mimeType: true, reviewStatus: true },
+    });
+    if (!document) throw new EmployerVerificationDocumentNotFoundError();
+    if (document.reviewStatus !== 'REJECTED') {
+      throw new EmployerVerificationDocumentConflictError(
+        'Only rejected documents can be removed and replaced',
+      );
+    }
+    await this.prisma.client.employerDocument.delete({ where: { id: document.id } });
+    await this.documentStorage.delete(document.storageKey, document.mimeType ?? 'image/jpeg');
   }
 }
