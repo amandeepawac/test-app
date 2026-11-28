@@ -7,6 +7,9 @@ import {
   employerJobUpdateSchema,
   jobSeekerSkillsQuerySchema,
   employerVerificationDocumentUploadSchema,
+  createApplicationSchema,
+  applicationPageQuerySchema,
+  updateApplicationStatusSchema,
 } from '@repo/contracts';
 import { z } from 'zod';
 import { getCurrentUser } from '@/features/auth/current-user';
@@ -27,6 +30,11 @@ import {
   uploadEmployerVerificationDocument,
   submitEmployerVerification,
   deleteEmployerVerificationDocument,
+  applyToJob,
+  listJobSeekerApplications,
+  withdrawJobSeekerApplication,
+  listEmployerApplications,
+  updateEmployerApplicationStatus,
 } from './portal-api';
 
 export type PortalActionResult<T> =
@@ -163,6 +171,66 @@ export async function transitionEmployerJobAction(id: string, action: 'publish' 
   }
   const result = await perform(() => transitionEmployerJob(id, action));
   if (result.ok) revalidatePath('/employer/jobs');
+  return result;
+}
+
+export async function applyToJobAction(jobId: string, input: unknown) {
+  const parsedId = z.uuid().safeParse(jobId);
+  const parsedInput = createApplicationSchema.safeParse(input);
+  if (!parsedId.success || !parsedInput.success) {
+    return {
+      ok: false as const,
+      status: 400,
+      message: 'Check the application details.',
+    };
+  }
+  const result = await perform(() => applyToJob(jobId, parsedInput.data));
+  if (result.ok) {
+    revalidatePath('/job-seeker/applications');
+    revalidatePath(`/jobs/${jobId}`);
+  }
+  return result;
+}
+
+export async function listJobSeekerApplicationsAction(input: unknown) {
+  const parsed = applicationPageQuerySchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false as const, status: 400, message: 'Check the page parameters.' };
+  }
+  return perform(() => listJobSeekerApplications(parsed.data.page, parsed.data.pageSize));
+}
+
+export async function withdrawJobSeekerApplicationAction(id: string) {
+  if (!z.uuid().safeParse(id).success) {
+    return { ok: false as const, status: 400, message: 'Invalid application.' };
+  }
+  const result = await perform(() => withdrawJobSeekerApplication(id));
+  if (result.ok) revalidatePath('/job-seeker/applications');
+  return result;
+}
+
+export async function listEmployerApplicationsAction(jobId: string, input: unknown) {
+  const parsedId = z.uuid().safeParse(jobId);
+  const parsed = applicationPageQuerySchema.safeParse(input);
+  if (!parsedId.success || !parsed.success) {
+    return { ok: false as const, status: 400, message: 'Check the application query.' };
+  }
+  return perform(() =>
+    listEmployerApplications(jobId, parsed.data.page, parsed.data.pageSize),
+  );
+}
+
+export async function updateEmployerApplicationStatusAction(id: string, input: unknown) {
+  const parsedId = z.uuid().safeParse(id);
+  const parsed = updateApplicationStatusSchema.safeParse(input);
+  if (!parsedId.success || !parsed.success) {
+    return { ok: false as const, status: 400, message: 'Check the application status.' };
+  }
+  const result = await perform(() => updateEmployerApplicationStatus(id, parsed.data));
+  if (result.ok) {
+    revalidatePath('/employer/jobs');
+    revalidatePath('/job-seeker/applications');
+  }
   return result;
 }
 

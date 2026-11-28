@@ -54,6 +54,7 @@
       "notDisclosed": "ਦੱਸਿਆ ਨਹੀਂ ਗਿਆ",
       "category": "ਸ਼੍ਰੇਣੀ",
       "signInToApply": "ਅਰਜ਼ੀ ਦੇਣ ਲਈ ਸਾਈਨ ਇਨ ਕਰੋ",
+      "jobSeekerAccountRequired": "ਅਰਜ਼ੀ ਦੇਣ ਲਈ ਨੌਕਰੀ ਲੱਭਣ ਵਾਲੇ ਦਾ ਖਾਤਾ ਲਾਜ਼ਮੀ ਹੈ।",
       "employmentTypes": {
         "FULL_TIME": "ਪੂਰਾ ਸਮਾਂ",
         "PART_TIME": "ਪਾਰਟ-ਟਾਈਮ",
@@ -89,6 +90,91 @@
       }
     }
   },
+  "Applications": {
+    "apply": {
+      "coverMessage": "ਰੁਜ਼ਗਾਰਦਾਤਾ ਲਈ ਸੁਨੇਹਾ",
+      "coverMessagePlaceholder": "ਆਪਣਾ ਸੰਖੇਪ ਪਰਿਚਯ ਦਿਓ ਅਤੇ ਦੱਸੋ ਕਿ ਤੁਸੀਂ ਇਸ ਕੰਮ ਲਈ ਕਿਉਂ ਢੁੱਕਵੇਂ ਹੋ।",
+      "coverMessageOptional": "ਵਿਕਲਪਿਕ · ਵੱਧ ਤੋਂ ਵੱਧ 2,000 ਅੱਖਰ",
+      "apply": "ਅਰਜ਼ੀ ਜਮ੍ਹਾਂ ਕਰੋ",
+      "submitting": "ਜਮ੍ਹਾਂ ਹੋ ਰਹੀ ਹੈ...",
+      "success": "ਤੁਹਾਡੀ ਅਰਜ਼ੀ ਜਮ੍ਹਾਂ ਹੋ ਗਈ ਹੈ।",
+      "signInRequired": "ਅਰਜ਼ੀ ਦੇਣ ਲਈ ਨੌਕਰੀ ਲੱਭਣ ਵਾਲੇ ਵਜੋਂ ਸਾਈਨ ਇਨ ਕਰੋ।",
+      "jobSeekerOnly": "ਸਿਰਫ਼ ਨੌਕਰੀ ਲੱਭਣ ਵਾਲੇ ਖਾਤੇ ਅਰਜ਼ੀ ਦੇ ਸਕਦੇ ਹਨ।",
+      "profileIncomplete": "ਅਰਜ਼ੀ ਦੇਣ ਤੋਂ ਪਹਿਲਾਂ ਆਪਣੀ ਪ੍ਰੋਫਾਈਲ ਪੂਰੀ ਕਰੋ।",
+      "completeProfile": "ਪ੍ਰੋਫਾਈਲ ਪੂਰੀ ਕਰੋ",
+      "alreadyAppliedOrUnavailable": "ਤੁਸੀਂ ਪਹਿਲਾਂ ਹੀ ਅਰਜ਼ੀ ਦੇ ਚੁੱਕੇ ਹੋ ਸਕਦੇ ਹੋ ਜਾਂ ਇਹ ਨੌਕਰੀ ਹੁਣ ਅਰਜ਼ੀਆਂ ਨਹੀਂ ਲੈ ਰਹੀ।",
+      "requestFailed": "ਅਰਜ਼ੀ ਜਮ੍ਹਾਂ ਨਹੀਂ ਹੋ ਸਕੀ। ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"
+    },
+    "seeker": {
+      "title": "ਮੇਰੀਆਂ ਅਰਜ਼ੀਆਂ",
+      "description": "ਅਰਜ਼ੀ ਦੀ ਪ੍ਰਗਤੀ ਵੇਖੋ ਅਤੇ ਰੁਜ਼ਗਾਰਦਾਤਾ ਦੇ ਅੱਪਡੇਟ ਪੜ੍ਹੋ।",
+      "empty": "ਤੁਸੀਂ ਹਾਲੇ ਕਿਸੇ ਨੌਕਰੀ ਲਈ ਅਰਜ਼ੀ ਨਹੀਂ ਦਿੱਤੀ।",
+      "browseJobs": "ਨੌਕਰੀਆਂ ਵੇਖੋ",
+      "verifiedEmployer": "ਤਸਦੀਕਸ਼ੁਦਾ ਰੁਜ਼ਗਾਰਦਾਤਾ",
+      "appliedAt": "{date} ਨੂੰ ਅਰਜ਼ੀ ਦਿੱਤੀ",
+      "withdraw": "ਅਰਜ਼ੀ ਵਾਪਸ ਲਵੋ",
+      "withdrawing": "ਵਾਪਸ ਲਈ ਜਾ ਰਹੀ ਹੈ...",
+      "withdrawNotAllowed": "ਇਹ ਅਰਜ਼ੀ ਹੁਣ ਵਾਪਸ ਨਹੀਂ ਲਈ ਜਾ ਸਕਦੀ।",
+      "requestFailed": "ਬੇਨਤੀ ਪੂਰੀ ਨਹੀਂ ਹੋਈ। ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+      "page": "ਪੰਨਾ {page}, ਕੁੱਲ {totalPages}",
+      "previous": "ਪਿਛਲਾ",
+      "next": "ਅਗਲਾ",
+      "statuses": {
+        "APPLIED": "ਅਰਜ਼ੀ ਦਿੱਤੀ",
+        "REVIEWING": "ਸਮੀਖਿਆ ਹੇਠ",
+        "SHORTLISTED": "ਚੁਣੀ ਗਈ",
+        "CONTACTED": "ਸੰਪਰਕ ਕੀਤਾ",
+        "REJECTED": "ਚੋਣ ਨਹੀਂ ਹੋਈ",
+        "HIRED": "ਨੌਕਰੀ ਮਿਲੀ",
+        "WITHDRAWN": "ਵਾਪਸ ਲਈ"
+      }
+    },
+    "employer": {
+      "title": "ਨੌਕਰੀ ਲਈ ਅਰਜ਼ੀਆਂ",
+      "description": "ਅਰਜ਼ੀਆਂ ਵੇਖੋ ਅਤੇ ਹਰ ਅਰਜ਼ੀ ਦੀ ਸਥਿਤੀ ਅੱਪਡੇਟ ਕਰੋ।",
+      "backToJob": "ਨੌਕਰੀ ਵੱਲ ਵਾਪਸ",
+      "empty": "ਹਾਲੇ ਕਿਸੇ ਨੇ ਇਸ ਨੌਕਰੀ ਲਈ ਅਰਜ਼ੀ ਨਹੀਂ ਦਿੱਤੀ।",
+      "jobSeeker": "ਨੌਕਰੀ ਲੱਭਣ ਵਾਲਾ",
+      "locationUnspecified": "ਥਾਂ ਨਹੀਂ ਦਿੱਤੀ",
+      "experience": "ਤਜਰਬਾ",
+      "contact": "ਸੰਪਰਕ",
+      "contactPrivate": "ਸੰਪਰਕ ਵੇਰਵੇ ਨਿੱਜੀ ਹਨ",
+      "skills": "ਹੁਨਰ",
+      "notProvided": "ਨਹੀਂ ਦਿੱਤਾ",
+      "experienceSummary": "ਤਜਰਬੇ ਦਾ ਸੰਖੇਪ",
+      "coverMessage": "ਸੁਨੇਹਾ",
+      "transitionConflict": "ਇਹ ਸਥਿਤੀ ਬਦਲਾਅ ਮਨਜ਼ੂਰ ਨਹੀਂ। ਪੰਨਾ ਮੁੜ ਲੋਡ ਕਰਕੇ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+      "requestFailed": "ਸਥਿਤੀ ਅੱਪਡੇਟ ਨਹੀਂ ਹੋਈ। ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+      "page": "ਪੰਨਾ {page}, ਕੁੱਲ {totalPages}",
+      "previous": "ਪਿਛਲਾ",
+      "next": "ਅਗਲਾ",
+      "statuses": {
+        "APPLIED": "ਅਰਜ਼ੀ ਦਿੱਤੀ",
+        "REVIEWING": "ਸਮੀਖਿਆ ਹੇਠ",
+        "SHORTLISTED": "ਚੁਣੀ ਗਈ",
+        "CONTACTED": "ਸੰਪਰਕ ਕੀਤਾ",
+        "REJECTED": "ਚੋਣ ਨਹੀਂ ਹੋਈ",
+        "HIRED": "ਨੌਕਰੀ ਮਿਲੀ",
+        "WITHDRAWN": "ਵਾਪਸ ਲਈ"
+      },
+      "actions": {
+        "REVIEWING": "ਸਮੀਖਿਆ ਵਿੱਚ ਰੱਖੋ",
+        "SHORTLISTED": "ਚੁਣੋ",
+        "CONTACTED": "ਸੰਪਰਕ ਕੀਤਾ",
+        "REJECTED": "ਰੱਦ ਕਰੋ",
+        "HIRED": "ਨੌਕਰੀ ਦਿੱਤੀ"
+      },
+      "experienceLevels": {
+        "NO_EXPERIENCE": "ਕੋਈ ਤਜਰਬਾ ਨਹੀਂ",
+        "ENTRY_LEVEL": "ਸ਼ੁਰੂਆਤੀ ਪੱਧਰ",
+        "LESS_THAN_1_YEAR": "1 ਸਾਲ ਤੋਂ ਘੱਟ",
+        "ONE_TO_THREE_YEARS": "1–3 ਸਾਲ",
+        "THREE_TO_FIVE_YEARS": "3–5 ਸਾਲ",
+        "FIVE_TO_TEN_YEARS": "5–10 ਸਾਲ",
+        "TEN_PLUS_YEARS": "10+ ਸਾਲ"
+      }
+    }
+  },
   "Portal": {
     "workspaceEmployer": "ਰੁਜ਼ਗਾਰਦਾਤਾ ਵਰਕਸਪੇਸ",
     "workspaceSeeker": "ਨੌਕਰੀ ਲੱਭਣ ਵਾਲੇ ਦਾ ਵਰਕਸਪੇਸ",
@@ -100,6 +186,7 @@
     "legacyLocation": "ਤੁਹਾਡੀ ਸੰਭਾਲੀ ਥਾਂ ਸੂਚੀ ਵਿੱਚ ਨਹੀਂ ਹੈ। ਇਸਨੂੰ ਰੱਖਿਆ ਗਿਆ ਹੈ; ਬਦਲਣ ਲਈ ਸੂਚੀ ਵਿੱਚੋਂ ਰਾਜ ਅਤੇ ਸ਼ਹਿਰ ਚੁਣੋ।",
     "noCities": "ਇਸ ਰਾਜ ਲਈ ਕੋਈ ਸ਼ਹਿਰ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।",
     "jobs": "ਮੇਰੀਆਂ ਨੌਕਰੀਆਂ",
+    "applications": "ਅਰਜ਼ੀਆਂ ਦਾ ਇਤਿਹਾਸ",
     "jobsPage": {
       "title": "ਮੇਰੀਆਂ ਨੌਕਰੀਆਂ",
       "listTitle": "ਨੌਕਰੀਆਂ ਦੀਆਂ ਸੂਚੀਆਂ",
@@ -144,6 +231,7 @@
       "readOnly": "ਸਿਰਫ਼ ਡਰਾਫਟ ਜਾਂ ਰੋਕੀ ਗਈ ਨੌਕਰੀ ਬਦਲੀ ਜਾ ਸਕਦੀ ਹੈ।",
       "back": "ਨੌਕਰੀਆਂ ਵੱਲ ਵਾਪਸ",
       "view": "ਨੌਕਰੀ ਵੇਖੋ",
+      "applications": "ਅਰਜ਼ੀਦਾਰ ਵੇਖੋ",
       "empty": "ਤੁਸੀਂ ਹਾਲੇ ਕੋਈ ਨੌਕਰੀ ਨਹੀਂ ਬਣਾਈ।",
       "loading": "ਨੌਕਰੀਆਂ ਲੋਡ ਹੋ ਰਹੀਆਂ ਹਨ...",
       "page": "ਪੰਨਾ {page} · {total} ਨੌਕਰੀਆਂ",

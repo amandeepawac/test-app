@@ -15,9 +15,10 @@ import { PublicJobsController } from '@/modules/employers/public-jobs.controller
 import { PublicJobsService } from '@/modules/employers/services/public-jobs.service.js';
 import { PublicJobsRepository } from '@/modules/employers/repositories/public-jobs.repository.js';
 import { PrismaPublicJobsRepository } from '@/modules/employers/repositories/prisma-public-jobs.repository.js';
+import { ApplicationsModule } from '@/modules/applications/applications.module.js';
 
 @Module({
-  imports: [DatabaseModule, AuthModule],
+  imports: [DatabaseModule, AuthModule, ApplicationsModule],
   controllers: [EmployerProfileController, EmployerJobsController, PublicJobsController],
   providers: [
     EmployerAuthGuard,

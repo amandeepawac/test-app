@@ -14,7 +14,10 @@ export function PortalNavigation({ role }: { role: PortalRole }) {
       <SidebarMenu className="gap-1.5">
         {portalNavItems
           .filter(
-            (item) => role === 'employer' || (item.id !== 'verification' && item.id !== 'jobs'),
+            (item) =>
+              role === 'employer'
+                ? item.id !== 'applications'
+                : item.id !== 'verification' && item.id !== 'jobs',
           )
           .map(({ id, label, icon: Icon }) => {
             const href = id === 'dashboard' ? `/${role}` : `/${role}/${id}`;

@@ -54,6 +54,7 @@
       "notDisclosed": "Not disclosed",
       "category": "Category",
       "signInToApply": "Sign in to apply",
+      "jobSeekerAccountRequired": "A job seeker account is required to apply.",
       "employmentTypes": {
         "FULL_TIME": "Full time",
         "PART_TIME": "Part time",
@@ -89,6 +90,91 @@
       }
     }
   },
+  "Applications": {
+    "apply": {
+      "coverMessage": "Message to the employer",
+      "coverMessagePlaceholder": "Briefly introduce yourself and explain why you are a good fit.",
+      "coverMessageOptional": "Optional · up to 2,000 characters",
+      "apply": "Submit application",
+      "submitting": "Submitting...",
+      "success": "Your application was submitted.",
+      "signInRequired": "Sign in as a job seeker to apply.",
+      "jobSeekerOnly": "Only job seeker accounts can apply.",
+      "profileIncomplete": "Complete your job seeker profile before applying.",
+      "completeProfile": "Complete profile",
+      "alreadyAppliedOrUnavailable": "You may already have applied, or this job is no longer accepting applications.",
+      "requestFailed": "The application could not be submitted. Please try again."
+    },
+    "seeker": {
+      "title": "My applications",
+      "description": "Track application progress and review employer updates.",
+      "empty": "You have not applied to any jobs yet.",
+      "browseJobs": "Browse jobs",
+      "verifiedEmployer": "Verified employer",
+      "appliedAt": "Applied on {date}",
+      "withdraw": "Withdraw application",
+      "withdrawing": "Withdrawing...",
+      "withdrawNotAllowed": "This application can no longer be withdrawn.",
+      "requestFailed": "The request could not be completed. Please try again.",
+      "page": "Page {page} of {totalPages}",
+      "previous": "Previous",
+      "next": "Next",
+      "statuses": {
+        "APPLIED": "Applied",
+        "REVIEWING": "Under review",
+        "SHORTLISTED": "Shortlisted",
+        "CONTACTED": "Contacted",
+        "REJECTED": "Not selected",
+        "HIRED": "Hired",
+        "WITHDRAWN": "Withdrawn"
+      }
+    },
+    "employer": {
+      "title": "Job applicants",
+      "description": "Review applicants and update each application status.",
+      "backToJob": "Back to job",
+      "empty": "No one has applied to this job yet.",
+      "jobSeeker": "Job seeker",
+      "locationUnspecified": "Location not specified",
+      "experience": "Experience",
+      "contact": "Contact",
+      "contactPrivate": "Contact details are private",
+      "skills": "Skills",
+      "notProvided": "Not provided",
+      "experienceSummary": "Experience summary",
+      "coverMessage": "Message",
+      "transitionConflict": "That status change is not allowed. Refresh the page and try again.",
+      "requestFailed": "The status could not be updated. Please try again.",
+      "page": "Page {page} of {totalPages}",
+      "previous": "Previous",
+      "next": "Next",
+      "statuses": {
+        "APPLIED": "Applied",
+        "REVIEWING": "Under review",
+        "SHORTLISTED": "Shortlisted",
+        "CONTACTED": "Contacted",
+        "REJECTED": "Not selected",
+        "HIRED": "Hired",
+        "WITHDRAWN": "Withdrawn"
+      },
+      "actions": {
+        "REVIEWING": "Mark reviewing",
+        "SHORTLISTED": "Shortlist",
+        "CONTACTED": "Mark contacted",
+        "REJECTED": "Reject",
+        "HIRED": "Mark hired"
+      },
+      "experienceLevels": {
+        "NO_EXPERIENCE": "No experience",
+        "ENTRY_LEVEL": "Entry level",
+        "LESS_THAN_1_YEAR": "Less than 1 year",
+        "ONE_TO_THREE_YEARS": "1–3 years",
+        "THREE_TO_FIVE_YEARS": "3–5 years",
+        "FIVE_TO_TEN_YEARS": "5–10 years",
+        "TEN_PLUS_YEARS": "10+ years"
+      }
+    }
+  },
   "Portal": {
     "workspaceEmployer": "Employer workspace",
     "workspaceSeeker": "Job seeker workspace",
@@ -100,6 +186,7 @@
     "legacyLocation": "Your saved location is not in the catalogue. It has been preserved; select a listed state and city to update it.",
     "noCities": "No cities are available for this state.",
     "jobs": "My jobs",
+    "applications": "Application history",
     "jobsPage": {
       "title": "My jobs",
       "listTitle": "Job listings",
@@ -144,6 +231,7 @@
       "readOnly": "Only draft or paused jobs can be edited.",
       "back": "Back to jobs",
       "view": "View job",
+      "applications": "View applicants",
       "empty": "You have not created any jobs yet.",
       "loading": "Loading jobs...",
       "page": "Page {page} · {total} jobs",

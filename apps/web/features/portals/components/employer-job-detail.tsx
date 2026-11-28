@@ -136,6 +136,15 @@ export function EmployerJobDetail({
           {t('readOnly')}
         </p>
       )}
+      <Link
+        href={`/employer/jobs/${job.id}/applications`}
+        className={buttonVariants({
+          variant: 'outline',
+          className: 'h-10 rounded-xl border-auth-border bg-auth-surface',
+        })}
+      >
+        {t('applications')}
+      </Link>
       {job.moderationNote && (
         <div className="rounded-xl border border-auth-border bg-auth-surface p-4 text-sm">
           <strong>{t('moderationNote')}</strong>

@@ -2,8 +2,17 @@ import Link from 'next/link';
 import type { PublicJob } from '@repo/contracts';
 import { ArrowLeft, BriefcaseBusiness, MapPin } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+import { ApplyToJob } from './apply-to-job';
 
-export async function PublicJobDetail({ job }: { job: PublicJob }) {
+export async function PublicJobDetail({
+  job,
+  isJobSeeker,
+  isSignedIn,
+}: {
+  job: PublicJob;
+  isJobSeeker: boolean;
+  isSignedIn: boolean;
+}) {
   const t = await getTranslations('PublicJobs.detail');
   return (
     <main className="container mx-auto flex-1 px-4 py-10 sm:px-6 lg:px-8">
@@ -52,12 +61,20 @@ export async function PublicJobDetail({ job }: { job: PublicJob }) {
             />
             {job.category && <Detail label={t('category')} value={job.category.name} />}
           </dl>
-          <Link
-            href="/login"
-            className="mt-6 flex min-h-11 items-center justify-center rounded-full bg-auth-primary px-5 text-sm font-semibold text-auth-primary-foreground"
-          >
-            {t('signInToApply')}
-          </Link>
+          {isJobSeeker ? (
+            <ApplyToJob jobId={job.id} />
+          ) : isSignedIn ? (
+            <p className="mt-6 rounded-xl border border-auth-border p-3 text-center text-sm text-auth-muted">
+              {t('jobSeekerAccountRequired')}
+            </p>
+          ) : (
+            <Link
+              href="/login"
+              className="mt-6 flex min-h-11 items-center justify-center rounded-full bg-auth-primary px-5 text-sm font-semibold text-auth-primary-foreground"
+            >
+              {t('signInToApply')}
+            </Link>
+          )}
         </aside>
       </article>
     </main>

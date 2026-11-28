@@ -6,9 +6,10 @@ import { JobSeekerProfileController } from '@/modules/job-seeker/job-seeker-prof
 import { JobSeekerProfileRepository } from '@/modules/job-seeker/repositories/job-seeker-profile.repository.js';
 import { PrismaJobSeekerProfileRepository } from '@/modules/job-seeker/repositories/prisma-job-seeker-profile.repository.js';
 import { JobSeekerProfileService } from '@/modules/job-seeker/services/job-seeker-profile.service.js';
+import { ApplicationsModule } from '@/modules/applications/applications.module.js';
 
 @Module({
-  imports: [DatabaseModule, AuthModule],
+  imports: [DatabaseModule, AuthModule, ApplicationsModule],
   controllers: [JobSeekerProfileController],
   providers: [
     JobSeekerAuthGuard,
