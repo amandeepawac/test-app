@@ -159,6 +159,6 @@ jobs, applications, or verification documents are created. Confirm
 The current `db:test` script writes a demo user and should only be used with a
 disposable development database.
 
-See the [PRD](docs/RozgarLocal-PRD.md) and
+See the [revised PRD](docs/RozgarLocal-PRD-Revised.md) and
 [database reference](docs/database/tables/README.md) for the intended product
 and data model.

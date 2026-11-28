@@ -597,7 +597,7 @@ Keep package scripts consistent (`lint`, `check-types`, `test`, `build`) whereve
 ```text
 docs/
 ├── product/
-│   └── RozgarLocal-PRD.md
+│   └── RozgarLocal-PRD-Revised.md
 ├── architecture/
 │   ├── repository-structure.md         # This document
 │   ├── architecture-overview.md

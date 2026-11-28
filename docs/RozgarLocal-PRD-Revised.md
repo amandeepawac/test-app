@@ -7,16 +7,17 @@
 | Product          | RozgarLocal                                                                          |
 | Version          | 2.0 revised baseline                                                                 |
 | Prepared         | 27 November 2026                                                                     |
+| Status updated   | 28 November 2026                                                                     |
 | Market           | Punjab, India                                                                        |
 | Languages        | Punjabi, Hindi, English                                                              |
 | Status           | Product baseline for review; implementation and launch validation remain in progress |
-| Sources compared | `docs/RozgarLocal-PRD.md` and `RozgarLocal_Solution_Architecture_and_Design.docx`    |
+| Sources compared | Previous PRD (available in Git history) and `RozgarLocal_Solution_Architecture_and_Design.docx` |
 
 ## 1. Executive summary
 
 RozgarLocal addresses a local hiring problem: job seekers often cannot find trustworthy nearby vacancies, while small employers rely on word of mouth and fragmented channels to reach suitable workers. The MVP must prove a complete, safe hiring loop in a defined Punjab pilot: an employer creates a business profile, passes verification, publishes a vacancy, a job seeker discovers and applies to it, and the employer can review and update the application while both sides receive clear status feedback.
 
-The repository already contains a substantial foundation: email/password and Google authentication flows, role-specific profile onboarding, employer job draft and publish controls, admin review surfaces, and multilingual internal workspaces. These code slices do not yet form an end-to-end marketplace. Public job discovery, applications, saved jobs, evidence submission, report intake, and user-facing application notifications are still missing or unvalidated. A database model, screen, or API for one slice is not counted as a completed user journey.
+The repository contains authentication, role-specific profiles, employer verification evidence intake, public job discovery, and application and employer-review code. Saved jobs have API and contract code but no user interface. These slices have not yet been validated as an end-to-end marketplace; report intake and a user-facing notification inbox are still missing. A database model, screen, or API for one slice is not counted as a completed user journey.
 
 This revised PRD keeps the MVP deliberately focused. It retains the current single-role account behavior, email/password plus Google authentication, and the state/city profile location flow. It makes the architecture's alternative proposals explicit, identifies which are deferred, and prioritizes the missing transaction flows that directly solve the local hiring problem.
 
@@ -90,6 +91,7 @@ Reviews business evidence, moderates jobs, handles submitted reports, applies au
 - Role-specific profiles remain separate from account identity. Authorization and resource ownership are enforced by the API on every protected operation.
 - Google sign-in uses an existing account's role. Email matching alone must never link identities. Google linking to an existing account requires an authenticated, explicit linking flow and verified identity ownership.
 - A verified user must complete the minimum profile for the selected role before using role-specific marketplace actions. Incomplete users can resume onboarding and use the authentication/session actions needed to do so.
+- Current saved-jobs API code allows an incomplete or absent seeker profile and creates a profile when saving. This differs from the profile-completion requirement above and needs a product decision and alignment before the journey is accepted.
 - An employer profile being complete does not mean that the employer is verified or may publish jobs.
 
 ## 5. Reconciliation of the architecture and the previous PRD
@@ -103,17 +105,17 @@ The architecture is a conceptual proposal, not proof of deployed or implemented 
 | Sign-in              | Email/password and Google are the selected providers; email verification is implemented.                                    | Lists phone/email registration and OTP/password reset as alternatives; recommends confirming provider.      | Retain email/password and Google. Treat phone OTP as future work, not an MVP dependency. Email verification is distinct from business verification.                                           | Clarified                              |
 | Location             | Current profile selectors use state and city. District is not required in the current profile flow.                         | Recommends state, district, locality, PIN code, and optional coordinates for search.                        | Keep state/city for minimum profiles. Include district/PIN as potential job discovery filters when canonical data and product need are validated; defer radius search.                        | Updated scope                          |
 | Application method   | Previous PRD prioritizes in-platform applications.                                                                          | Mentions contact or apply and asks whether both are needed.                                                 | Use structured in-platform applications as the primary MVP path so status can be tracked. Direct contact or chat is not a substitute for application records.                                 | Decision recorded                      |
-| Verification         | Review UI/API exists; evidence intake and secure delivery are pending.                                                      | Recommends private object storage, signed access, separate verification workflow, and admin decision audit. | Preserve verification as a separate employer process. Require private evidence, authorized review, reasoned rejection, and resubmission before considering the flow complete.                 | Updated and pending                    |
+| Verification         | Review and evidence-intake code exists; secure reviewer file delivery remains pending.                                     | Recommends private object storage, signed access, separate verification workflow, and admin decision audit. | Preserve verification as a separate employer process. Require private evidence, authorized review, reasoned rejection, and resubmission before considering the flow complete.                 | Partial; validation pending            |
 | Job publication      | The intended policy is verified employers publish without prior job approval; admins may hide/remove content.               | Leaves publication policy open and suggests a policy decision.                                              | Use the already specified verified-employer gate and post-publication moderation. Admin may hide, remove, and restore only according to explicit transitions.                                 | Decision recorded                      |
 | Backend architecture | Modular monolith with Next.js, NestJS, PostgreSQL, Prisma, shared contracts.                                                | Same recommendation, plus explicit integration boundaries and optional worker/object storage.               | Keep the modular monolith. Keep web-to-API access; web must not connect directly to PostgreSQL. Add a worker only when reliable async delivery requires one.                                  | Aligned                                |
 | PWA                  | A launch goal, but no complete PWA implementation is present.                                                               | Recommends installability and safe static/read-only offline caching.                                        | Treat installability and offline states as launch requirements only after core online journeys work; never queue applications offline.                                                        | Pending                                |
 | API versioning       | Current routes are not prefixed with `/api/v1`; target route proposal was clearly marked as a proposal.                     | Recommends a consistent versioned REST prefix and OpenAPI.                                                  | Do not describe `/api/v1` as implemented. Decide migration/versioning policy before committing clients to a new public API contract; publish Swagger before integration is declared complete. | Pending decision                       |
-| Notifications        | Authentication email delivery and some admin notification records exist; user inbox and application events are pending.     | Recommends in-app first, with email/SMS/push where justified.                                               | Complete in-app application notifications and essential email delivery with safe retry handling. SMS, push, and WhatsApp remain future options.                                               | Updated                                |
+| Notifications        | Authentication email and admin/application notification records exist; user inbox and reliable delivery are pending.       | Recommends in-app first, with email/SMS/push where justified.                                               | Complete in-app application notifications and essential email delivery with safe retry handling. SMS, push, and WhatsApp remain future options.                                               | Partial; validation pending            |
 | Data and deployment  | Prisma schema and migrations exist; target database/seed validation and production operations remain pending.               | Adds private file storage, CI/CD, monitoring, backups, restore, and recovery expectations.                  | Treat schema models as design support only. Validate a clean database, seed, deployment pipeline, backups, monitoring, and restore before pilot.                                              | Expanded launch gate                   |
 
 ## 6. Functional requirements
 
-Priority definitions: **P0** is required for the controlled MVP pilot; **P1** follows once the core loop is stable; **P2** is a future enhancement. Status labels describe repository evidence as of 27 November 2026: **Implemented in code**, **Partial**, **Pending**, or **Decision required**. “Implemented in code” does not mean production validated.
+Priority definitions: **P0** is required for the controlled MVP pilot; **P1** follows once the core loop is stable; **P2** is a future enhancement. Status labels describe repository evidence as of 28 November 2026: **Implemented in code**, **Partial**, **Pending**, or **Decision required**. “Implemented in code” does not mean production validated.
 
 ### 6.1 Authentication and account security
 
@@ -138,9 +140,9 @@ Priority definitions: **P0** is required for the controlled MVP pilot; **P1** fo
 | SEEK-03 | Profile supports experience summary, up to 50 skills, and contact visibility settings.           | P0       | Implemented in code; skill seed run still needs confirmation   |
 | SEEK-04 | State and city selection use searchable controls; changing state clears the selected city.       | P0       | Implemented in code                                            |
 | SEEK-05 | Optional education, profile image, and detailed address can be added.                            | P1       | Pending; secure image storage policy required                  |
-| SEEK-06 | A job seeker can browse jobs without registering; authentication is required to apply.           | P0       | Public browse flow pending                                     |
-| SEEK-07 | A job seeker can view application history and status, and withdraw where allowed.                | P0       | Pending with application APIs                                  |
-| SEEK-08 | A job seeker can save and remove saved jobs.                                                     | P0       | Pending                                                        |
+| SEEK-06 | A job seeker can browse jobs without registering; authentication is required to apply.           | P0       | API and UI code present; browser validation pending            |
+| SEEK-07 | A job seeker can view application history and status, and withdraw where allowed.                | P0       | API and UI code present; withdrawal policy and tests pending   |
+| SEEK-08 | A job seeker can save and remove saved jobs.                                                     | P0       | API and contracts present; UI and journey validation pending   |
 
 Contact privacy requirements:
 
@@ -155,19 +157,19 @@ Contact privacy requirements:
 | ------ | ----------------------------------------------------------------------------------------------------------------------- | -------- | -------------------------------------------------------------------------- |
 | EMP-01 | An employer can save and complete a profile with business name, employer type, contact person, phone, state, and city.  | P0       | Implemented in code                                                        |
 | EMP-02 | Profile completion does not imply verification.                                                                         | P0       | Implemented in code; enforce on future marketplace APIs                    |
-| EMP-03 | An employer can upload evidence privately, submit it, replace rejected evidence, and resubmit.                          | P0       | Pending                                                                    |
-| EMP-04 | Authorized admins can access submitted documents securely and approve, reject, or request more information with reason. | P0       | Review API/UI exists; evidence intake and secure delivery pending          |
+| EMP-03 | An employer can upload evidence privately, submit it, replace rejected evidence, and resubmit.                          | P0       | Intake and submission code present; storage and journey validation pending  |
+| EMP-04 | Authorized admins can access submitted documents securely and approve, reject, or request more information with reason. | P0       | Review code exists; secure reviewer file delivery remains pending          |
 | EMP-05 | Employer can view current verification status and reviewer feedback.                                                    | P0       | Status view implemented in code                                            |
 | EMP-06 | Only verified employers may publish jobs; unverified employers may create drafts.                                       | P0       | Job draft/publish API code exists; database and journey validation pending |
 | EMP-07 | Business name, employer type, and verification evidence changes trigger a re-review policy.                             | P1       | Sensitive changes are currently restricted; full re-review flow pending    |
-| EMP-08 | Employer email/phone are shown publicly only when their individual visibility controls permit it.                       | P0       | Settings UI/API code exists; marketplace response enforcement pending      |
+| EMP-08 | Employer email/phone are shown publicly only when their individual visibility controls permit it.                       | P0       | Visibility enforced in public API code; privacy validation pending          |
 
 Verification evidence and privacy rules:
 
 - Employers may submit a relevant document; no single document type is mandatory. Admin reviewers assess readability, relevance, identity match where applicable, and expiry.
 - If Aadhaar is considered, accept only a masked copy after legal/privacy review. Do not collect or retain a full Aadhaar number. Define safe handling for accidental unmasked uploads before accepting files.
 - Use private storage, server-side authorization, limited reviewer access, and short-lived authorized delivery. Do not expose storage keys or permanent public URLs.
-- Cloudinary is the selected intended provider in the existing PRD, but account setup, credentials, private delivery configuration, and implementation are pending.
+- Cloudinary private evidence upload and deletion code exists; account setup, credentials, secure reviewer delivery, and provider security validation remain pending.
 - Rejection requires a reason. Employers must replace evidence and resubmit before a new review.
 
 ### 6.4 Job creation, publication, and moderation
@@ -179,10 +181,10 @@ Verification evidence and privacy rules:
 | JOB-03 | Only verified employers can publish.                                                                                                                        | P0       | Gate exists in code; end-to-end validation pending                                  |
 | JOB-04 | Employer can publish and pause its own eligible job; ownership is checked by API.                                                                           | P0       | API/UI code implemented; integration validation pending                             |
 | JOB-05 | Employer can close, mark filled, and manage expired jobs using explicit legal transitions.                                                                  | P0       | Pending                                                                             |
-| JOB-06 | Public visitors can search active published jobs by keyword and available filters, sort, and paginate.                                                      | P0       | Pending; no public marketplace API/page currently completes this flow               |
-| JOB-07 | Job detail shows employer trust status, location, salary if supplied, requirements, and application action.                                                 | P0       | Pending                                                                             |
+| JOB-06 | Public visitors can search active published jobs by keyword and available filters, sort, and paginate.                                                      | P0       | API/UI code present; pagination drops filters and browser validation is pending     |
+| JOB-07 | Job detail shows employer trust status, location, salary if supplied, requirements, and application action.                                                 | P0       | Detail and apply UI code present; completeness and journey validation pending      |
 | JOB-08 | Admin can hide/remove problematic jobs and restore hidden jobs with auditable reasons.                                                                      | P0       | Admin moderation review code exists; marketplace integration and validation pending |
-| JOB-09 | Draft, paused, rejected, hidden, removed, filled, and expired jobs do not appear as active public vacancies.                                                | P0       | Pending with public discovery and transition implementation                         |
+| JOB-09 | Draft, paused, rejected, hidden, removed, filled, and expired jobs do not appear as active public vacancies.                                                | P0       | Public API eligibility filters present; lifecycle and integration validation pending |
 
 Verified employers publish without prior job approval. Admin moderation is a separate post-publication control and must support the agreed hide, remove, and restore transitions. Public listing and job detail APIs must enforce eligibility on the server.
 
@@ -199,17 +201,19 @@ Verified employers publish without prior job approval. Admin moderation is a sep
 
 | ID     | Requirement                                                                              | Priority | Current status                                  |
 | ------ | ---------------------------------------------------------------------------------------- | -------- | ----------------------------------------------- |
-| APP-01 | An authenticated job seeker with a complete profile can apply to an eligible active job. | P0       | Pending                                         |
-| APP-02 | The system prevents duplicate applications per job and seeker.                           | P0       | Schema support exists; API behavior pending     |
-| APP-03 | Application creation and initial status history are atomic.                              | P0       | Pending                                         |
-| APP-04 | Job seeker can view application history and current status.                              | P0       | Pending                                         |
-| APP-05 | Employer can view applicants only for its own jobs.                                      | P0       | Pending                                         |
-| APP-06 | Employer can update application status through allowed server-side transitions.          | P0       | Pending                                         |
-| APP-07 | Status history records actor, old status, new status, and timestamp.                     | P0       | Schema support exists; behavior pending         |
-| APP-08 | Job seeker can withdraw only when the current application state allows it.               | P0       | Pending; allowed states need final confirmation |
-| APP-09 | Application and status events create relevant notifications.                             | P0       | Pending                                         |
+| APP-01 | An authenticated job seeker with a complete profile can apply to an eligible active job. | P0       | API/UI code present; end-to-end validation pending |
+| APP-02 | The system prevents duplicate applications per job and seeker.                           | P0       | Unique constraint and API conflict handling present; tests pending |
+| APP-03 | Application creation and initial status history are atomic.                              | P0       | Transaction code and test source present; execution pending |
+| APP-04 | Job seeker can view application history and current status.                              | P0       | API/UI code present; validation pending |
+| APP-05 | Employer can view applicants only for its own jobs.                                      | P0       | Ownership checks and UI code present; privacy tests pending |
+| APP-06 | Employer can update application status through allowed server-side transitions.          | P0       | API/UI code present; transition matrix needs product confirmation |
+| APP-07 | Status history records actor, old status, new status, and timestamp.                     | P0       | Persistence code present; integration validation pending |
+| APP-08 | Job seeker can withdraw only when the current application state allows it.               | P0       | APPLIED-only code present; allowed states need confirmation |
+| APP-09 | Application and status events create relevant notifications.                             | P0       | Notification records created; inbox and reliable delivery pending |
 
 Initial status set: `APPLIED`, `REVIEWING`, `SHORTLISTED`, `CONTACTED`, `REJECTED`, `HIRED`, and `WITHDRAWN`. `WITHDRAWN` is terminal: a seeker cannot apply again to the same job after withdrawing. The API must reject another application for that job/seeker pair, and the unique application record remains in place. Do not add a separate `VIEWED` state unless product explicitly enables and explains view tracking. One application record per seeker/job is the rule.
+
+The current implementation permits withdrawal only from `APPLIED` and uses a forward-only employer transition matrix. These are implementation assumptions, not confirmed product policy.
 
 ### 6.7 Reports, moderation, and audit
 
@@ -224,6 +228,7 @@ Initial status set: `APPLIED`, `REVIEWING`, `SHORTLISTED`, `CONTACTED`, `REJECTE
 - Authentication verification and password reset emails are part of the current auth slice.
 - P0 marketplace notifications: employer receives new application notice; job seeker receives application status updates; users can view an in-app inbox and mark items read.
 - Notification delivery should not make a successful application mutation appear to fail. Record delivery state, retry transient errors safely, and expose operational failures to monitoring.
+- Application notification records are currently created in the same transaction as the application mutation; a record-creation failure rolls back the mutation. Delivery independence, inbox/read state, retries, and operational monitoring remain pending.
 - Email can supplement in-app delivery for critical events. Exact provider/queue remains subject to deployment and reliability decisions.
 - Push, SMS, and WhatsApp are future options, not MVP dependencies.
 
@@ -241,6 +246,7 @@ Initial status set: `APPLIED`, `REVIEWING`, `SHORTLISTED`, `CONTACTED`, `REJECTE
 ## 7. UX, accessibility, and localization
 
 - Mobile-first responsive layouts across public, seeker, employer, and admin pages.
+- Use the available content width for internal workspaces; use the shared `FormCombobox` instead of `FormSelect` in React Hook Form forms.
 - Visible labels, keyboard access, clear focus, semantic markup, touch-sized controls, useful validation, and status meaning that does not rely on color alone.
 - Every data-driven screen has loading, empty, failure, success, and retry behavior as relevant.
 - Use English, Hindi, and Punjabi translation resources. Review translations with fluent speakers before launch, especially safety, wages, privacy, and verification copy.
@@ -288,23 +294,26 @@ The PWA is a product target, not a current implementation claim. Before the pilo
 
 ## 10. Current implementation status
 
-Status reviewed against repository code on 27 November 2026. This is a code review snapshot, not a production-readiness assertion.
+Status updated against repository code on 28 November 2026. This is a code review snapshot, not a production-readiness assertion. The recent application and saved-jobs changes have not been built, type-checked, or tested in this environment.
 
 | Capability              | Current implementation                                                                                                                                      | Remaining work / qualification                                                                                                                                                      |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Engineering foundation  | Turborepo, Next.js web, NestJS API, shared contracts, Prisma schema/migrations, env validation, API health endpoint.                                        | Clean environment, CI/deployment pipeline, target DB migration/seed validation, monitoring, backups, production setup.                                                              |
 | Authentication          | Email/password register/login, email verification, password recovery, refresh/logout, Google OAuth flow and provider linking code.                          | Google credentials/environment and full deployment validation; resend-verification endpoint; end-to-end/security review.                                                            |
 | Role policy             | Registration and current account model support one fixed role.                                                                                              | Keep aligned across future APIs; multi-role architecture option is deferred.                                                                                                        |
-| Job seeker profile      | Draft save/completion, state/city comboboxes, paginated searchable skills, contact settings, workspace overview, loading/error UX.                          | Confirm master data seeded; optional education/image; public search, saved jobs, applications, history, withdrawal.                                                                 |
-| Employer profile        | Draft save/completion, contact settings, verification status/feedback, employer job list and draft editor.                                                  | Evidence intake/resubmission, secure reviewer file access, full re-review flow.                                                                                                     |
-| Employer job management | Draft/create/edit, publish and pause API/UI code, verified-employer publication gate.                                                                       | Confirm persistence against target DB; remaining lifecycle; category/skill fields; complete browser journey; public discovery APIs/pages.                                           |
-| Admin                   | Dashboard, employer verification review, job moderation, report review, audit log APIs and UI.                                                              | Report submission intake; evidence storage integration; marketplace integration; production authorization and workflow validation.                                                  |
+| Job seeker profile      | Draft save/completion, state/city comboboxes, paginated searchable skills, contact settings, workspace overview, loading/error UX.                          | Confirm master data seeded; optional education/image; verify completion gates and marketplace journeys.                                                                            |
+| Employer profile        | Draft save/completion, contact settings, verification status/feedback, and evidence upload/submission code.                                                | Configure and validate private storage; secure reviewer file access; full re-review flow and end-to-end testing.                                                                   |
+| Employer job management | Draft/create/edit, publish and pause API/UI code, verified-employer publication gate.                                                                       | Confirm persistence against target DB; remaining lifecycle; category/skill fields; complete browser journey.                                                                        |
+| Public discovery        | Public active-job listing, category, detail and filter API/UI code; employer contact visibility enforced by API.                                            | Preserve filters during pagination; validate details, error/retry states, privacy, accessibility and browser journeys.                                                              |
+| Applications            | Seeker apply/history/withdraw and employer applicant/status API/UI code; initial history, ownership checks and notification records.                         | Confirm transition/withdrawal policy; run API and browser tests, including duplicate prevention and contact privacy.                                                               |
+| Saved jobs              | Authenticated save, list, saved-state and unsave API and contracts; unavailable saved jobs return no job details.                                          | Build public save controls and seeker saved-jobs UI; resolve profile-completion mismatch; validate API and browser journeys.                                                       |
+| Admin                   | Dashboard, employer verification review, job moderation, report review, audit log APIs and UI.                                                              | Report submission intake; secure evidence delivery; production authorization and workflow validation.                                                                              |
 | Account deletion        | Schema supports `DELETION_PENDING`/`DELETED`, `deletedAt`/`anonymizedAt`, and a tracked deletion-request lifecycle.                                         | Deletion request API/UI and worker, session and credential cleanup, profile anonymization, retained-history behavior, per-category retention schedule, and backup purge validation. |
 | Categories and skills   | Expanded seed files and idempotent seed logic; skills lookup API/UI.                                                                                        | Prior seed command failed while deserializing a `void` advisory-lock result. Query was changed to return text, but successful seed against the intended DB is unconfirmed.          |
-| Notifications           | Authentication mail and some admin decision notification records.                                                                                           | In-app inbox/read state, application events, reliable retry/delivery operations.                                                                                                    |
-| Localization and UI     | English, Hindi, Punjabi resources; responsive workspaces; collapsible sidebars; combobox forms; toast feedback; improved admin mobile tables and skills UX. | Translation and accessibility audit across completed and future flows; account-synced locale is optional future scope.                                                              |
+| Notifications           | Authentication mail, admin decision records, and application submission/status notification records.                                                      | In-app inbox/read state, delivery independence, reliable retry/delivery operations, and localized notification content.                                                             |
+| Localization and UI     | English, Hindi, Punjabi resources for discovery and application interfaces; responsive workspaces and shared form controls.                                | Translate remaining hardcoded verification and notification text; audit language quality, accessibility, and mobile layouts; saved-jobs UI pending.                               |
 | PWA                     | No installable/offline completion confirmed.                                                                                                                | Manifest, service worker, safe caching, offline indicator, install validation.                                                                                                      |
-| Marketplace loop        | No complete public discovery-to-application-to-employer-review path.                                                                                        | P0 launch blocker: implement and validate the complete loop before a public pilot.                                                                                                  |
+| Marketplace loop        | Public discovery, application and employer-review code is present.                                                                                          | P0 launch blocker: complete saved-jobs UI and validate the full loop in a deployment-like environment.                                                                              |
 | Launch readiness        | Automated tests exist in repository.                                                                                                                        | Execute critical API/E2E checks against configured services; security/privacy review, deployment, restore test, support/moderation readiness, Punjab pilot.                         |
 
 Prisma models for jobs, applications, saved jobs, notifications, reports, and other entities do not prove that their user-facing journeys are available. Similarly, an admin review screen does not prove that users can submit the item being reviewed.
@@ -353,6 +362,8 @@ No implemented feature was deleted from the repository by this PRD. “Removed�
 - Employer job draft management and publish/pause UI/API code with verification gating.
 - Admin dashboard and review surfaces for verification, jobs, reports, and audit records.
 - Responsive workspaces, collapsible icon sidebars, shared form controls, success toasts, and translated interfaces.
+- Employer evidence upload/submission code and private-storage integration; public discovery and application/review API and UI code.
+- Saved-jobs API and contracts only; the user-facing saved-jobs journey is not yet implemented.
 
 Completion is limited to the code slices listed. Target database validation, external provider configuration, and end-to-end journeys remain pending where stated in Section 10.
 
@@ -364,6 +375,8 @@ Completion is limited to the code slices listed. Target database validation, ext
 | Private file delivery                    | Permanent public document URLs could expose evidence.                                                         | Validate Cloudinary private storage and authorized/temporary reviewer access before accepting uploads.                           |
 | Job moderation policy                    | Abuse controls must be predictable for employers and seekers.                                                 | Define prohibited content, response targets, hide/remove/restore transitions, and appeal handling.                               |
 | Application withdrawal rules             | Withdrawal must not erase application history or allow a second application to the same job.                  | Reapplication after withdrawal is not allowed. Confirm which pre-withdrawal statuses may be withdrawn.                           |
+| Application status transitions           | The implementation currently assumes a forward-only employer transition matrix.                             | Confirm allowed transitions and terminal states before pilot.                                                                    |
+| Saved-job profile requirement             | The saved-jobs API allows incomplete profiles, unlike the role-action policy in Section 4.4.                   | Confirm whether saving is an exception or enforce profile completion consistently.                                                |
 | Account deletion retention periods       | The deletion behavior is defined, but exact retention periods depend on legal duties and documented purposes. | Approve a per-data-category schedule, legal exceptions/holds, and backup expiry with privacy counsel before launch.              |
 | API versioning                           | Existing routes do not use the proposed prefix.                                                               | Decide versioning before external clients or long-lived integrations are published.                                              |
 | Location source                          | Search quality depends on complete canonical data.                                                            | Confirm state/city coverage now; assess district/PIN source and update cadence before expanding.                                 |
@@ -385,29 +398,26 @@ The sequence below prioritizes the actual product problem. Complete each stage a
 
 ### Stage 1: Finish employer verification intake
 
-- Configure private evidence storage and authorized temporary review access.
-- Implement upload, submission, replacement, and resubmission.
-- Connect employer submissions to the existing admin queue and decision APIs.
-- Validate approval/rejection feedback, audit records, and publication gating through browser and API journeys.
+- Evidence upload/submission and private-storage integration are present in code; configure and validate the provider.
+- Complete secure authorized reviewer file access and validate replacement/resubmission.
+- Validate the admin queue, approval/rejection feedback, audit records, and publication gating through browser and API journeys.
 
 ### Stage 2: Build public job discovery
 
 - Complete job categories/skills and remaining job lifecycle operations.
-- Implement public active-job listing, job detail, keyword/location/category/type/salary filters, sorting, and pagination.
-- Ensure draft, paused, hidden, rejected, removed, filled, and expired jobs are not shown as active.
-- Validate visitor browsing and employer-owned job management.
+- Public active-job listing, detail and filter API/UI code is present; preserve filters when paging and complete error/retry states.
+- Validate eligibility filtering, visitor browsing and employer-owned job management.
 
 ### Stage 3: Build applications and saved jobs
 
-- Implement application creation, duplicate prevention, and atomic initial history.
-- Implement seeker history/withdrawal and employer applicant listing/status updates with ownership checks.
-- Implement save/list/unsave.
-- Add end-to-end tests for the core hiring loop and contact privacy.
+- Application, history, withdrawal and employer review code is present; confirm the transition and withdrawal rules.
+- Saved-job save/list/state/unsave API and contracts are present; implement the public and seeker UI and resolve the profile-completion policy mismatch.
+- Run focused API tests and add/run end-to-end tests for the core hiring loop and contact privacy.
 
 ### Stage 4: Complete reporting and user notifications
 
 - Implement user report submission and connect it to admin review.
-- Implement notification inbox/read state and application event generation.
+- Application notification records are generated; implement notification inbox/read state and delivery independence.
 - Add safe retries and delivery observability for critical email/in-app work.
 
 ### Stage 5: Prepare and run the Punjab pilot
@@ -470,6 +480,6 @@ Consider these after the core marketplace loop is stable and pilot data supports
 ## 17. Source and status notes
 
 - The high-level architecture is an initial conceptual proposal dated 27 November 2026 and marked for review and requirements validation. Its technology and workflow tables are inputs to this PRD, not proof of current implementation.
-- The previous PRD is retained unchanged as the historical baseline. This revised file is the reconciled product baseline; supersede the previous document only after product-owner review.
-- Repository status was checked on 27 November 2026. Code presence does not establish successful deployment, database execution, or end-to-end product readiness.
+- This revised PRD is the product baseline. The previous PRD remains available in Git history as a historical reference.
+- Repository implementation status was updated on 28 November 2026. Code presence does not establish successful deployment, database execution, or end-to-end product readiness.
 - Do not treat illustrative routes, proposed metrics, future enhancements, or architecture diagrams as approved production behavior unless this PRD or a later decision record confirms them.
