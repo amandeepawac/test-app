@@ -189,7 +189,15 @@ export class PrismaEmployerProfileRepository implements EmployerProfileRepositor
     });
     if (!profile) throw new EmployerProfileNotFoundError();
     if (!profile.completedAt) throw new EmployerProfileIncompleteError();
-    if (!['NOT_SUBMITTED', 'REJECTED', 'NEEDS_MORE_INFO', 'PENDING'].includes(profile.verificationStatus)) {
+    if (
+      ![
+        'NOT_SUBMITTED',
+        'REJECTED',
+        'NEEDS_MORE_INFO',
+        'PENDING',
+        'UNDER_REVIEW',
+      ].includes(profile.verificationStatus)
+    ) {
       throw new EmployerVerificationDocumentConflictError(
         'Documents cannot be changed while verification is in this state',
       );
@@ -298,22 +306,32 @@ export class PrismaEmployerProfileRepository implements EmployerProfileRepositor
       select: { id: true, verificationStatus: true },
     });
     if (!profile) throw new EmployerProfileNotFoundError();
-    if (!['REJECTED', 'NEEDS_MORE_INFO'].includes(profile.verificationStatus)) {
+    if (['VERIFIED', 'SUSPENDED'].includes(profile.verificationStatus)) {
       throw new EmployerVerificationDocumentConflictError(
-        'Rejected documents can only be replaced after a review decision',
+        'Documents cannot be changed after verification is complete or suspended',
       );
     }
     const document = await this.prisma.client.employerDocument.findFirst({
       where: { id: documentId, employerId: profile.id },
-      select: { id: true, storageKey: true, mimeType: true, reviewStatus: true },
+      select: { id: true, storageKey: true, mimeType: true },
     });
     if (!document) throw new EmployerVerificationDocumentNotFoundError();
-    if (document.reviewStatus !== 'REJECTED') {
-      throw new EmployerVerificationDocumentConflictError(
-        'Only rejected documents can be removed and replaced',
-      );
-    }
-    await this.prisma.client.employerDocument.delete({ where: { id: document.id } });
+
     await this.documentStorage.delete(document.storageKey, document.mimeType ?? 'image/jpeg');
+    await this.prisma.client.$transaction(async (tx) => {
+      const deleted = await tx.employerDocument.deleteMany({
+        where: { id: document.id, employerId: profile.id },
+      });
+      if (deleted.count !== 1) throw new EmployerVerificationDocumentNotFoundError();
+      await tx.auditLog.create({
+        data: {
+          actorId: userId,
+          entityType: 'EMPLOYER_DOCUMENT',
+          entityId: document.id,
+          action: 'EMPLOYER_DOCUMENT_DELETED_BY_OWNER',
+          metadata: { employerId: profile.id },
+        },
+      });
+    });
   }
 }

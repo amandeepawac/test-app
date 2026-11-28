@@ -64,6 +64,7 @@ export const employerVerificationDocumentResponseSchema = z.strictObject({
 
 export const employerVerificationDocumentUploadSchema = z.strictObject({
   documentType: employerDocumentTypeSchema,
+  evidencePolicyConfirmed: z.literal(true),
   originalName: z
     .string()
     .trim()

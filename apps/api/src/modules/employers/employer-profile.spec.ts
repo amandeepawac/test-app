@@ -45,6 +45,7 @@ describe('employer request validation', () => {
     expect(
       employerVerificationDocumentUploadSchema.safeParse({
         documentType: 'GST_CERTIFICATE',
+        evidencePolicyConfirmed: true,
         originalName: 'gst.pdf',
         mimeType: 'application/pdf',
         base64Data: 'AAAA',
@@ -53,6 +54,15 @@ describe('employer request validation', () => {
     expect(
       employerVerificationDocumentUploadSchema.safeParse({
         documentType: 'GST_CERTIFICATE',
+        originalName: 'gst.pdf',
+        mimeType: 'application/pdf',
+        base64Data: 'AAAA',
+      }).success,
+    ).toBe(false);
+    expect(
+      employerVerificationDocumentUploadSchema.safeParse({
+        documentType: 'GST_CERTIFICATE',
+        evidencePolicyConfirmed: true,
         originalName: 'malware.exe',
         mimeType: 'application/x-msdownload',
         base64Data: 'AAAA',
@@ -103,6 +113,8 @@ describe('PrismaEmployerProfileRepository', () => {
   const tx = {
     $queryRaw: vi.fn(),
     employerProfile: { findUnique: vi.fn(), update: vi.fn(), upsert: vi.fn() },
+    employerDocument: { findFirst: vi.fn(), deleteMany: vi.fn() },
+    auditLog: { create: vi.fn() },
   };
   const prisma = { client: { $transaction: vi.fn() } };
   let repository: PrismaEmployerProfileRepository;
@@ -204,6 +216,100 @@ describe('PrismaEmployerProfileRepository', () => {
       showEmail: true,
       verification: { verificationStatus: 'VERIFIED' },
     });
+  });
+
+  it('deletes an employer document from private storage before removing its record', async () => {
+    const document = {
+      id: 'document-id',
+      storageKey: 'private/document-key',
+      mimeType: 'application/pdf',
+    };
+    tx.employerProfile.findUnique.mockResolvedValue({
+      id: 'profile-id',
+      verificationStatus: 'UNDER_REVIEW',
+    });
+    tx.employerDocument.findFirst.mockResolvedValue(document);
+    tx.employerDocument.deleteMany.mockResolvedValue({ count: 1 });
+    const storage = {
+      upload: vi.fn(),
+      delete: vi.fn().mockImplementation(async () => {
+        expect(tx.employerDocument.deleteMany).not.toHaveBeenCalled();
+      }),
+    };
+    const module = await Test.createTestingModule({
+      providers: [
+        PrismaEmployerProfileRepository,
+        { provide: PrismaService, useValue: prisma },
+        { provide: PrivateDocumentStorage, useValue: storage },
+      ],
+    }).compile();
+    const repository = module.get(PrismaEmployerProfileRepository);
+
+    await expect(repository.deleteDocument('user-id', 'document-id')).resolves.toBeUndefined();
+
+    expect(storage.delete).toHaveBeenCalledWith(document.storageKey, document.mimeType);
+    expect(tx.employerDocument.deleteMany).toHaveBeenCalledWith({
+      where: { id: document.id, employerId: 'profile-id' },
+    });
+    expect(tx.auditLog.create).toHaveBeenCalledWith({
+      data: {
+        actorId: 'user-id',
+        entityType: 'EMPLOYER_DOCUMENT',
+        entityId: 'document-id',
+        action: 'EMPLOYER_DOCUMENT_DELETED_BY_OWNER',
+        metadata: { employerId: 'profile-id' },
+      },
+    });
+  });
+
+  it('does not remove an evidence record when private storage deletion fails', async () => {
+    tx.employerProfile.findUnique.mockResolvedValue({
+      id: 'profile-id',
+      verificationStatus: 'PENDING',
+    });
+    tx.employerDocument.findFirst.mockResolvedValue({
+      id: 'document-id',
+      storageKey: 'private/document-key',
+      mimeType: 'application/pdf',
+    });
+    const storage = {
+      upload: vi.fn(),
+      delete: vi.fn().mockRejectedValue(new Error('Storage unavailable')),
+    };
+    const module = await Test.createTestingModule({
+      providers: [
+        PrismaEmployerProfileRepository,
+        { provide: PrismaService, useValue: prisma },
+        { provide: PrivateDocumentStorage, useValue: storage },
+      ],
+    }).compile();
+    const repository = module.get(PrismaEmployerProfileRepository);
+
+    await expect(repository.deleteDocument('user-id', 'document-id')).rejects.toThrow(
+      'Storage unavailable',
+    );
+    expect(tx.employerDocument.deleteMany).not.toHaveBeenCalled();
+  });
+
+  it('does not allow employers to remove evidence after verification or suspension', async () => {
+    tx.employerProfile.findUnique.mockResolvedValue({
+      id: 'profile-id',
+      verificationStatus: 'VERIFIED',
+    });
+    const storage = { upload: vi.fn(), delete: vi.fn() };
+    const module = await Test.createTestingModule({
+      providers: [
+        PrismaEmployerProfileRepository,
+        { provide: PrismaService, useValue: prisma },
+        { provide: PrivateDocumentStorage, useValue: storage },
+      ],
+    }).compile();
+    const repository = module.get(PrismaEmployerProfileRepository);
+
+    await expect(repository.deleteDocument('user-id', 'document-id')).rejects.toThrow(
+      'Documents cannot be changed after verification is complete or suspended',
+    );
+    expect(storage.delete).not.toHaveBeenCalled();
   });
 });
 

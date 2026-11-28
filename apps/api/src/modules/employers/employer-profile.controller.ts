@@ -78,6 +78,7 @@ export class EmployerProfileController {
 
   @Delete('verification/documents/:documentId')
   @HttpCode(204)
+  @Header('Cache-Control', 'no-store')
   deleteDocument(
     @Param('documentId', new ParseUUIDPipe({ version: 'all' })) documentId: string,
     @Req() request: EmployerRequest,

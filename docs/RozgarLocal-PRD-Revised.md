@@ -167,7 +167,8 @@ Contact privacy requirements:
 Verification evidence and privacy rules:
 
 - Employers may submit a relevant document; no single document type is mandatory. Admin reviewers assess readability, relevance, identity match where applicable, and expiry.
-- If Aadhaar is considered, accept only a masked copy after legal/privacy review. Do not collect or retain a full Aadhaar number. Define safe handling for accidental unmasked uploads before accepting files.
+- The MVP does not accept Aadhaar copies (masked or unmasked), Aadhaar numbers, or biometric information as verification evidence. Use business records instead. The upload flow must warn users, require confirmation, and let them remove their own uploaded evidence before verification is complete or suspended; storage deletion must succeed before its database record is removed.
+- If Aadhaar is ever considered for a later verification flow, first obtain legal/privacy approval and design it around UIDAI-compliant verification rather than treating an Aadhaar image as an ordinary business document. Define a numeric retention schedule with Indian privacy counsel; erase personal data when its purpose is no longer served unless retention is required by law.
 - Use private storage, server-side authorization, limited reviewer access, and short-lived authorized delivery. Do not expose storage keys or permanent public URLs.
 - Cloudinary private evidence upload and deletion code exists; account setup, credentials, secure reviewer delivery, and provider security validation remain pending.
 - Rejection requires a reason. Employers must replace evidence and resubmit before a new review.
@@ -371,7 +372,7 @@ Completion is limited to the code slices listed. Target database validation, ext
 
 | Decision / risk                          | Why it matters                                                                                                | Required resolution                                                                                                              |
 | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Verification evidence policy and privacy | Sensitive business evidence may include personal identifiers.                                                 | Approve accepted evidence, masked Aadhaar policy, accidental unmasked-upload handling, retention, reviewer access, and deletion. |
+| Verification evidence policy and privacy | Business evidence can contain personal information, and Aadhaar is not accepted for the MVP.                    | Validate secure storage and reviewer access; set exact retention periods and legal exceptions with Indian privacy counsel.       |
 | Private file delivery                    | Permanent public document URLs could expose evidence.                                                         | Validate Cloudinary private storage and authorized/temporary reviewer access before accepting uploads.                           |
 | Job moderation policy                    | Abuse controls must be predictable for employers and seekers.                                                 | Define prohibited content, response targets, hide/remove/restore transitions, and appeal handling.                               |
 | Application withdrawal rules             | Withdrawal must not erase application history or allow a second application to the same job.                  | Reapplication after withdrawal is not allowed. Confirm which pre-withdrawal statuses may be withdrawn.                           |
@@ -393,7 +394,7 @@ The sequence below prioritizes the actual product problem. Complete each stage a
 
 - Confirm migration status and schema alignment against the intended development database.
 - Run category/skill master-data seed successfully and record the environment used.
-- Resolve evidence storage/privacy, withdrawable application statuses, exact account-data retention periods with privacy counsel, and moderation policy.
+- Validate private evidence storage/reviewer access; set exact evidence and account-data retention periods with privacy counsel; resolve withdrawable application statuses and moderation policy. Aadhaar evidence is excluded from the MVP.
 - Confirm current API contracts and decide versioning before publishing external clients.
 
 ### Stage 1: Finish employer verification intake

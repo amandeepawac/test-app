@@ -10,6 +10,7 @@ import type {
 import { Info, ShieldCheck } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
 import {
@@ -31,6 +32,8 @@ export function EmployerVerification({
   const [documentType, setDocumentType] =
     useState<EmployerDocumentType>('OTHER');
   const [file, setFile] = useState<File | null>(null);
+  const [evidenceConfirmed, setEvidenceConfirmed] = useState(false);
+  const [fileInputKey, setFileInputKey] = useState(0);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -38,6 +41,10 @@ export function EmployerVerification({
   async function upload() {
     if (!file) {
       setError(t('documentRequired'));
+      return;
+    }
+    if (!evidenceConfirmed) {
+      setError(t('evidenceConfirmationRequired'));
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
@@ -51,6 +58,7 @@ export function EmployerVerification({
       const base64Data = await fileToBase64(file);
       const result = await uploadEmployerVerificationDocumentAction({
         documentType,
+        evidencePolicyConfirmed: true,
         originalName: file.name,
         mimeType: file.type,
         base64Data,
@@ -61,6 +69,8 @@ export function EmployerVerification({
       }
       setDocuments((current) => [...current, result.data]);
       setFile(null);
+      setFileInputKey((current) => current + 1);
+      setEvidenceConfirmed(false);
       setMessage(t('documentUploaded'));
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : t('documentRequired'));
@@ -85,6 +95,7 @@ export function EmployerVerification({
   async function remove(documentId: string) {
     setBusy(true);
     setError('');
+    setMessage('');
     const result = await deleteEmployerVerificationDocumentAction(documentId);
     setBusy(false);
     if (!result.ok) {
@@ -92,7 +103,14 @@ export function EmployerVerification({
       return;
     }
     setDocuments((current) => current.filter((document) => document.id !== documentId));
+    setEvidenceConfirmed(false);
+    setMessage(t('documentRemoved'));
   }
+
+  const canChangeDocuments = !['VERIFIED', 'SUSPENDED'].includes(
+    verification.verificationStatus,
+  );
+
   return (
     <ProfileCard title={t('verification')} description={t('verificationDescription')}>
       <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-auth-border bg-auth-canvas/60 p-4 sm:p-5">
@@ -123,6 +141,9 @@ export function EmployerVerification({
         <Info className="mt-0.5 size-4 shrink-0 text-auth-primary" aria-hidden="true" />
         <p>{t('privateEvidenceNotice')}</p>
       </div>
+      <p role="note" className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 text-sm">
+        {t('noAadhaarNotice')}
+      </p>
       {error && (
         <p role="alert" className="text-sm text-destructive">
           {error}
@@ -149,7 +170,7 @@ export function EmployerVerification({
                   {document.reviewNote ? ` — ${document.reviewNote}` : ''}
                 </p>
               </div>
-              {document.reviewStatus === 'REJECTED' && (
+              {canChangeDocuments && (
                 <Button
                   type="button"
                   variant="destructive"
@@ -157,16 +178,14 @@ export function EmployerVerification({
                   disabled={busy}
                   onClick={() => void remove(document.id)}
                 >
-                  {t('removeRejectedDocument')}
+                  {t('removeDocument')}
                 </Button>
               )}
             </div>
           ))}
         </div>
       )}
-      {['NOT_SUBMITTED', 'REJECTED', 'NEEDS_MORE_INFO'].includes(
-        verification.verificationStatus,
-      ) && (
+      {canChangeDocuments && (
         <div className="grid gap-3 rounded-xl border border-auth-border p-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
           <NativeSelect
             aria-label={t('documentType')}
@@ -198,12 +217,31 @@ export function EmployerVerification({
             <NativeSelectOption value="OTHER">Other</NativeSelectOption>
           </NativeSelect>
           <Input
+            key={fileInputKey}
             type="file"
             accept="application/pdf,image/jpeg,image/png,image/webp"
             disabled={busy}
             onChange={(event) => setFile(event.target.files?.[0] ?? null)}
           />
-          <Button type="button" disabled={busy || !file} onClick={() => void upload()}>
+          <div className="flex items-center gap-2 sm:col-span-2">
+            <Checkbox
+              id="verification-evidence-confirmation"
+              checked={evidenceConfirmed}
+              onCheckedChange={(checked) => setEvidenceConfirmed(checked === true)}
+              disabled={busy}
+            />
+            <label
+              htmlFor="verification-evidence-confirmation"
+              className="text-sm text-auth-muted"
+            >
+              {t('noAadhaarConfirmation')}
+            </label>
+          </div>
+          <Button
+            type="button"
+            disabled={busy || !file || !evidenceConfirmed}
+            onClick={() => void upload()}
+          >
             {busy ? t('uploading') : t('uploadDocument')}
           </Button>
         </div>

@@ -66,8 +66,7 @@ export class PrivateDocumentStorage {
     const endpoint = `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/${isPdf ? 'raw' : 'image'}/upload`;
     const response = await fetch(endpoint, { method: 'POST', body: form });
     if (!response.ok) {
-      const detail = await response.text();
-      console.error('Cloudinary verification upload failed', response.status, detail);
+      console.error('Cloudinary verification upload failed', response.status);
       throw new ServiceUnavailableException('The document could not be stored securely.');
     }
 
@@ -91,7 +90,11 @@ export class PrivateDocumentStorage {
     const cloudName = this.config.get<string>('CLOUDINARY_CLOUD_NAME');
     const apiKey = this.config.get<string>('CLOUDINARY_API_KEY');
     const apiSecret = this.config.get<string>('CLOUDINARY_API_SECRET');
-    if (!cloudName || !apiKey || !apiSecret) return;
+    if (!cloudName || !apiKey || !apiSecret) {
+      throw new ServiceUnavailableException(
+        'Private document storage is not configured. Contact the platform administrator.',
+      );
+    }
 
     const timestamp = Math.floor(Date.now() / 1000);
     const params = { public_id: publicId, timestamp: String(timestamp), invalidate: 'true' };
@@ -108,9 +111,30 @@ export class PrivateDocumentStorage {
       api_key: apiKey,
       signature,
     });
-    await fetch(
-      `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/${mimeType === 'application/pdf' ? 'raw' : 'image'}/destroy`,
-      { method: 'POST', body: form },
-    ).catch((error) => console.error('Cloudinary verification deletion failed', error));
+    const endpoint = `https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/${mimeType === 'application/pdf' ? 'raw' : 'image'}/destroy`;
+    let response: Response;
+    try {
+      response = await fetch(endpoint, { method: 'POST', body: form });
+    } catch (error) {
+      console.error('Cloudinary verification deletion request failed', error);
+      throw new ServiceUnavailableException('The document could not be deleted securely.');
+    }
+
+    if (!response.ok) {
+      console.error('Cloudinary verification deletion failed', response.status);
+      throw new ServiceUnavailableException('The document could not be deleted securely.');
+    }
+
+    let result: { result?: string };
+    try {
+      result = (await response.json()) as { result?: string };
+    } catch (error) {
+      console.error('Cloudinary verification deletion returned an invalid response', error);
+      throw new ServiceUnavailableException('The document could not be deleted securely.');
+    }
+    if (result.result !== 'ok' && result.result !== 'not found') {
+      console.error('Cloudinary verification deletion returned an unexpected result');
+      throw new ServiceUnavailableException('The document could not be deleted securely.');
+    }
   }
 }
