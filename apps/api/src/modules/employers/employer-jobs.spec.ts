@@ -1,5 +1,9 @@
 import { Test } from '@nestjs/testing';
-import { employerJobCreateSchema, employerJobUpdateSchema } from '@repo/contracts';
+import {
+  employerJobCreateSchema,
+  employerJobUpdateSchema,
+  publicJobsQuerySchema,
+} from '@repo/contracts';
 import { PrismaService } from '@/infrastructure/database/prisma.service.js';
 import {
   EmployerJobConflictError,
@@ -9,6 +13,9 @@ import {
   JobVerificationRequiredError,
 } from '@/modules/employers/employer-jobs-errors.js';
 import { PrismaEmployerJobsRepository } from '@/modules/employers/repositories/prisma-employer-jobs.repository.js';
+import { PrismaPublicJobsRepository } from '@/modules/employers/repositories/prisma-public-jobs.repository.js';
+import { publicJobsQuerySchema } from '@repo/contracts';
+import { PrismaPublicJobsRepository } from '@/modules/employers/repositories/prisma-public-jobs.repository.js';
 
 const draft = { title: 'Cook', description: 'Prepare meals', employmentType: 'FULL_TIME' } as const;
 
@@ -21,6 +28,102 @@ describe('employer job request validation', () => {
     );
     expect(employerJobUpdateSchema.safeParse({ employerId: skillId }).success).toBe(false);
     expect(employerJobUpdateSchema.safeParse({ skillIds: [skillId, skillId] }).success).toBe(false);
+  });
+
+  describe('Public jobs request validation', () => {
+    it('accepts search filters and rejects an invalid salary range', () => {
+      expect(
+        publicJobsQuerySchema.safeParse({
+          keyword: 'cook',
+          cityName: 'Ludhiana',
+          employmentType: 'FULL_TIME',
+        }).success,
+      ).toBe(true);
+      expect(
+        publicJobsQuerySchema.safeParse({ salaryMin: 30000, salaryMax: 20000 }).success,
+      ).toBe(false);
+    });
+  });
+
+  describe('PrismaPublicJobsRepository', () => {
+    const prisma = {
+      client: {
+        job: { findMany: vi.fn(), count: vi.fn(), findFirst: vi.fn() },
+        jobCategory: { findMany: vi.fn() },
+      },
+    };
+    let repository: PrismaPublicJobsRepository;
+
+    beforeEach(async () => {
+      vi.resetAllMocks();
+      prisma.client.job.findMany.mockResolvedValue([]);
+      prisma.client.job.count.mockResolvedValue(0);
+      const module = await Test.createTestingModule({
+        providers: [
+          PrismaPublicJobsRepository,
+          { provide: PrismaService, useValue: prisma },
+        ],
+      }).compile();
+      repository = module.get(PrismaPublicJobsRepository);
+    });
+
+    it('queries only published, verified, unexpired jobs', async () => {
+      const result = await repository.list({
+        page: 1,
+        pageSize: 20,
+        sort: 'NEWEST',
+      });
+      expect(result.items).toEqual([]);
+      const where = prisma.client.job.findMany.mock.calls[0][0].where;
+      expect(where.AND).toContainEqual({
+        status: 'PUBLISHED',
+        employer: { is: { verificationStatus: 'VERIFIED' } },
+      });
+    });
+
+    it('does not expose private employer contact details', async () => {
+      prisma.client.job.findFirst.mockResolvedValue({
+        id: '01900000-0000-7000-8000-000000000001',
+        title: 'Cook',
+        description: 'Prepare meals',
+        responsibilities: null,
+        employmentType: 'FULL_TIME',
+        workMode: 'ON_SITE',
+        experienceLevel: 'NO_EXPERIENCE',
+        salaryMin: null,
+        salaryMax: null,
+        salaryPeriod: 'MONTH',
+        isSalaryNegotiable: false,
+        openings: 1,
+        addressLine: null,
+        localityName: null,
+        cityName: 'Ludhiana',
+        districtName: null,
+        stateName: 'Punjab',
+        postalCode: null,
+        workingHours: null,
+        shiftDetails: null,
+        isUrgent: false,
+        publishedAt: new Date(),
+        expiresAt: null,
+        category: null,
+        skills: [],
+        employer: {
+          id: '01900000-0000-7000-8000-000000000002',
+          businessName: 'Example Shop',
+          employerType: 'SHOP',
+          showEmail: false,
+          showPhone: false,
+          verificationStatus: 'VERIFIED',
+          businessPhone: '9999999999',
+          user: { email: 'private@example.com' },
+        },
+      });
+      const result = await repository.findById(
+        '01900000-0000-7000-8000-000000000001',
+      );
+      expect(result.employer).toMatchObject({ email: null, phone: null });
+    });
   });
 });
 

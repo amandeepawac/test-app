@@ -1,4 +1,94 @@
 {
+  "PublicJobs": {
+    "search": {
+      "navLabel": "नौकरियाँ",
+      "eyebrow": "स्थानीय नौकरियाँ",
+      "title": "अपने पास काम खोजें",
+      "keyword": "कीवर्ड",
+      "keywordPlaceholder": "नौकरी का शीर्षक या कीवर्ड",
+      "city": "शहर",
+      "state": "राज्य",
+      "employmentType": "रोज़गार का प्रकार",
+      "anyEmploymentType": "कोई भी रोज़गार प्रकार",
+      "employmentTypes": {
+        "FULL_TIME": "पूर्णकालिक",
+        "PART_TIME": "अंशकालिक",
+        "CONTRACT": "अनुबंध",
+        "TEMPORARY": "अस्थायी",
+        "DAILY_WAGE": "दिहाड़ी",
+        "APPRENTICESHIP": "शिक्षुता",
+        "INTERNSHIP": "इंटर्नशिप",
+        "FREELANCE": "फ्रीलांस"
+      },
+      "minimumSalary": "न्यूनतम वेतन",
+      "maximumSalary": "अधिकतम वेतन",
+      "category": "श्रेणी",
+      "allCategories": "सभी श्रेणियाँ",
+      "sort": "क्रमबद्ध करें",
+      "sortOptions": {
+        "NEWEST": "नवीनतम पहले",
+        "OLDEST": "सबसे पुरानी पहले",
+        "SALARY_LOW": "कम वेतन पहले",
+        "SALARY_HIGH": "अधिक वेतन पहले"
+      },
+      "search": "नौकरियाँ खोजें",
+      "empty": "इन फ़िल्टरों से कोई सक्रिय नौकरी नहीं मिली।",
+      "verifiedEmployer": "सत्यापित नियोक्ता",
+      "locationUnspecified": "स्थान नहीं दिया गया",
+      "page": "पृष्ठ {page}, कुल {totalPages}",
+      "next": "अगला"
+    },
+    "detail": {
+      "backToJobs": "नौकरियों पर लौटें",
+      "verifiedEmployer": "सत्यापित नियोक्ता",
+      "locationUnspecified": "स्थान नहीं दिया गया",
+      "description": "विवरण",
+      "responsibilities": "ज़िम्मेदारियाँ",
+      "jobDetails": "नौकरी का विवरण",
+      "employment": "रोज़गार",
+      "workMode": "कार्य का तरीका",
+      "experience": "अनुभव",
+      "openings": "रिक्तियाँ",
+      "salary": "वेतन",
+      "negotiable": "बातचीत योग्य",
+      "notDisclosed": "उल्लेख नहीं किया गया",
+      "category": "श्रेणी",
+      "signInToApply": "आवेदन करने के लिए साइन इन करें",
+      "employmentTypes": {
+        "FULL_TIME": "पूर्णकालिक",
+        "PART_TIME": "अंशकालिक",
+        "CONTRACT": "अनुबंध",
+        "TEMPORARY": "अस्थायी",
+        "DAILY_WAGE": "दिहाड़ी",
+        "APPRENTICESHIP": "शिक्षुता",
+        "INTERNSHIP": "इंटर्नशिप",
+        "FREELANCE": "फ्रीलांस"
+      },
+      "workModes": {
+        "ON_SITE": "कार्यस्थल पर",
+        "REMOTE": "दूरस्थ",
+        "HYBRID": "मिश्रित"
+      },
+      "experienceLevels": {
+        "NO_EXPERIENCE": "कोई अनुभव नहीं",
+        "ENTRY_LEVEL": "प्रारंभिक स्तर",
+        "LESS_THAN_1_YEAR": "1 वर्ष से कम",
+        "ONE_TO_THREE_YEARS": "1–3 वर्ष",
+        "THREE_TO_FIVE_YEARS": "3–5 वर्ष",
+        "FIVE_TO_TEN_YEARS": "5–10 वर्ष",
+        "TEN_PLUS_YEARS": "10+ वर्ष"
+      },
+      "salaryPeriods": {
+        "HOUR": "प्रति घंटा",
+        "DAY": "प्रति दिन",
+        "WEEK": "प्रति सप्ताह",
+        "MONTH": "प्रति माह",
+        "YEAR": "प्रति वर्ष",
+        "FIXED": "निश्चित",
+        "NEGOTIABLE": "बातचीत योग्य"
+      }
+    }
+  },
   "Portal": {
     "workspaceEmployer": "नियोक्ता कार्यस्थल",
     "workspaceSeeker": "नौकरी खोजने वाले का कार्यस्थल",

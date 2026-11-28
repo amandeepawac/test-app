@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getApiHealth } from '@/features/home/api-health';
 import {
@@ -113,13 +112,12 @@ export default async function Home() {
                     />
                   </div>
                 </div>
-                <Button
-                  type="button"
+                <Link
+                  href="/jobs"
                   className="h-auto min-h-12 w-full rounded-full bg-auth-primary px-4 py-3 text-center font-medium whitespace-normal text-auth-primary-foreground"
-                  disabled
                 >
                   {t('searchJobs')}
-                </Button>
+                </Link>
               </div>
             </div>
           </div>

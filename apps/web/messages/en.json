@@ -1,4 +1,94 @@
 {
+  "PublicJobs": {
+    "search": {
+      "navLabel": "Jobs",
+      "eyebrow": "Local jobs",
+      "title": "Find work near you",
+      "keyword": "Keyword",
+      "keywordPlaceholder": "Job title or keyword",
+      "city": "City",
+      "state": "State",
+      "employmentType": "Employment type",
+      "anyEmploymentType": "Any employment type",
+      "employmentTypes": {
+        "FULL_TIME": "Full time",
+        "PART_TIME": "Part time",
+        "CONTRACT": "Contract",
+        "TEMPORARY": "Temporary",
+        "DAILY_WAGE": "Daily wage",
+        "APPRENTICESHIP": "Apprenticeship",
+        "INTERNSHIP": "Internship",
+        "FREELANCE": "Freelance"
+      },
+      "minimumSalary": "Minimum salary",
+      "maximumSalary": "Maximum salary",
+      "category": "Category",
+      "allCategories": "All categories",
+      "sort": "Sort",
+      "sortOptions": {
+        "NEWEST": "Newest",
+        "OLDEST": "Oldest",
+        "SALARY_LOW": "Lowest salary",
+        "SALARY_HIGH": "Highest salary"
+      },
+      "search": "Search jobs",
+      "empty": "No active jobs match these filters.",
+      "verifiedEmployer": "Verified employer",
+      "locationUnspecified": "Location not specified",
+      "page": "Page {page} of {totalPages}",
+      "next": "Next"
+    },
+    "detail": {
+      "backToJobs": "Back to jobs",
+      "verifiedEmployer": "Verified employer",
+      "locationUnspecified": "Location not specified",
+      "description": "Description",
+      "responsibilities": "Responsibilities",
+      "jobDetails": "Job details",
+      "employment": "Employment",
+      "workMode": "Work mode",
+      "experience": "Experience",
+      "openings": "Openings",
+      "salary": "Salary",
+      "negotiable": "Negotiable",
+      "notDisclosed": "Not disclosed",
+      "category": "Category",
+      "signInToApply": "Sign in to apply",
+      "employmentTypes": {
+        "FULL_TIME": "Full time",
+        "PART_TIME": "Part time",
+        "CONTRACT": "Contract",
+        "TEMPORARY": "Temporary",
+        "DAILY_WAGE": "Daily wage",
+        "APPRENTICESHIP": "Apprenticeship",
+        "INTERNSHIP": "Internship",
+        "FREELANCE": "Freelance"
+      },
+      "workModes": {
+        "ON_SITE": "On-site",
+        "REMOTE": "Remote",
+        "HYBRID": "Hybrid"
+      },
+      "experienceLevels": {
+        "NO_EXPERIENCE": "No experience",
+        "ENTRY_LEVEL": "Entry level",
+        "LESS_THAN_1_YEAR": "Less than 1 year",
+        "ONE_TO_THREE_YEARS": "1–3 years",
+        "THREE_TO_FIVE_YEARS": "3–5 years",
+        "FIVE_TO_TEN_YEARS": "5–10 years",
+        "TEN_PLUS_YEARS": "10+ years"
+      },
+      "salaryPeriods": {
+        "HOUR": "per hour",
+        "DAY": "per day",
+        "WEEK": "per week",
+        "MONTH": "per month",
+        "YEAR": "per year",
+        "FIXED": "fixed",
+        "NEGOTIABLE": "negotiable"
+      }
+    }
+  },
   "Portal": {
     "workspaceEmployer": "Employer workspace",
     "workspaceSeeker": "Job seeker workspace",

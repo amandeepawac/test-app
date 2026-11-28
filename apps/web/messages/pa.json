@@ -1,4 +1,94 @@
 {
+  "PublicJobs": {
+    "search": {
+      "navLabel": "ਨੌਕਰੀਆਂ",
+      "eyebrow": "ਸਥਾਨਕ ਨੌਕਰੀਆਂ",
+      "title": "ਆਪਣੇ ਨੇੜੇ ਕੰਮ ਲੱਭੋ",
+      "keyword": "ਕੀਵਰਡ",
+      "keywordPlaceholder": "ਨੌਕਰੀ ਦਾ ਸਿਰਲੇਖ ਜਾਂ ਕੀਵਰਡ",
+      "city": "ਸ਼ਹਿਰ",
+      "state": "ਰਾਜ",
+      "employmentType": "ਰੁਜ਼ਗਾਰ ਦੀ ਕਿਸਮ",
+      "anyEmploymentType": "ਕੋਈ ਵੀ ਰੁਜ਼ਗਾਰ ਕਿਸਮ",
+      "employmentTypes": {
+        "FULL_TIME": "ਪੂਰਾ ਸਮਾਂ",
+        "PART_TIME": "ਪਾਰਟ-ਟਾਈਮ",
+        "CONTRACT": "ਠੇਕਾ",
+        "TEMPORARY": "ਅਸਥਾਈ",
+        "DAILY_WAGE": "ਦਿਹਾੜੀ",
+        "APPRENTICESHIP": "ਅਪ੍ਰੈਂਟਿਸਸ਼ਿਪ",
+        "INTERNSHIP": "ਇੰਟਰਨਸ਼ਿਪ",
+        "FREELANCE": "ਫ੍ਰੀਲਾਂਸ"
+      },
+      "minimumSalary": "ਘੱਟੋ-ਘੱਟ ਤਨਖਾਹ",
+      "maximumSalary": "ਵੱਧ ਤੋਂ ਵੱਧ ਤਨਖਾਹ",
+      "category": "ਸ਼੍ਰੇਣੀ",
+      "allCategories": "ਸਾਰੀਆਂ ਸ਼੍ਰੇਣੀਆਂ",
+      "sort": "ਕ੍ਰਮਬੱਧ ਕਰੋ",
+      "sortOptions": {
+        "NEWEST": "ਨਵੀਆਂ ਪਹਿਲਾਂ",
+        "OLDEST": "ਪੁਰਾਣੀਆਂ ਪਹਿਲਾਂ",
+        "SALARY_LOW": "ਘੱਟ ਤਨਖਾਹ ਪਹਿਲਾਂ",
+        "SALARY_HIGH": "ਵੱਧ ਤਨਖਾਹ ਪਹਿਲਾਂ"
+      },
+      "search": "ਨੌਕਰੀਆਂ ਲੱਭੋ",
+      "empty": "ਇਨ੍ਹਾਂ ਫਿਲਟਰਾਂ ਨਾਲ ਕੋਈ ਸਰਗਰਮ ਨੌਕਰੀ ਨਹੀਂ ਮਿਲੀ।",
+      "verifiedEmployer": "ਤਸਦੀਕਸ਼ੁਦਾ ਰੁਜ਼ਗਾਰਦਾਤਾ",
+      "locationUnspecified": "ਥਾਂ ਨਹੀਂ ਦਿੱਤੀ",
+      "page": "ਪੰਨਾ {page}, ਕੁੱਲ {totalPages}",
+      "next": "ਅਗਲਾ"
+    },
+    "detail": {
+      "backToJobs": "ਨੌਕਰੀਆਂ ਵੱਲ ਵਾਪਸ",
+      "verifiedEmployer": "ਤਸਦੀਕਸ਼ੁਦਾ ਰੁਜ਼ਗਾਰਦਾਤਾ",
+      "locationUnspecified": "ਥਾਂ ਨਹੀਂ ਦਿੱਤੀ",
+      "description": "ਵੇਰਵਾ",
+      "responsibilities": "ਜ਼ਿੰਮੇਵਾਰੀਆਂ",
+      "jobDetails": "ਨੌਕਰੀ ਦੇ ਵੇਰਵੇ",
+      "employment": "ਰੁਜ਼ਗਾਰ",
+      "workMode": "ਕੰਮ ਦਾ ਤਰੀਕਾ",
+      "experience": "ਤਜਰਬਾ",
+      "openings": "ਖਾਲੀ ਅਸਾਮੀਆਂ",
+      "salary": "ਤਨਖਾਹ",
+      "negotiable": "ਗੱਲਬਾਤਯੋਗ",
+      "notDisclosed": "ਦੱਸਿਆ ਨਹੀਂ ਗਿਆ",
+      "category": "ਸ਼੍ਰੇਣੀ",
+      "signInToApply": "ਅਰਜ਼ੀ ਦੇਣ ਲਈ ਸਾਈਨ ਇਨ ਕਰੋ",
+      "employmentTypes": {
+        "FULL_TIME": "ਪੂਰਾ ਸਮਾਂ",
+        "PART_TIME": "ਪਾਰਟ-ਟਾਈਮ",
+        "CONTRACT": "ਠੇਕਾ",
+        "TEMPORARY": "ਅਸਥਾਈ",
+        "DAILY_WAGE": "ਦਿਹਾੜੀ",
+        "APPRENTICESHIP": "ਅਪ੍ਰੈਂਟਿਸਸ਼ਿਪ",
+        "INTERNSHIP": "ਇੰਟਰਨਸ਼ਿਪ",
+        "FREELANCE": "ਫ੍ਰੀਲਾਂਸ"
+      },
+      "workModes": {
+        "ON_SITE": "ਕਾਰਜ-ਸਥਾਨ 'ਤੇ",
+        "REMOTE": "ਦੂਰ-ਸਥਿਤ",
+        "HYBRID": "ਮਿਸ਼ਰਤ"
+      },
+      "experienceLevels": {
+        "NO_EXPERIENCE": "ਕੋਈ ਤਜਰਬਾ ਨਹੀਂ",
+        "ENTRY_LEVEL": "ਸ਼ੁਰੂਆਤੀ ਪੱਧਰ",
+        "LESS_THAN_1_YEAR": "1 ਸਾਲ ਤੋਂ ਘੱਟ",
+        "ONE_TO_THREE_YEARS": "1–3 ਸਾਲ",
+        "THREE_TO_FIVE_YEARS": "3–5 ਸਾਲ",
+        "FIVE_TO_TEN_YEARS": "5–10 ਸਾਲ",
+        "TEN_PLUS_YEARS": "10+ ਸਾਲ"
+      },
+      "salaryPeriods": {
+        "HOUR": "ਪ੍ਰਤੀ ਘੰਟਾ",
+        "DAY": "ਪ੍ਰਤੀ ਦਿਨ",
+        "WEEK": "ਪ੍ਰਤੀ ਹਫ਼ਤਾ",
+        "MONTH": "ਪ੍ਰਤੀ ਮਹੀਨਾ",
+        "YEAR": "ਪ੍ਰਤੀ ਸਾਲ",
+        "FIXED": "ਨਿਸ਼ਚਿਤ",
+        "NEGOTIABLE": "ਗੱਲਬਾਤਯੋਗ"
+      }
+    }
+  },
   "Portal": {
     "workspaceEmployer": "ਰੁਜ਼ਗਾਰਦਾਤਾ ਵਰਕਸਪੇਸ",
     "workspaceSeeker": "ਨੌਕਰੀ ਲੱਭਣ ਵਾਲੇ ਦਾ ਵਰਕਸਪੇਸ",

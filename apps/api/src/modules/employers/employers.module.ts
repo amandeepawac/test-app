@@ -11,17 +11,23 @@ import { EmployerJobsService } from '@/modules/employers/services/employer-jobs.
 import { EmployerJobsRepository } from '@/modules/employers/repositories/employer-jobs.repository.js';
 import { PrismaEmployerJobsRepository } from '@/modules/employers/repositories/prisma-employer-jobs.repository.js';
 import { PrivateDocumentStorage } from '@/infrastructure/storage/private-document-storage.js';
+import { PublicJobsController } from '@/modules/employers/public-jobs.controller.js';
+import { PublicJobsService } from '@/modules/employers/services/public-jobs.service.js';
+import { PublicJobsRepository } from '@/modules/employers/repositories/public-jobs.repository.js';
+import { PrismaPublicJobsRepository } from '@/modules/employers/repositories/prisma-public-jobs.repository.js';
 
 @Module({
   imports: [DatabaseModule, AuthModule],
-  controllers: [EmployerProfileController, EmployerJobsController],
+  controllers: [EmployerProfileController, EmployerJobsController, PublicJobsController],
   providers: [
     EmployerAuthGuard,
     PrivateDocumentStorage,
     EmployerProfileService,
     EmployerJobsService,
+    PublicJobsService,
     { provide: EmployerProfileRepository, useClass: PrismaEmployerProfileRepository },
     { provide: EmployerJobsRepository, useClass: PrismaEmployerJobsRepository },
+    { provide: PublicJobsRepository, useClass: PrismaPublicJobsRepository },
   ],
 })
 export class EmployersModule {}

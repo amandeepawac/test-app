@@ -9,6 +9,7 @@ import { SessionControls } from '@/features/auth/session-controls';
 export async function SiteHeader() {
   const t = await getTranslations('Auth');
   const home = await getTranslations('Home');
+  const publicJobs = await getTranslations('PublicJobs.search');
   const session = await getCurrentUser();
 
   return (
@@ -27,6 +28,12 @@ export async function SiteHeader() {
           aria-label={home('navigation')}
           className="order-3 flex w-full flex-wrap gap-x-6 gap-y-2 text-sm font-medium text-auth-muted sm:order-2 sm:w-auto"
         >
+          <Link
+            href="/jobs"
+            className="transition hover:text-auth-primary focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-auth-primary"
+          >
+            {publicJobs('navLabel')}
+          </Link>
           <Link
             href="/#how-it-works"
             className="transition hover:text-auth-primary focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-auth-primary"
