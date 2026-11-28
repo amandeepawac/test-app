@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Header,
   HttpCode,
@@ -19,14 +20,17 @@ import {
   jobSeekerSkillsQuerySchema,
   applicationPageQuerySchema,
   createApplicationSchema,
+  savedJobsQuerySchema,
   type CreateApplication,
   type JobSeekerProfileUpdate,
   type JobSeekerSkillsQuery,
+  type SavedJobsQuery,
 } from '@repo/contracts';
 import type { JobSeekerRequest } from '@/modules/job-seeker/job-seeker-context.js';
 import { JobSeekerAuthGuard } from '@/modules/job-seeker/guards/job-seeker-auth.guard.js';
 import { JobSeekerProfileService } from '@/modules/job-seeker/services/job-seeker-profile.service.js';
 import { ApplicationService } from '@/modules/applications/application.service.js';
+import { SavedJobsService } from '@/modules/job-seeker/services/saved-jobs.service.js';
 
 @Controller('job-seeker')
 @UsePipes(new StandardSchemaValidationPipe())
@@ -35,6 +39,7 @@ export class JobSeekerProfileController {
   constructor(
     private readonly profiles: JobSeekerProfileService,
     private readonly applications: ApplicationService,
+    private readonly savedJobs: SavedJobsService,
   ) {}
 
   @Get('profile')
@@ -94,5 +99,41 @@ export class JobSeekerProfileController {
     @Req() request: JobSeekerRequest,
   ) {
     return this.applications.withdraw(request.user.id, id);
+  }
+
+  @Get('saved-jobs')
+  @Header('Cache-Control', 'no-store')
+  listSavedJobs(
+    @Req() request: JobSeekerRequest,
+    @Query({ schema: savedJobsQuerySchema }) query: SavedJobsQuery,
+  ) {
+    return this.savedJobs.list(request.user.id, query);
+  }
+
+  @Get('saved-jobs/:jobId')
+  @Header('Cache-Control', 'no-store')
+  savedJobState(
+    @Req() request: JobSeekerRequest,
+    @Param('jobId', new ParseUUIDPipe({ version: 'all' })) jobId: string,
+  ) {
+    return this.savedJobs.findState(request.user.id, jobId);
+  }
+
+  @Put('saved-jobs/:jobId')
+  @Header('Cache-Control', 'no-store')
+  saveJob(
+    @Req() request: JobSeekerRequest,
+    @Param('jobId', new ParseUUIDPipe({ version: 'all' })) jobId: string,
+  ) {
+    return this.savedJobs.save(request.user.id, jobId);
+  }
+
+  @Delete('saved-jobs/:jobId')
+  @Header('Cache-Control', 'no-store')
+  removeSavedJob(
+    @Req() request: JobSeekerRequest,
+    @Param('jobId', new ParseUUIDPipe({ version: 'all' })) jobId: string,
+  ) {
+    return this.savedJobs.remove(request.user.id, jobId);
   }
 }

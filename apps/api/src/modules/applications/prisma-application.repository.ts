@@ -16,6 +16,7 @@ import {
   ApplicationWithdrawNotAllowedError,
 } from '@/modules/applications/application-errors.js';
 import { ApplicationRepository } from '@/modules/applications/application.repository.js';
+import { publicJobEligibility } from '@/modules/employers/repositories/public-job-eligibility.js';
 
 const historySelect = {
   oldStatus: true,
@@ -154,9 +155,7 @@ export class PrismaApplicationRepository implements ApplicationRepository {
         const job = await tx.job.findFirst({
           where: {
             id: jobId,
-            status: 'PUBLISHED',
-            employer: { is: { verificationStatus: 'VERIFIED' } },
-            OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+            ...publicJobEligibility(now),
           },
           select: {
             id: true,

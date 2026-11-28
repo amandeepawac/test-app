@@ -7,6 +7,9 @@ import { JobSeekerProfileRepository } from '@/modules/job-seeker/repositories/jo
 import { PrismaJobSeekerProfileRepository } from '@/modules/job-seeker/repositories/prisma-job-seeker-profile.repository.js';
 import { JobSeekerProfileService } from '@/modules/job-seeker/services/job-seeker-profile.service.js';
 import { ApplicationsModule } from '@/modules/applications/applications.module.js';
+import { SavedJobsRepository } from '@/modules/job-seeker/repositories/saved-jobs.repository.js';
+import { PrismaSavedJobsRepository } from '@/modules/job-seeker/repositories/prisma-saved-jobs.repository.js';
+import { SavedJobsService } from '@/modules/job-seeker/services/saved-jobs.service.js';
 
 @Module({
   imports: [DatabaseModule, AuthModule, ApplicationsModule],
@@ -14,7 +17,9 @@ import { ApplicationsModule } from '@/modules/applications/applications.module.j
   providers: [
     JobSeekerAuthGuard,
     JobSeekerProfileService,
+    SavedJobsService,
     { provide: JobSeekerProfileRepository, useClass: PrismaJobSeekerProfileRepository },
+    { provide: SavedJobsRepository, useClass: PrismaSavedJobsRepository },
   ],
 })
 export class JobSeekerModule {}

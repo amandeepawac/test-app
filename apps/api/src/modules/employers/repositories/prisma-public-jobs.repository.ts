@@ -7,6 +7,7 @@ import type {
 import type { Prisma } from '@repo/db/generated';
 import { PrismaService } from '@/infrastructure/database/prisma.service.js';
 import { PublicJobsRepository } from './public-jobs.repository.js';
+import { publicJobEligibility } from './public-job-eligibility.js';
 
 const publicJobSelect = {
   id: true,
@@ -97,13 +98,11 @@ export class PrismaPublicJobsRepository implements PublicJobsRepository {
 
   async list(query: PublicJobsQuery): Promise<PublicJobListResponse> {
     const now = new Date();
+    const eligibility = publicJobEligibility(now);
     const and: Prisma.JobWhereInput[] = [
-      {
-        status: 'PUBLISHED',
-        employer: { is: { verificationStatus: 'VERIFIED' } },
-      },
+      { status: eligibility.status, employer: eligibility.employer },
+      { OR: eligibility.OR },
     ];
-    and.push({ OR: [{ expiresAt: null }, { expiresAt: { gt: now } }] });
 
     if (query.keyword) {
       const keyword = query.keyword;
@@ -177,9 +176,7 @@ export class PrismaPublicJobsRepository implements PublicJobsRepository {
     const record = await this.prisma.client.job.findFirst({
       where: {
         id,
-        status: 'PUBLISHED',
-        employer: { is: { verificationStatus: 'VERIFIED' } },
-        OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+        ...publicJobEligibility(now),
       },
       select: publicJobSelect,
     });

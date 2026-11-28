@@ -25,6 +25,18 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Saved jobs API
+
+Authenticated job seekers can use `PUT /job-seeker/saved-jobs/:jobId` to save a
+published, unexpired job from a verified employer, and `DELETE` on the same
+path to remove it. Both operations are idempotent. `GET` on that path returns
+the current saved state. `GET /job-seeker/saved-jobs` lists saved jobs with
+`page` and `pageSize` query parameters.
+
+Saved jobs that are no longer public remain removable but have `job: null` in
+the list response. Saving does not require a completed seeker profile; an empty
+profile is created if needed. These endpoints require a job seeker account.
+
 ## Project setup
 
 ```bash

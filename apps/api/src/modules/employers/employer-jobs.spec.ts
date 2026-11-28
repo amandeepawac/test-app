@@ -14,8 +14,6 @@ import {
 } from '@/modules/employers/employer-jobs-errors.js';
 import { PrismaEmployerJobsRepository } from '@/modules/employers/repositories/prisma-employer-jobs.repository.js';
 import { PrismaPublicJobsRepository } from '@/modules/employers/repositories/prisma-public-jobs.repository.js';
-import { publicJobsQuerySchema } from '@repo/contracts';
-import { PrismaPublicJobsRepository } from '@/modules/employers/repositories/prisma-public-jobs.repository.js';
 
 const draft = { title: 'Cook', description: 'Prepare meals', employmentType: 'FULL_TIME' } as const;
 
@@ -78,6 +76,9 @@ describe('employer job request validation', () => {
       expect(where.AND).toContainEqual({
         status: 'PUBLISHED',
         employer: { is: { verificationStatus: 'VERIFIED' } },
+      });
+      expect(where.AND).toContainEqual({
+        OR: [{ expiresAt: null }, { expiresAt: { gt: expect.any(Date) } }],
       });
     });
 

@@ -4,6 +4,7 @@ export class JobSeekerProfileNotFoundError extends Error {}
 export class JobSeekerProfileIncompleteError extends Error {}
 export class JobSeekerInvalidSkillsError extends Error {}
 export class JobSeekerPhoneConflictError extends Error {}
+export class SavedJobUnavailableError extends Error {}
 
 export async function mapJobSeekerRepositoryErrors<T>(operation: () => Promise<T>): Promise<T> {
   try {
@@ -20,6 +21,9 @@ export async function mapJobSeekerRepositoryErrors<T>(operation: () => Promise<T
     }
     if (error instanceof JobSeekerPhoneConflictError) {
       throw new ConflictException('Phone number is already in use');
+    }
+    if (error instanceof SavedJobUnavailableError) {
+      throw new NotFoundException('Job not found or unavailable');
     }
     throw error;
   }
